@@ -1,0 +1,8 @@
+reward:
+  - fn: multilevel_localization_f1_reward
+    weight: 1.0
+  - fn: multiturn_reward
+    args:
+      maximal_turns: 4
+      minimal_turns: 4
+    weight: 1.0
