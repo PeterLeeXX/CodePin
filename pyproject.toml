@@ -8,25 +8,26 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.13"
 license = { "text" = "MIT" }
 dependencies = [
-    "skyrl-train",
-    "transformers==4.57.3",
+    "skyrl[fsdp]",
+    "transformers>=5.6.1,<=5.8.0",
     "openhands-tools",
     "openhands-agent-server",
     "openhands-workspace",
-    "vllm==0.11.0",
+    "vllm==0.23.0",
     "verifiers>=0.1.6.post0",
     "datasets>=4.0.0",
+    "pyarrow>=17.0.0",
+    "pyyaml>=6.0.2",
+    "unidiff>=0.7.5",
     "ipykernel>=7.1.0",
     "ipywidgets>=8.1.8",
     "matplotlib>=3.10.7",
     "seaborn>=0.13.2",
     "gcsfs>=2025.3.0",
     "lmcache",
-    # "flashinfer-python",
-    # "flashinfer-jit-cache",
 ]
 
 [build-system]
@@ -51,13 +52,15 @@ dev = [
 ]
 
 [tool.uv]
+required-environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
 override-dependencies = [
-    "flash-attn",
-    # "anthropic>=0.72.1",
-    # "openai>=2.8.0",
-    # "torch==2.8.0",
-    # "torchvision==0.23.0",
-    # "torchaudio==2.8.0",
+    "transformers>=5.6.1,<=5.8.0; sys_platform == 'linux'",
+    "nixl-cu13; sys_platform == 'never'",
+    "flashinfer-python==0.6.12; sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "flashinfer-jit-cache==0.6.12; sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "flashinfer-cubin==0.6.12; sys_platform == 'linux' and platform_machine == 'x86_64'",
 ]
 extra-build-variables = { flash-attn = { FLASH_ATTENTION_SKIP_CUDA_BUILD = "TRUE" } }
 
@@ -68,23 +71,25 @@ url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
 [[tool.uv.index]]
-name = "flashinfer-cu128"
-url = "https://flashinfer.ai/whl/cu128"
+name = "vllm-cu129"
+url = "https://wheels.vllm.ai/0.23.0/cu129"
 explicit = true
 
 [tool.uv.extra-build-dependencies]
-flash-attn = ["torch"]
+flash-attn = [{ requirement = "torch", match-runtime = true }]
 
 [tool.uv.sources]
-skyrl-train = { git = "https://github.com/adityasoni9998/SkyRL.git", rev = "81e5a97c7430503c0c4e6508497cc5aa01a0c624", subdirectory = "skyrl-train" }
-flash-attn = {url = "https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.8cxx11abiTRUE-cp313-cp313-linux_x86_64.whl"}
+skyrl = { git = "https://github.com/NovaSky-AI/SkyRL.git", rev = "f5bc3b78dfddfb352870d5d7430cd226e5785838" }
+vllm = { index = "vllm-cu129", marker = "sys_platform == 'linux'" }
+flash-attn = { url = "https://github.com/erictang000/flash-attention/releases/download/v2.8.3-torch2.11-clean/flash_attn-2.8.3-cp312-cp312-linux_x86_64.whl", marker = "sys_platform == 'linux' and python_version == '3.12' and platform_machine == 'x86_64'" }
+causal-conv1d = { url = "https://github.com/erictang000/causal-conv1d/releases/download/v1.6.1.post4-torch2.11/causal_conv1d-1.6.1-cp312-cp312-linux_x86_64.whl", marker = "sys_platform == 'linux' and python_version == '3.12' and platform_machine == 'x86_64'" }
 openhands-sdk = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-sdk" }
 openhands-tools = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-tools" }
 openhands-workspace = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-workspace" }
 openhands-agent-server = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-agent-server" }
 torch = { index = "pytorch-cu128" }
 torchvision = { index = "pytorch-cu128" }
-flashinfer-jit-cache = { index = "flashinfer-cu128" }
+flashinfer-jit-cache = { url = "https://github.com/flashinfer-ai/flashinfer/releases/download/v0.6.12/flashinfer_jit_cache-0.6.12%2Bcu128-cp39-abi3-manylinux_2_28_x86_64.whl", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" }
 # flashinfer-python = [
 #     { url = "https://download.pytorch.org/whl/cu128/flashinfer/flashinfer_python-0.2.6.post1%2Bcu128torch2.7-cp39-abi3-linux_x86_64.whl" }
 # ]

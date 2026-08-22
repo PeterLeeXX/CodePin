@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Reusable source snapshots downloaded by the SWE-Smith data builder.
+data/.cache/

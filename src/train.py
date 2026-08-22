@@ -1,106 +1,85 @@
-import hydra
-from omegaconf import DictConfig, OmegaConf, open_dict
-from skyrl_train.entrypoints.main_base import BasePPOExp, config_dir, validate_cfg
-from skyrl_train.utils import initialize_ray
-import ray
+"""CodePin RL entrypoint for the typed SkyRL v0.3 configuration API."""
 
-import asyncio
+from __future__ import annotations
+
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Optional
+
+import ray
+import yaml
+from skyrl.backends.skyrl_train.inference_servers.utils import resolve_policy_model_name
+from skyrl.train.config import BaseConfig, GeneratorConfig, SkyRLTrainConfig
+from skyrl.train.entrypoints.main_base import BasePPOExp
+from skyrl.train.utils import validate_cfg
+from skyrl.train.utils.utils import initialize_ray
 
 from src.generator.code_search_generator import CodeSearchGenerator
-from src.async_trainer import CustomFullyAsyncRayPPOTrainer as FullyAsyncRayPPOTrainer
-# from skyrl_train.fully_async_trainer import FullyAsyncRayPPOTrainer
+
+
+@dataclass
+class PromptPaths(BaseConfig):
+    system_prompt: str = "templates/system_prompt_custom_finish.j2"
+    user_prompt: str = "templates/file_module_custom_finish.j2"
+
+
+@dataclass
+class CodeSearchGeneratorConfig(GeneratorConfig):
+    reward: list[dict[str, Any]] = field(
+        default_factory=lambda: [{"fn": "multilevel_localization_f1_reward"}]
+    )
+    tools: list[str] = field(default_factory=lambda: ["terminal"])
+    prompts: PromptPaths = field(default_factory=PromptPaths)
+    traj_dir: str = "ckpts/trajectories"
+    max_train_length: int = 40960
+    exp_config: Optional[str] = None
+
+
+@dataclass
+class CodeSearchSkyRLConfig(SkyRLTrainConfig):
+    generator: CodeSearchGeneratorConfig = field(
+        default_factory=CodeSearchGeneratorConfig
+    )
 
 
 class CodeSearchPPOExp(BasePPOExp):
     def get_generator(self, cfg, tokenizer, inference_engine_client):
-        generator = CodeSearchGenerator(
+        return CodeSearchGenerator(
             generator_cfg=cfg.generator,
-            skyrl_gym_cfg=OmegaConf.create({"max_env_workers": 0}),
             inference_engine_client=inference_engine_client,
             tokenizer=tokenizer,
-            model_name=self.cfg.trainer.policy.model.path,
-            step_wise=cfg.trainer.get("step_wise_training", False),
-        )
-        return generator
-
-class AsyncCodeSearchPPOExp(CodeSearchPPOExp):
-    def get_trainer(
-        self,
-        cfg,
-        tracker,
-        tokenizer,
-        train_dataset,
-        eval_dataset,
-        inference_engine_client,
-        generator,
-        colocate_pg,
-    ):
-        return FullyAsyncRayPPOTrainer(
-            cfg=cfg,
-            tracker=tracker,
-            tokenizer=tokenizer,
-            train_dataset=train_dataset,
-            eval_dataset=eval_dataset,
-            inference_engine_client=inference_engine_client,
-            generator=generator,
-            colocate_pg=colocate_pg,
+            policy_model_name=resolve_policy_model_name(cfg),
         )
 
-    def run(self):
-        trainer = self._setup_trainer()
-        # Start the async training loop
-        asyncio.run(trainer.train())
+
+def apply_experiment_config(cfg: CodeSearchSkyRLConfig) -> None:
+    if not cfg.generator.exp_config:
+        return
+    path = Path(cfg.generator.exp_config)
+    with path.open(encoding="utf-8") as handle:
+        experiment = yaml.safe_load(handle) or {}
+    for key in ("reward", "tools"):
+        if key in experiment:
+            setattr(cfg.generator, key, experiment[key])
+    if "prompts" in experiment:
+        cfg.generator.prompts = PromptPaths(**experiment["prompts"])
 
 
 @ray.remote(num_cpus=1)
-def skyrl_entrypoint(cfg: DictConfig):
-    # make sure that the training loop is not run on the head node.
-    if cfg.get("run_async_trainer", False):
-        print("Running async trainer")
-        exp = AsyncCodeSearchPPOExp(cfg)
-    else:
-        print("Running sync trainer")
-        exp = CodeSearchPPOExp(cfg)
-    exp.run()
+def skyrl_entrypoint(cfg: CodeSearchSkyRLConfig) -> None:
+    CodeSearchPPOExp(cfg).run()
 
 
-@hydra.main(config_path=config_dir, config_name="ppo_base_config", version_base=None)
-def main(cfg: DictConfig) -> None:
-    # validate the arguments
+def main() -> None:
+    cfg = CodeSearchSkyRLConfig.from_cli_overrides(sys.argv[1:])
+    apply_experiment_config(cfg)
+    if cfg.trainer.fully_async.enabled:
+        raise ValueError(
+            "CodePin's OpenHands HTTP loop does not yet return rollout token "
+            "logprobs; use synchronous on-policy mode (fully_async.enabled=false)."
+        )
     validate_cfg(cfg)
-
-    print("cfg.trainer.policy.deepspeed_config")
-    print(cfg.trainer.policy.deepspeed_config)
-
-    # check cfg.generator.exp_config if it exists or not
-    if hasattr(cfg.generator, "exp_config"):
-        # Open yaml file and print its contents
-        with open(cfg.generator.exp_config, "r") as f:
-            exp_cfg = OmegaConf.load(f)
-
-        with open_dict(cfg):
-            cfg.generator.reward = exp_cfg.reward
-            cfg.generator.tools = exp_cfg.tools
-            # Parse prompts if they exist in the exp config
-            if hasattr(exp_cfg, "prompts"):
-                cfg.generator.prompts = exp_cfg.prompts
-    else:
-        with open_dict(cfg):
-            cfg.generator.reward = [
-                {"fn": "multilevel_localization_f1_reward"},
-            ]
-            cfg.generator.tools = [
-                "terminal",
-            ]
-    
-    # Set default prompts if not specified
-    if not hasattr(cfg.generator, "prompts"):
-        with open_dict(cfg):
-            cfg.generator.prompts = {
-                "system_prompt": "templates/system_prompt.j2",
-                "user_prompt": "templates/file_module_parallel_tools.j2"
-            }
-    
     initialize_ray(cfg)
     ray.get(skyrl_entrypoint.remote(cfg))
 

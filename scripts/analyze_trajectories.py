@@ -40,7 +40,16 @@ def analyze_trajectory(filepath: Path) -> dict:
 
 
 def main():
-    base_dir = Path('/home/ubuntu/agentic-code-search-oss/ckpts/Qwen-Qwen3-4B/trajectories')
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "trajectory_dir",
+        nargs="?",
+        default="ckpts/Qwen-Qwen3.5-0.8B-rl/trajectories",
+    )
+    args = parser.parse_args()
+    base_dir = Path(args.trajectory_dir)
     
     rows = []
     all_kinds = set()
@@ -129,4 +138,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

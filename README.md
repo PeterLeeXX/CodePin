@@ -10,7 +10,7 @@
     <a href="https://github.com/PeterLeeXX/CodePin/stargazers"><img src="https://img.shields.io/github/stars/PeterLeeXX/CodePin?style=flat-square&logo=github&label=Stars" alt="GitHub stars" /></a>
     <a href="https://github.com/PeterLeeXX/CodePin/forks"><img src="https://img.shields.io/github/forks/PeterLeeXX/CodePin?style=flat-square&logo=github&label=Forks" alt="GitHub forks" /></a>
     <a href="https://github.com/PeterLeeXX/CodePin/blob/main/LICENSE"><img src="https://img.shields.io/github/license/PeterLeeXX/CodePin?style=flat-square&label=License" alt="MIT license" /></a>
-    <img src="https://img.shields.io/badge/Python-3.13%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.13+" />
+    <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.12" />
     <img src="https://img.shields.io/badge/status-research%20preview-f59e0b?style=flat-square" alt="Research preview" />
   </p>
 </div>
@@ -33,7 +33,7 @@ Main Coding Agent ── 聚焦推理与修改 ──→ Patch
 - **Agentic search**：通过多轮工具调用主动探索仓库，并以专用 finish tool 输出结构化定位结果。
 - **RL post-training**：从真实 issue 与 gold patch 中提取监督信号，以多层级 localization F1 作为奖励进行后训练。
 - **上下文压缩**：将精确代码坐标交给主 Agent，减少无关上下文、重复搜索与 Token 消耗。
-- **异步训练**：基于 SkyRL、vLLM、Ray 与 GRPO / GSPO 的多 GPU 训练链路。
+- **训练栈**：基于 SkyRL、vLLM、Ray 与 GRPO / GSPO 的 Qwen3.5 多 GPU 训练链路。
 
 <p align="center">
   <img src="docs/recipe.png" alt="CodePin Agentic RL training recipe" width="900" />
@@ -44,26 +44,44 @@ Main Coding Agent ── 聚焦推理与修改 ──→ Patch
 > 当前版本面向研究与训练，建议在 Linux + NVIDIA GPU 环境中运行。
 
 ```bash
-# Install dependencies
+# Install the tested Qwen3.5 / SkyRL v0.3 stack
 uv sync
 
-# Build train / validation data
-uv run python -m src.build_dataset \
-  --output data \
-  --use_patch
+# Verify CUDA, hybrid-attention kernels and Qwen3.5 registration
+uv run python scripts/preflight_qwen3_5.py
 
-# Launch the 4B recipe; 1.7B and 14B recipes are also available
-bash scripts/run_async_training_4b.sh \
-  -m Qwen/Qwen3-4B \
-  -d data/adityasoni17__SWE-smith-py-code-search_train
+# Build code-search train / validation data from the raw SWE-Smith shards.
+# The builder resolves patch lines to file, class/module, and function targets.
+uv run python -m src.build_swe_smith_code_search \
+  --input data/orgin_SWE_smith \
+  --output data/SWE-smith-code-search \
+  --overwrite
+
+# Build SFT data from successful teacher trajectories
+uv run python scripts/prepare_sft_data.py \
+  --trajectories ckpts/teacher/trajectories \
+  --output data/sft-code-search
+
+# Full-parameter SFT: Qwen3.5-0.8B, one epoch, all assistant turns
+bash scripts/run_sft_qwen3_5_0_8b.sh
+
+# Continue with on-policy GRPO/GSPO from the exported SFT checkpoint
+MODEL=/absolute/path/to/sft/hf_export \
+  bash scripts/run_rl_qwen3_5_0_8b.sh
 ```
 
+清洗脚本会过滤空问题描述、没有 Python 修改以及创建/删除文件的任务，忽略非 Python 修改，并根据 mutation patch 的逆向修复语义生成 `file_changes`、`target`、`prompt` 和 `use_patch`。输出包含 `train.parquet`、`validation.parquet` 与记录逐类过滤数量的 `cleaning_report.json`；下载的源码缓存在 `data/.cache/swe_smith_sources`，后续运行可直接复用。
+
+如果已经有处理好的 Hugging Face 数据集，也可以继续使用 `python -m src.build_dataset` 进行下游字段转换和 train/validation 切分。
+
 训练参数、奖励组合和 Prompt 模板分别位于 [`configs/`](configs/)、[`src/rewards/`](src/rewards/) 与 [`src/prompts/templates/`](src/prompts/templates/)。
+
+Qwen3.5 的 AutoDL 环境、显存缩放与 SFT → RL 顺序见 [`docs/AUTODL_QWEN35.md`](docs/AUTODL_QWEN35.md)。
 
 ## Roadmap
 
 - [x] 文件、类与函数级联合奖励
-- [x] 多轮工具调用与异步 Agentic RL 训练
+- [x] 多轮工具调用与 Agentic RL 训练
 - [ ] 发布训练数据、模型权重与标准评测结果
 - [ ] 提供可直接接入主 Coding Agent 的轻量推理服务
 - [ ] 扩展更多语言与超大型 monorepo 场景
