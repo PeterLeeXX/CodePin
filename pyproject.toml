@@ -39,7 +39,10 @@ py-modules = ["swe_grep_oss_env"]
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src", "software-agent-sdk"]
+include = ["src", "src.*", "software-agent-sdk"]
+
+[tool.setuptools.package-data]
+"src.prompts" = ["templates/*.j2"]
 
 [dependency-groups]
 dev = [

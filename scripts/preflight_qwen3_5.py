@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import importlib
 import platform
+import shutil
+import subprocess
 import sys
 
 
@@ -16,6 +18,16 @@ def version(module_name: str) -> str:
 def main() -> None:
     if sys.version_info[:2] != (3, 12):
         raise RuntimeError(f"Python 3.12 is required, got {platform.python_version()}")
+
+    rg_executable = shutil.which("rg")
+    if rg_executable is None:
+        raise RuntimeError("ripgrep (rg) is required for CodePin atomic grep")
+    rg_version = subprocess.run(
+        [rg_executable, "--version"],
+        capture_output=True,
+        check=True,
+        text=True,
+    ).stdout.splitlines()[0]
 
     import torch
     from transformers import AutoConfig
@@ -36,6 +48,7 @@ def main() -> None:
         raise RuntimeError(f"Unexpected model_type: {model_type!r}")
 
     print(f"python={platform.python_version()}")
+    print(f"ripgrep={rg_version}")
     print(f"torch={torch.__version__} cuda={torch.version.cuda}")
     print(f"transformers={version('transformers')}")
     print(f"vllm={version('vllm')}")

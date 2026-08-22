@@ -1,156 +1,174 @@
-"""Custom finish tool for code localization tasks.
+"""Structured completion tool for CodePin localization tasks."""
 
-This tool allows the agent to submit localization results in a structured format where:
-- File path is required
-- Class name is optional
-- Function name is optional
-"""
+from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING
+import re
 from collections.abc import Sequence
+from pathlib import Path, PurePosixPath
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, Field, computed_field
-from rich.text import Text
-
-from openhands.sdk import (
+from openhands.sdk.conversation.state import ConversationExecutionStatus
+from openhands.sdk.tool import (
     Action,
     Observation,
-    ToolDefinition
+    ToolAnnotations,
+    ToolDefinition,
+    ToolExecutor,
+    register_tool,
 )
-from openhands.sdk.tool import ToolExecutor, ToolAnnotations
-from openhands.sdk.conversation.state import ConversationExecutionStatus
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from rich.text import Text
 
 if TYPE_CHECKING:
-    from openhands.sdk.conversation.base import BaseConversation
+    from openhands.sdk.conversation import LocalConversation
+    from openhands.sdk.conversation.state import ConversationState
+
 
 class CodeLocation(BaseModel):
-    """A single code location with optional class and function."""
+    """One existing repository location selected for modification."""
 
-    file: str = Field(description="Path to the file (required)")
-    class_name: str | None = Field(default=None, description="Class name (optional)")
-    function_name: str | None = Field(default=None, description="Function/method name (optional)")
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    file: str = Field(description="Repository-relative path to an existing file")
+    class_name: str | None = Field(default=None, description="Optional class name")
+    function_name: str | None = Field(
+        default=None,
+        description="Optional function or method name",
+    )
+
+    @field_validator("file")
+    @classmethod
+    def validate_file(cls, value: str) -> str:
+        normalized = value.replace("\\", "/")
+        parsed = PurePosixPath(normalized)
+        if not normalized or normalized != normalized.strip():
+            raise ValueError("file must be a non-empty repository-relative path")
+        if (
+            parsed.is_absolute()
+            or normalized.startswith("./")
+            or ".." in parsed.parts
+            or re.match(r"^[A-Za-z]:/", normalized)
+        ):
+            raise ValueError(
+                "file must be relative without a leading './' or '..' component"
+            )
+        return parsed.as_posix()
+
+    @field_validator("class_name", "function_name")
+    @classmethod
+    def validate_optional_name(cls, value: str | None) -> str | None:
+        if value is not None and (not value or value != value.strip()):
+            raise ValueError("class and function names cannot be empty or padded")
+        return value
+
 
 class LocalizationFinishAction(Action):
-    """Action for submitting final localization results."""
+    """Submit the final set of source locations."""
 
     locations: list[CodeLocation] = Field(
-        description="""List of code locations to modify. Each location in this list must have:
-- file: Path to the file relative to the repository root (required)
-- class_name: Class name (optional, omit for changes to imports, global variables, and global functions)
-- function_name: Function/method name (optional, omit for changes that edit parts of a file outside of any particular function)
-"""
+        min_length=1,
+        description=(
+            "Locations that require modification. Each item has a repository-relative "
+            "file and optional class_name and function_name."
+        ),
     )
+
+    @field_validator("locations")
+    @classmethod
+    def reject_duplicates(cls, locations: list[CodeLocation]) -> list[CodeLocation]:
+        signatures = {
+            (location.file, location.class_name, location.function_name)
+            for location in locations
+        }
+        if len(signatures) != len(locations):
+            raise ValueError("locations cannot contain duplicate entries")
+        return locations
 
     @property
     def visualize(self) -> Text:
-        """Return Rich Text representation of this action."""
         content = Text()
         content.append("Submitting localization results:\n", style="bold blue")
-        content.append(f"Found {len(self.locations)} location(s):\n", style="green")
-        for i, loc in enumerate(self.locations, 1):
-            content.append(f"  {i}. {loc.file}", style="cyan")
-            if loc.class_name:
-                content.append(f" → {loc.class_name}", style="yellow")
-            if loc.function_name:
-                content.append(f".{loc.function_name}", style="magenta")
+        for index, location in enumerate(self.locations, start=1):
+            content.append(f"  {index}. {location.file}", style="cyan")
+            if location.class_name:
+                content.append(f" → {location.class_name}", style="yellow")
+            if location.function_name:
+                content.append(f".{location.function_name}", style="magenta")
             content.append("\n")
         return content
 
+
 class LocalizationFinishObservation(Observation):
-    """Observation returned after submitting localization results. No observation is needed since the agent will exit after this action."""
+    """Confirmation returned as the conversation transitions to finished."""
 
     @property
     def visualize(self) -> Text:
-        """Return an empty Text representation since the message is in the action."""
         return Text()
-    
-def locations_to_dict_list(locations: list[CodeLocation]) -> list[dict]:
-    """Convert CodeLocation objects to dictionary format.
 
-    Args:
-        locations: List of CodeLocation objects
 
-    Returns:
-        List of dictionaries with 'file', 'class_name', 'function_name' keys
-    """
-    return [
-        {
-            "file": loc.file,
-            "class_name": loc.class_name,
-            "function_name": loc.function_name,
-        }
-        for loc in locations
-    ]
+class LocalizationFinishExecutor(
+    ToolExecutor[LocalizationFinishAction, LocalizationFinishObservation]
+):
+    def __init__(self, workspace_root: str):
+        self.workspace_root = Path(workspace_root).resolve()
 
-class LocalizationFinishExecutor(ToolExecutor):
     def __call__(
         self,
         action: LocalizationFinishAction,
-        conversation: "BaseConversation | None" = None,  # noqa: ARG002
+        conversation: LocalConversation | None = None,
     ) -> LocalizationFinishObservation:
         try:
-            loc_dict = locations_to_dict_list(action.locations)
-            text = json.dumps(loc_dict, indent=2)
+            for location in action.locations:
+                candidate = (self.workspace_root / location.file).resolve()
+                candidate.relative_to(self.workspace_root)
+                if not candidate.is_file():
+                    raise ValueError(f"location file does not exist: {location.file}")
+            if conversation is None:
+                raise ValueError("localization_finish requires an active conversation")
+
+            payload = [location.model_dump() for location in action.locations]
             conversation.state.execution_status = ConversationExecutionStatus.FINISHED
-            return LocalizationFinishObservation.from_text(text=text)
-        except Exception as _:
-            return LocalizationFinishObservation.from_text(text="")
+            return LocalizationFinishObservation.from_text(
+                text=json.dumps(payload, ensure_ascii=False, indent=2)
+            )
+        except (AttributeError, OSError, ValueError) as exc:
+            return LocalizationFinishObservation.from_text(
+                text=str(exc),
+                is_error=True,
+            )
 
-TOOL_DESCRIPTION = """Submit your final code localization results.
 
-Use this tool when you have identified all relevant files, classes, and functions that need to be modified to address the issue described in the problem statement.
+TOOL_DESCRIPTION = """Submit the final CodePin localization result and end the run.
 
-Provide a structured list of locations. Each location must have:
-- file: Path to the file relative to the root of the repository (required)
-- class_name: Class name (optional)
-- function_name: Function/method name (optional)
-
-You must submit a list of locations that require modification and for each location you must follow the below rules in your output:
-1. If the required modifications belong to a specific function that belongs to a class, provide the file path, class name, and function name.
-2. If the required modification belongs to a function that is not part of any class, provide the file path and function name.
-3. If the required modification does not belong to any specific class or a function (e.g. global variables, imports, new class, new global function etc.), it is sufficient to provide only the file path.
-4. If the required modification belongs to a class (e.g. adding a new method to a class, changing the class inheritance), provide the file path and class name. If you are modifying the __init__ method of a class, you should provide the function name as well.
-
-IMPORTANT:
-1. If multiple different edits need to be edited in the same file, you should create separate entries for each edit, specifying the same file path but different class/function names as applicable. Each entry should compulsorily include the file path.
-2. Do NOT include duplicate entries in your output for which the file, class, and function names are all identical.
-3. Ensure that the file paths are accurate and relative to the root of the repository without any leading "./" or "/". All locations must be valid and exist in the codebase and this applies to class and function names as well.
-4. Aim for high precision (all returned locations are relevant) and high recall (no relevant locations missed).
-5. The agent will terminate its execution after you call this tool.
+Each location must name an existing repository-relative file. Add class_name and
+function_name only when that existing symbol is the specific modification target.
+Submit each distinct location once. This tool must be the only call in the final turn.
 """
 
-class LocalizationFinishTool(ToolDefinition[LocalizationFinishAction, LocalizationFinishObservation]):
-    """Tool for submitting final localization results."""
 
-    """Tool for submitting final code localization results."""
+class LocalizationFinishTool(
+    ToolDefinition[LocalizationFinishAction, LocalizationFinishObservation]
+):
+    """OpenHands definition for CodePin's structured final submission."""
 
     @classmethod
     def create(
         cls,
-        conv_state, # noqa: ARG003
-        **params
-    ) -> Sequence["LocalizationFinishTool"]:
-        """Create LocalizationFinishTool instance.
-
-        Args:
-            conv_state: Conversation state (provides workspace info)
-            workspace_dir: Optional workspace directory override
-            **params: Additional parameters
-
-        Returns:
-            A sequence containing a single LocalizationFinishTool instance.
-        """
+        conv_state: ConversationState,
+        **params,
+    ) -> Sequence[LocalizationFinishTool]:
         if params:
-            raise ValueError("LocalizationFinishTool doesn't accept parameters")
-        
+            raise ValueError("LocalizationFinishTool does not accept parameters")
+        working_dir = conv_state.workspace.working_dir
+        if not Path(working_dir).is_dir():
+            raise ValueError(f"working_dir {working_dir!r} is not a valid directory")
         return [
             cls(
-                name="localization_finish",
                 action_type=LocalizationFinishAction,
                 observation_type=LocalizationFinishObservation,
                 description=TOOL_DESCRIPTION,
-                executor=LocalizationFinishExecutor(),
+                executor=LocalizationFinishExecutor(working_dir),
                 annotations=ToolAnnotations(
                     title="localization_finish",
                     readOnlyHint=True,
@@ -160,4 +178,6 @@ class LocalizationFinishTool(ToolDefinition[LocalizationFinishAction, Localizati
                 ),
             )
         ]
-    
+
+
+register_tool(LocalizationFinishTool.name, LocalizationFinishTool)

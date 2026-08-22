@@ -13,6 +13,7 @@ logits，而不是 0.8B 参数本身；32K SFT 推荐 48 GB，24 GB 先把 `MAX_
 
 ```bash
 cd /root/CodePin
+apt-get update && apt-get install -y ripgrep
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source "$HOME/.local/bin/env"
 uv python install 3.12
@@ -27,7 +28,9 @@ uv run python scripts/preflight_qwen3_5.py
 
 SFT 数据应来自成功的工具调用轨迹，而不是 RL 的训练/验证样本答案。每条记录使用
 OpenAI `messages` 格式并保留 `tools` schema；默认只选总奖励不低于 1 的轨迹，去重后
-按固定种子划分训练集和验证集。
+按固定种子划分训练集和验证集。工具 schema 必须严格按
+`glob`、`grep`、`read_file`、`localization_finish` 排列；旧 `terminal` 轨迹会被过滤，
+避免混入不兼容的动作空间。
 
 ```bash
 uv run python scripts/prepare_sft_data.py \

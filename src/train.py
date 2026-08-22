@@ -20,7 +20,7 @@ from src.generator.code_search_generator import CodeSearchGenerator
 
 @dataclass
 class PromptPaths(BaseConfig):
-    system_prompt: str = "templates/system_prompt_custom_finish.j2"
+    system_prompt: str = "templates/system_prompt_atomic_search.j2"
     user_prompt: str = "templates/file_module_custom_finish.j2"
 
 
@@ -29,7 +29,9 @@ class CodeSearchGeneratorConfig(GeneratorConfig):
     reward: list[dict[str, Any]] = field(
         default_factory=lambda: [{"fn": "multilevel_localization_f1_reward"}]
     )
-    tools: list[str] = field(default_factory=lambda: ["terminal"])
+    tools: list[str] = field(
+        default_factory=lambda: ["glob", "grep", "read_file"]
+    )
     prompts: PromptPaths = field(default_factory=PromptPaths)
     traj_dir: str = "ckpts/trajectories"
     max_train_length: int = 40960

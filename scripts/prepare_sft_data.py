@@ -10,6 +10,51 @@ import random
 from pathlib import Path
 from typing import Any
 
+ATOMIC_TOOL_SCHEMA_SHAPES = {
+    "glob": {
+        "type": "object",
+        "properties": {"pattern": {"type": "string"}, "path": {"type": "string"}},
+        "required": ["pattern"],
+    },
+    "grep": {
+        "type": "object",
+        "properties": {
+            "pattern": {"type": "string"},
+            "path": {"type": "string"},
+            "include": {"type": "string"},
+        },
+        "required": ["pattern"],
+    },
+    "read_file": {
+        "type": "object",
+        "properties": {
+            "path": {"type": "string"},
+            "start_line": {"type": "integer"},
+            "end_line": {"type": "integer"},
+        },
+        "required": ["path"],
+    },
+    "localization_finish": {
+        "type": "object",
+        "properties": {
+            "locations": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "file": {"type": "string"},
+                        "class_name": {"type": "string"},
+                        "function_name": {"type": "string"},
+                    },
+                    "required": ["file"],
+                },
+            }
+        },
+        "required": ["locations"],
+    },
+}
+ATOMIC_TOOL_NAMES = list(ATOMIC_TOOL_SCHEMA_SHAPES)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -56,6 +101,49 @@ def is_chat(messages: Any) -> bool:
     return len(roles) == len(messages) and "assistant" in roles
 
 
+def schema_shape(schema: Any) -> dict | None:
+    """Keep only the structural fields that define the model action space."""
+    if not isinstance(schema, dict) or not isinstance(schema.get("type"), str):
+        return None
+
+    shape: dict[str, Any] = {"type": schema["type"]}
+    if schema["type"] == "object":
+        properties = schema.get("properties")
+        required = schema.get("required", [])
+        if not isinstance(properties, dict) or not isinstance(required, list):
+            return None
+        shaped_properties = {
+            name: schema_shape(value) for name, value in properties.items()
+        }
+        if any(value is None for value in shaped_properties.values()):
+            return None
+        shape["properties"] = shaped_properties
+        shape["required"] = required
+    elif schema["type"] == "array":
+        items = schema_shape(schema.get("items"))
+        if items is None:
+            return None
+        shape["items"] = items
+    return shape
+
+
+def has_atomic_tool_schema(tools: Any) -> bool:
+    if not isinstance(tools, list) or len(tools) != len(ATOMIC_TOOL_NAMES):
+        return False
+    for tool, expected_name in zip(tools, ATOMIC_TOOL_NAMES, strict=True):
+        if not isinstance(tool, dict) or tool.get("type") != "function":
+            return False
+        function = tool.get("function")
+        if not isinstance(function, dict) or function.get("name") != expected_name:
+            return False
+        if (
+            schema_shape(function.get("parameters"))
+            != ATOMIC_TOOL_SCHEMA_SHAPES[expected_name]
+        ):
+            return False
+    return True
+
+
 def normalized_row(path: Path, excluded: set[str], min_reward: float) -> dict | None:
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -72,10 +160,13 @@ def normalized_row(path: Path, excluded: set[str], min_reward: float) -> dict | 
         messages = data.get("messages")
     if not is_chat(messages):
         return None
+    tools = data.get("tools", [])
+    if not has_atomic_tool_schema(tools):
+        return None
     return {
         "instance_id": instance_id,
         "messages": messages,
-        "tools": data.get("tools", []),
+        "tools": tools,
         "reward": float(data.get("total_reward", 0.0)),
         "source": str(path),
     }

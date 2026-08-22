@@ -24,8 +24,6 @@ from openhands.sdk import (
 )
 from openhands.sdk.conversation.response_utils import get_agent_final_response
 from openhands.sdk.event import ActionEvent
-from openhands.sdk.tool import Tool, register_tool
-from openhands.tools.terminal import TerminalTool
 from skyrl.backends.skyrl_train.inference_servers.base import (
     ConversationType,
     InferenceEngineInterface,
@@ -46,10 +44,8 @@ from src.metrics.efficiency_metrics import compute_all_efficiency_metrics
 from src.metrics.trajectory_metrics import compute_trajectory_metrics
 from src.prompts.prompt_builder import get_instruction
 from src.rewards import get_reward_function
-from src.tools.localization_finish import (
-    LocalizationFinishAction,
-    LocalizationFinishTool,
-)
+from src.tools import build_agent_tool_specs
+from src.tools.localization_finish import LocalizationFinishAction
 from src.utils.instance import clone_instance
 from src.utils.trajectory_tokens import build_assistant_loss_mask
 
@@ -57,7 +53,6 @@ logger = get_logger(__name__)
 logger.setLevel(logging.ERROR)
 
 file_path = os.path.dirname(__file__)
-
 
 def get_structured_locations(events: List[Event]) -> Optional[List[Dict[str, Any]]]:
     """Extract structured locations from LocalizationFinishAction in events.
@@ -134,11 +129,7 @@ def init_and_run(
     sft_messages = []
     tool_schemas = []
 
-    register_tool(LocalizationFinishTool.name, LocalizationFinishTool)
-    tools = [
-        Tool(name=TerminalTool.name),
-        Tool(name="localization_finish"),
-    ]
+    tools = build_agent_tool_specs(generator_cfg.tools)
 
     # Get prompt paths from config (path-independent)
     prompts_base_dir = os.path.join(os.path.dirname(__file__), "..", "prompts")

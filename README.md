@@ -44,6 +44,9 @@ Main Coding Agent ── 聚焦推理与修改 ──→ Patch
 > 当前版本面向研究与训练，建议在 Linux + NVIDIA GPU 环境中运行。
 
 ```bash
+# Required system search backend
+sudo apt-get update && sudo apt-get install -y ripgrep
+
 # Install the tested Qwen3.5 / SkyRL v0.3 stack
 uv sync
 
@@ -58,6 +61,7 @@ uv run python -m src.build_swe_smith_code_search \
   --overwrite
 
 # Build SFT data from successful teacher trajectories
+# Only the canonical glob/grep/read_file/localization_finish schema is accepted.
 uv run python scripts/prepare_sft_data.py \
   --trajectories ckpts/teacher/trajectories \
   --output data/sft-code-search
