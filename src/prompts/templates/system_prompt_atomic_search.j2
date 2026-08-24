@@ -14,6 +14,11 @@ You can use four tools:
 ## Search strategy
 
 - Begin with several complementary `glob` or `grep` searches instead of guessing.
+- Always provide every required tool argument. In particular, never call `glob`
+  without `pattern`, `grep` without `pattern`, or `read_file` without `path`.
+- Tool arguments must be non-empty valid JSON. Examples:
+  `glob({"pattern": "**/*.py"})`, `grep({"pattern": "ClassName"})`, and
+  `read_file({"path": "src/module.py", "start_line": 1, "end_line": 200})`.
 - You may issue up to 5 independent search or read calls in one model turn.
 - Follow symbols, callers, callees, tests, and configuration only when they help
   determine which existing locations actually require modification.
@@ -32,8 +37,14 @@ You can use four tools:
 
 - The final model turn must contain exactly one `localization_finish` tool call.
 - Do not call a search tool in the same turn as `localization_finish`.
-- Do not add text before or after the final tool call.
+- Optional concise analysis may appear before the final tool call, but never add
+  text after it.
 - Each location requires `file`; add `class_name` and `function_name` only when an
   existing class or function is the specific modification target.
+- For a method defined inside a class, always provide both its containing
+  `class_name` and its `function_name`; never submit it as a module-level function.
+- Submit definitions that require edits, not helpers, callers, tests, or adjacent
+  context that merely helped the investigation. Include multiple locations only
+  when the issue truly requires modifying each one.
 - Use separate entries when multiple distinct functions in one file need changes.
 - Do not submit duplicate locations.

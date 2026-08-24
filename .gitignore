@@ -2,5 +2,34 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# Local environments and editor state
+.venv/
+.idea/
+.vscode/
+.env
+.env.*
+
+# Experiment state and generated artifacts
+.codex-tmp/
+autodl_runs/
+archive/
+figures/
+docs/AUTODL_EXPERIMENT_RUNBOOK.md
+ckpts/
+outputs/
+wandb/
+ray_results/
+*.parquet
+
+# Locally materialized datasets (existing tracked fixtures remain tracked)
+data/CodePin-SFT-*/
+data/SWE-smith-*/
+data/orgin_SWE_smith/
+
+# Accidental shell/redirection artifacts
+/NUL
+/PY
+/=*
+
 # Reusable source snapshots downloaded by the SWE-Smith data builder.
 data/.cache/

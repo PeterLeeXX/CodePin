@@ -11,6 +11,7 @@ classifiers = [
 requires-python = ">=3.12,<3.13"
 license = { "text" = "MIT" }
 dependencies = [
+    "openai>=1.60.0,<3.0.0",
     "skyrl[fsdp]",
     "transformers>=5.6.1,<=5.8.0",
     "openhands-tools",

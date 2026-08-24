@@ -60,10 +60,34 @@ uv run python -m src.build_swe_smith_code_search \
   --output data/SWE-smith-code-search \
   --overwrite
 
+# Use repeated 14B rollouts only as a difficulty signal. The resulting
+# easy/medium/hard parquets retain the real source-data schema and do not copy
+# rollout conversations into the trainable data.
+uv run python scripts/split_rollout_difficulty.py \
+  --rollouts train-14B-rollout.parquet \
+  --source data/SWE-smith-code-search/train.parquet \
+  --output data/SWE-smith-code-search-difficulty
+
+# Select a deterministic first-round pool for teacher response generation:
+# 60% representative, 25% boundary, and 15% long-tail samples.
+uv run python scripts/select_sft_candidates.py \
+  --source data/SWE-smith-code-search/train.parquet \
+  --difficulty-index data/SWE-smith-code-search-difficulty/difficulty_index.parquet \
+  --output data/SWE-smith-code-search-sft-selection-6000 \
+  --size 6000
+
+# Generate resumable, repository-grounded teacher trajectories. The API key is
+# read only from the named environment variable and is never stored in outputs.
+export DASHSCOPE_API_KEY="..."
+uv run python scripts/generate_teacher_trajectories.py \
+  --input data/SWE-smith-code-search-sft-selection-6000/teacher_generation.parquet \
+  --selection-index data/SWE-smith-code-search-sft-selection-6000/selection_index.parquet \
+  --output data/SWE-smith-code-search-teacher-qwen3.5-35b-a3b
+
 # Build SFT data from successful teacher trajectories
 # Only the canonical glob/grep/read_file/localization_finish schema is accepted.
 uv run python scripts/prepare_sft_data.py \
-  --trajectories ckpts/teacher/trajectories \
+  --trajectories data/SWE-smith-code-search-teacher-qwen3.5-35b-a3b/trajectories \
   --output data/sft-code-search
 
 # Full-parameter SFT: Qwen3.5-0.8B, one epoch, all assistant turns
@@ -82,11 +106,18 @@ MODEL=/absolute/path/to/sft/hf_export \
 
 Qwen3.5 的 AutoDL 环境、显存缩放与 SFT → RL 顺序见 [`docs/AUTODL_QWEN35.md`](docs/AUTODL_QWEN35.md)。
 
+## Released artifacts
+
+- [CodePin-SFT-Qwen3.5-0.8B](https://huggingface.co/LeeXugar/CodePin-SFT-Qwen3.5-0.8B)
+- [CodePin-SFT-Qwen3.5-35B-A3B](https://huggingface.co/datasets/LeeXugar/CodePin-SFT-Qwen3.5-35B-A3B)
+- [CodePin Hugging Face Collection](https://huggingface.co/collections/LeeXugar/codepin-6a8afa1064d9f83f9fce2982)
+
 ## Roadmap
 
 - [x] 文件、类与函数级联合奖励
 - [x] 多轮工具调用与 Agentic RL 训练
-- [ ] 发布训练数据、模型权重与标准评测结果
+- [x] 发布 SFT 训练数据与模型权重
+- [ ] 发布标准代码定位评测结果
 - [ ] 提供可直接接入主 Coding Agent 的轻量推理服务
 - [ ] 扩展更多语言与超大型 monorepo 场景
 

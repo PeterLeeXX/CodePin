@@ -144,3 +144,59 @@ def test_normalized_row_rejects_same_names_with_incompatible_fields(tmp_path):
     )
 
     assert normalized_row(path, set(), 1.0) is None
+
+
+def test_normalized_row_rejects_unaccepted_teacher_schema_even_with_reward(tmp_path):
+    path = tmp_path / "teacher.json"
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": "codepin-teacher-trajectory-v1",
+                "instance_id": "teacher-failed",
+                "accepted": False,
+                "total_reward": 3.0,
+                "reward_dict": {"perfect": False},
+                "sft_messages": [
+                    {"role": "user", "content": "find it"},
+                    {"role": "assistant", "content": "guess"},
+                ],
+                "tools": _atomic_tools(),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert normalized_row(path, set(), 1.0) is None
+
+
+def test_normalized_row_rejects_unobserved_tool_call(tmp_path):
+    path = tmp_path / "unobserved.json"
+    path.write_text(
+        json.dumps(
+            {
+                "instance_id": "unobserved",
+                "total_reward": 1.0,
+                "sft_messages": [
+                    {"role": "user", "content": "find it"},
+                    {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                            {
+                                "id": "call-1",
+                                "type": "function",
+                                "function": {
+                                    "name": "localization_finish",
+                                    "arguments": '{"locations":[{"file":"x.py"}]}',
+                                },
+                            }
+                        ],
+                    },
+                ],
+                "tools": _atomic_tools(),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert normalized_row(path, set(), 1.0) is None

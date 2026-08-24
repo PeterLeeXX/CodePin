@@ -101,6 +101,67 @@ def is_chat(messages: Any) -> bool:
     return len(roles) == len(messages) and "assistant" in roles
 
 
+def has_valid_semantic_tool_trajectory(messages: Any) -> bool:
+    """Validate OpenAI tool-call linkage without depending on provider tokens."""
+    if not is_chat(messages):
+        return False
+    call_ids: set[str] = set()
+    observation_ids: set[str] = set()
+    finish_messages: list[dict[str, Any]] = []
+    assistant_messages = [
+        message for message in messages if message.get("role") == "assistant"
+    ]
+    for message in messages:
+        if "reasoning_content" in message:
+            return False
+        if message.get("role") == "tool":
+            tool_call_id = message.get("tool_call_id")
+            if not isinstance(tool_call_id, str) or not tool_call_id:
+                return False
+            observation_ids.add(tool_call_id)
+            continue
+        if message.get("role") != "assistant":
+            continue
+        tool_calls = message.get("tool_calls", [])
+        if not isinstance(tool_calls, list):
+            return False
+        for call in tool_calls:
+            if not isinstance(call, dict) or call.get("type") != "function":
+                return False
+            call_id = call.get("id")
+            function = call.get("function")
+            if (
+                not isinstance(call_id, str)
+                or not call_id
+                or call_id in call_ids
+                or not isinstance(function, dict)
+                or not isinstance(function.get("name"), str)
+            ):
+                return False
+            arguments = function.get("arguments")
+            if isinstance(arguments, str):
+                try:
+                    arguments = json.loads(arguments)
+                except json.JSONDecodeError:
+                    return False
+            if not isinstance(arguments, dict):
+                return False
+            call_ids.add(call_id)
+            if function["name"] == "localization_finish":
+                finish_messages.append(message)
+
+    # Keep accepting legacy plain-chat SFT rows. Once a row uses tools, require
+    # a fully linked, single structured terminal action.
+    if not call_ids:
+        return not observation_ids
+    if call_ids != observation_ids or len(finish_messages) != 1:
+        return False
+    finish = finish_messages[0]
+    if finish is not assistant_messages[-1]:
+        return False
+    return len(finish.get("tool_calls", [])) == 1
+
+
 def schema_shape(schema: Any) -> dict | None:
     """Keep only the structural fields that define the model action space."""
     if not isinstance(schema, dict) or not isinstance(schema.get("type"), str):
@@ -154,11 +215,19 @@ def normalized_row(path: Path, excluded: set[str], min_reward: float) -> dict | 
         return None
     if float(data.get("total_reward", 0.0)) < min_reward:
         return None
+    if str(data.get("schema_version", "")).startswith("codepin-teacher-trajectory"):
+        if data.get("accepted") is not True:
+            return None
+        reward_dict = data.get("reward_dict")
+        if not isinstance(reward_dict, dict) or reward_dict.get("perfect") is not True:
+            return None
     messages = data.get("sft_messages")
     if not is_chat(messages):
         # Also accept externally collected OpenAI-style trajectory files.
         messages = data.get("messages")
     if not is_chat(messages):
+        return None
+    if not has_valid_semantic_tool_trajectory(messages):
         return None
     tools = data.get("tools", [])
     if not has_atomic_tool_schema(tools):

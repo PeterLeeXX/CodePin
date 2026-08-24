@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib
+import os
 import platform
 import shutil
 import subprocess
@@ -34,13 +35,18 @@ def main() -> None:
 
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is not available")
-    if not torch.cuda.is_bf16_supported():
-        raise RuntimeError("The selected GPU does not support bf16 training")
+    precision = os.environ.get("CODEPIN_PRECISION", "bf16").lower()
+    if precision == "bf16" and not torch.cuda.is_bf16_supported():
+        raise RuntimeError("The selected GPU does not support bf16 training; set CODEPIN_PRECISION=fp16 for V100")
+    if precision not in {"bf16", "fp16"}:
+        raise RuntimeError(f"Unsupported CODEPIN_PRECISION: {precision!r}")
 
     importlib.import_module("skyrl")
     importlib.import_module("vllm")
     importlib.import_module("causal_conv1d")
-    importlib.import_module("flash_linear_attention")
+    # The PyPI distribution is named flash-linear-attention, while its Python
+    # import package is `fla` in the Qwen3.5-compatible releases.
+    importlib.import_module("fla")
 
     config = AutoConfig.from_pretrained("Qwen/Qwen3.5-0.8B")
     model_type = str(getattr(config, "model_type", ""))
@@ -50,6 +56,7 @@ def main() -> None:
     print(f"python={platform.python_version()}")
     print(f"ripgrep={rg_version}")
     print(f"torch={torch.__version__} cuda={torch.version.cuda}")
+    print(f"precision={precision}")
     print(f"transformers={version('transformers')}")
     print(f"vllm={version('vllm')}")
     print(f"skyrl={version('skyrl')}")
