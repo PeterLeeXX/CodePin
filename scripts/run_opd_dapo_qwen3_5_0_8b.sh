@@ -42,6 +42,8 @@ LOGGER="${LOGGER:-console}"
 OPD_DISTILL_COEF="${OPD_DISTILL_COEF:-1.0}"
 OPD_TASK_REWARD_COEF="${OPD_TASK_REWARD_COEF:-1.0}"
 OPD_REWARD_CLIP="${OPD_REWARD_CLIP:-5.0}"
+TRAINER_BF16="${TRAINER_BF16:-false}"
+VLLM_DTYPE="${VLLM_DTYPE:-half}"
 
 if [[ -n "$RESUME_PATH" ]]; then
   EXTRA_OVERRIDES+=("trainer.resume_mode=from_path" "trainer.resume_path=$RESUME_PATH")
@@ -49,7 +51,27 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
-uv run -m src.train \
+export PATH="${CODEPIN_EXTRA_PATH:-/root/.local/bin:/root/miniconda3/bin}${PATH:+:${PATH}}"
+export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-$(pwd)/.venv}"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-/root/.cache/uv}"
+export UV_LINK_MODE="${UV_LINK_MODE:-copy}"
+export RAY_DISABLE_DOCKER_CPU_WARNING="${RAY_DISABLE_DOCKER_CPU_WARNING:-1}"
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-8}"
+export VLLM_ENABLE_V1_MULTIPROCESSING="${VLLM_ENABLE_V1_MULTIPROCESSING:-0}"
+if [[ -n "${CODEPIN_EXTRA_PYTHONPATH:-}" ]]; then
+  export PYTHONPATH="${CODEPIN_EXTRA_PYTHONPATH}${PYTHONPATH:+:${PYTHONPATH}}"
+fi
+if [[ -n "${CODEPIN_COMPAT_PATH:-}" ]]; then
+  export PYTHONPATH="${CODEPIN_COMPAT_PATH}${PYTHONPATH:+:${PYTHONPATH}}"
+fi
+
+if [[ -n "${CODEPIN_OPD_PYTHON:-}" ]]; then
+  TRAIN_COMMAND=("$CODEPIN_OPD_PYTHON" -m src.train)
+else
+  TRAIN_COMMAND=(uv run -m src.train)
+fi
+
+"${TRAIN_COMMAND[@]}" \
   data.train_data="['$DATA_PATH/train.parquet']" \
   data.val_data="['$DATA_PATH/validation.parquet']" \
   opd.enabled=true \
@@ -78,6 +100,7 @@ uv run -m src.train \
   trainer.placement.ref_num_nodes=1 \
   trainer.placement.ref_num_gpus_per_node="$NUM_GPUS" \
   trainer.remove_microbatch_padding=false \
+  trainer.bf16="$TRAINER_BF16" \
   trainer.epochs=1 \
   trainer.max_training_steps="$MAX_TRAINING_STEPS" \
   trainer.train_batch_size="$BATCH_SIZE" \
@@ -103,6 +126,7 @@ uv run -m src.train \
   generator.inference_engine.tensor_parallel_size=1 \
   generator.inference_engine.weight_sync_backend=nccl \
   generator.inference_engine.language_model_only=true \
+  generator.inference_engine.model_dtype="$VLLM_DTYPE" \
   generator.inference_engine.gpu_memory_utilization=0.72 \
   generator.inference_engine.max_num_batched_tokens=65536 \
   generator.inference_engine.engine_init_kwargs.max_model_len=40960 \
