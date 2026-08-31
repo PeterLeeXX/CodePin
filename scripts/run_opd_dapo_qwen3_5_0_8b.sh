@@ -100,6 +100,7 @@ fi
   trainer.placement.ref_num_nodes=1 \
   trainer.placement.ref_num_gpus_per_node="$NUM_GPUS" \
   trainer.remove_microbatch_padding=false \
+  trainer.flash_attn=false \
   trainer.bf16="$TRAINER_BF16" \
   trainer.epochs=1 \
   trainer.max_training_steps="$MAX_TRAINING_STEPS" \
