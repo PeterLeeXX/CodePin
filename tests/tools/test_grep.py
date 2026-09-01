@@ -97,7 +97,7 @@ def test_grep_requires_ripgrep(tmp_path, monkeypatch):
 
 def test_grep_tool_schema_is_minimal_and_read_only(tmp_path):
     tool = GrepTool.create(_state(tmp_path))[0]
-    schema = tool.to_openai_tool().function.parameters
+    schema = tool.to_openai_tool()["function"]["parameters"]
 
     assert tool.name == "grep"
     assert set(schema["properties"]) == {"pattern", "path", "include"}

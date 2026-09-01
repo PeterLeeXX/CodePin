@@ -57,7 +57,7 @@ def test_glob_caps_and_sorts_results(tmp_path):
 
 def test_glob_tool_schema_is_minimal_and_read_only(tmp_path):
     tool = GlobTool.create(_state(tmp_path))[0]
-    schema = tool.to_openai_tool().function.parameters
+    schema = tool.to_openai_tool()["function"]["parameters"]
 
     assert tool.name == "glob"
     assert set(schema["properties"]) == {"pattern", "path"}

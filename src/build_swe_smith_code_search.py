@@ -21,21 +21,20 @@ import random
 import sys
 import time
 import tokenize
-import warnings
 import urllib.error
 import urllib.parse
 import urllib.request
+import warnings
 from collections import Counter
+from collections.abc import Iterable, Iterator, Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Iterator, Sequence
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 from unidiff import PatchSet
 from unidiff.errors import UnidiffParseError
-
 
 DEFAULT_INPUT = Path("data/orgin_SWE_smith")
 DEFAULT_OUTPUT = Path("data/SWE-smith-code-search")
@@ -576,7 +575,7 @@ def prefetch_sources(
             try:
                 future.result()
                 available.add(key)
-            except Exception as exc:  # keep the full build moving and report failures
+            except Exception as exc:  # noqa: BLE001 - report each worker failure.
                 failures[key] = str(exc)
             if completed % 250 == 0 or completed == len(ordered):
                 print(

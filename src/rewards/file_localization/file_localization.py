@@ -1,114 +1,76 @@
-import ast
+"""Structured file, module, and function localization reward."""
 
-from .module_rewards import get_simple_results_from_raw_outputs, parse_structured_outputs
+from __future__ import annotations
 
-from src.rewards import reward
+from typing import Any
 
-def compute_file_f1_score(predicted_files, true_files, beta=1.0):
-    pred, true = set(predicted_files), set(true_files)
-    if not true:
-        return 0.0 # return 0 reward if ground truth is empty
-    tp = len(pred & true)
-    precision = tp / len(pred) if pred else 0.0
-    recall = tp / len(true) if true else 0.0
-    return (1 + beta**2) * (precision * recall) / (beta**2 * precision + recall) if (precision + recall) > 0 else 0.0
 
-# def file_localization_f1_reward(final_message, instance):
-#     predicted_files = set(ast.literal_eval(final_message.split("<file-list>")[1].split("</file-list>")[0]))
-#     # print("Predicted files:", predicted_files)
-#     true_files = set(x[0] for x in ast.literal_eval(instance["target"]))
-#     # print("True files:", true_files)
-#     return compute_file_f1_score(predicted_files, true_files)
+def f1(predicted: set[str], truth: set[str]) -> float:
+    if not truth:
+        return 0.0
+    true_positive = len(predicted & truth)
+    if not true_positive:
+        return 0.0
+    precision = true_positive / len(predicted)
+    recall = true_positive / len(truth)
+    return 2 * precision * recall / (precision + recall)
 
-@reward("file_localization_f1_reward")
-def file_localization_f1_reward(
-    final_message: str,
-    instance: dict,
-    file_level_weight: float=1.0,
-    beta: float=1.0,
-    **kwargs
-    ):
-    all_found_files, all_found_modules, all_found_entities = get_simple_results_from_raw_outputs(final_message)
-    true_files = set(x[0] for x in ast.literal_eval(instance["target"]))
-    file_level_score = compute_file_f1_score(all_found_files, true_files, beta=beta)
-    weighted_file_score = file_level_weight * file_level_score
 
-    return weighted_file_score, {"file_reward": file_level_score}
+def parse_locations(
+    locations: list[dict[str, Any]],
+) -> tuple[set[str], set[str], set[str]]:
+    files: set[str] = set()
+    modules: set[str] = set()
+    entities: set[str] = set()
+    for location in locations:
+        path = location.get("file")
+        class_name = location.get("class_name")
+        function_name = location.get("function_name")
+        if not path:
+            return set(), set(), set()
+        files.add(path)
+        if class_name:
+            modules.add(f"{path}:{class_name}")
+        elif function_name:
+            modules.add(f"{path}:{function_name}")
+        if class_name and function_name:
+            entities.add(f"{path}:{class_name}.{function_name}")
+        elif function_name:
+            entities.add(f"{path}:{function_name}")
+    return files, modules, entities
 
-@reward("multilevel_localization_f1_reward")
+
 def multilevel_localization_f1_reward(
-    final_message: str,
-    instance: dict,
-    structured_locations: list[dict] | None = None,
-    file_level_weight: float=1.0,
-    module_level_weight: float=1.0,
-    entity_level_weight: float=1.0,
-    **kwargs
-    ):
+    *,
+    instance: dict[str, Any],
+    structured_locations: list[dict[str, Any]] | None,
+    **_: Any,
+) -> tuple[float, dict[str, float]]:
+    if not structured_locations:
+        scores = {
+            "file_reward": 0.0,
+            "module_reward": 0.0,
+            "entity_reward": 0.0,
+        }
+        return 0.0, {"multilevel_localization_f1_reward": 0.0, **scores}
 
-    if structured_locations is None:
-        return 0, {
-        "multilevel_localization_f1_reward": 0,
-        "file_reward": 0,
-        "module_reward": 0,
-        "entity_reward": 0,
-    }
-
-    gt_files = []
-    gt_modules = []
-    gt_entities = []
-    reward = 0
-
+    truth_files: set[str] = set()
+    truth_modules: set[str] = set()
+    truth_entities: set[str] = set()
     for change in instance.get("file_changes", []):
-        if "file" in change:
-            gt_files.append(change["file"])
-        if "changes" in change:
-            edited_modules = change["changes"].get("edited_modules", [])
-            edited_modules = [] if edited_modules is None else edited_modules
-            for module in edited_modules:
-                gt_modules.append(module)
+        if path := change.get("file"):
+            truth_files.add(path)
+        details = change.get("changes") or {}
+        for key in ("edited_modules", "added_modules"):
+            truth_modules.update(details.get(key) or [])
+        for key in ("edited_entities", "added_entities"):
+            truth_entities.update(details.get(key) or [])
 
-            edited_entities = change["changes"].get("edited_entities", [])
-            edited_entities = [] if edited_entities is None else edited_entities
-            for entity in edited_entities:
-                gt_entities.append(entity)
-    gt_files = set(gt_files)
-    gt_modules = set(gt_modules)
-    gt_entities = set(gt_entities)
-
-    if structured_locations is not None:
-        predicted_files, predicted_modules, predicted_entities = parse_structured_outputs(structured_locations)
-    else:
-        predicted_files, predicted_modules, predicted_entities = get_simple_results_from_raw_outputs(final_message)
-
-    file_f1_score = compute_file_f1_score(predicted_files, gt_files)
-    module_f1_score = compute_file_f1_score(predicted_modules, gt_modules)
-    entity_f1_score = compute_file_f1_score(predicted_entities, gt_entities)
-
-    # weight_total = file_level_weight + module_level_weight + entity_level_weight
-    # file_level_weight /= weight_total
-    # module_level_weight /= weight_total
-    # entity_level_weight /= weight_total
-
-    reward = (
-        file_f1_score * file_level_weight
-    + module_f1_score * module_level_weight
-    + entity_f1_score * entity_level_weight
-    )
-
-    return reward, {
-        "multilevel_localization_f1_reward": reward,
-        "file_reward": file_f1_score,
-        "module_reward": module_f1_score,
-        "entity_reward": entity_f1_score,
-        # "prediction": {
-        #     "files": list(predicted_files),
-        #     "modules": list(predicted_modules),
-        #     "entities": list(predicted_entities),
-        # },
-        # "ground_truth": {
-        #     "files": list(gt_files),
-        #     "modules": list(gt_modules),
-        #     "entities": list(gt_entities),
-        # },
+    predicted = parse_locations(structured_locations)
+    scores = {
+        "file_reward": f1(predicted[0], truth_files),
+        "module_reward": f1(predicted[1], truth_modules),
+        "entity_reward": f1(predicted[2], truth_entities),
     }
+    total = sum(scores.values())
+    return total, {"multilevel_localization_f1_reward": total, **scores}

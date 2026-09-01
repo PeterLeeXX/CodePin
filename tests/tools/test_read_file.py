@@ -87,7 +87,7 @@ def test_read_file_rejects_oversized_ranges(tmp_path):
 
 def test_read_file_tool_schema_is_minimal_and_read_only(tmp_path):
     tool = ReadFileTool.create(_state(tmp_path))[0]
-    schema = tool.to_openai_tool().function.parameters
+    schema = tool.to_openai_tool()["function"]["parameters"]
 
     assert tool.name == "read_file"
     assert set(schema["properties"]) == {"path", "start_line", "end_line"}

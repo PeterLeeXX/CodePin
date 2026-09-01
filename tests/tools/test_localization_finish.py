@@ -16,7 +16,7 @@ def _state(path):
 
 def test_localization_finish_schema_is_stable_and_read_only(tmp_path):
     tool = LocalizationFinishTool.create(_state(tmp_path))[0]
-    schema = tool.to_openai_tool().function.parameters
+    schema = tool.to_openai_tool()["function"]["parameters"]
 
     assert tool.name == "localization_finish"
     assert set(schema["properties"]) == {"locations"}

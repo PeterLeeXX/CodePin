@@ -1,72 +1,58 @@
 [project]
-name = "src"
-version = "0.0.1"
+name = "codepin"
+version = "0.1.0"
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
 ]
 requires-python = ">=3.12,<3.13"
 license = { "text" = "MIT" }
 dependencies = [
-    "openai>=1.60.0,<3.0.0",
-    "skyrl[fsdp]",
-    "transformers>=5.6.1,<=5.8.0",
-    "openhands-tools",
-    "openhands-agent-server",
-    "openhands-workspace",
+    "skyrl[fsdp]==0.3.0",
+    "transformers==5.8.0",
+    "openhands-sdk==1.7.1",
+    "openhands-tools==1.7.1",
+    "openhands-workspace==1.7.1",
     "vllm==0.23.0",
-    "verifiers>=0.1.6.post0",
-    "datasets>=4.0.0",
-    "pyarrow>=17.0.0",
-    "pyyaml>=6.0.2",
-    "unidiff>=0.7.5",
-    "ipykernel>=7.1.0",
-    "ipywidgets>=8.1.8",
-    "matplotlib>=3.10.7",
-    "seaborn>=0.13.2",
-    "gcsfs>=2025.3.0",
-    "lmcache",
+    "pydantic==2.13.5",
+    "rich==15.0.0",
+    "pyarrow==25.0.1",
+    "unidiff==1.0.0",
 ]
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-py-modules = ["swe_grep_oss_env"]
-
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src", "src.*", "software-agent-sdk"]
+include = ["src", "src.*"]
 
 [tool.setuptools.package-data]
 "src.prompts" = ["templates/*.j2"]
 
 [dependency-groups]
 dev = [
-    "pytest>=9.0.2",
-    "pre-commit>=4.3.0",
-    "psutil>=7.0.0",
-    "pyright>=1.1.405",
-    "ruff>=0.12.10",
-    "pycodestyle>=2.12.0",
+    "pytest==9.1.1",
+    "ruff==0.16.5",
 ]
 
 [tool.uv]
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
 required-environments = [
     "sys_platform == 'linux' and platform_machine == 'x86_64'",
 ]
 override-dependencies = [
-    "transformers>=5.6.1,<=5.8.0; sys_platform == 'linux'",
-    "nixl-cu13; sys_platform == 'never'",
+    "transformers==5.8.0; sys_platform == 'linux'",
     "flashinfer-python==0.6.12; sys_platform == 'linux' and platform_machine == 'x86_64'",
     "flashinfer-jit-cache==0.6.12; sys_platform == 'linux' and platform_machine == 'x86_64'",
     "flashinfer-cubin==0.6.12; sys_platform == 'linux' and platform_machine == 'x86_64'",
 ]
-extra-build-variables = { flash-attn = { FLASH_ATTENTION_SKIP_CUDA_BUILD = "TRUE" } }
 
 
 [[tool.uv.index]]
@@ -90,10 +76,5 @@ causal-conv1d = { url = "https://github.com/erictang000/causal-conv1d/releases/d
 openhands-sdk = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-sdk" }
 openhands-tools = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-tools" }
 openhands-workspace = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-workspace" }
-openhands-agent-server = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "85ecfd9333d2d2cc4404dd460fd38868d9b978e2", subdirectory = "openhands-agent-server" }
 torch = { index = "pytorch-cu128" }
-torchvision = { index = "pytorch-cu128" }
 flashinfer-jit-cache = { url = "https://github.com/flashinfer-ai/flashinfer/releases/download/v0.6.12/flashinfer_jit_cache-0.6.12%2Bcu128-cp39-abi3-manylinux_2_28_x86_64.whl", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" }
-# flashinfer-python = [
-#     { url = "https://download.pytorch.org/whl/cu128/flashinfer/flashinfer_python-0.2.6.post1%2Bcu128torch2.7-cp39-abi3-linux_x86_64.whl" }
-# ]

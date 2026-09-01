@@ -3,9 +3,8 @@ set -euo pipefail
 
 EXTRA_OVERRIDES=()
 RESUME_PATH=""
-STEP_WISE="${STEP_WISE:-false}"
 RUN_NAME="${RUN_NAME:-qwen3.5-0.8b-grpo}"
-while getopts ":m:n:d:s:l:o:i:t:b:c:r:w:" opt; do
+while getopts ":m:n:d:s:l:o:i:t:b:c:r:" opt; do
   case "$opt" in
     m) MODEL="$OPTARG" ;;
     n) N_ROLLOUTS="$OPTARG" ;;
@@ -18,7 +17,6 @@ while getopts ":m:n:d:s:l:o:i:t:b:c:r:w:" opt; do
     b) BATCH_SIZE="$OPTARG" ;;
     c) MICRO_BATCH_SIZE="$OPTARG" ;;
     r) RUN_NAME="$OPTARG" ;;
-    w) STEP_WISE="$OPTARG" ;;
     *) echo "Unknown legacy option: -$OPTARG" >&2; exit 2 ;;
   esac
 done
@@ -107,8 +105,6 @@ uv run --isolated -m src.train \
   generator.sampling_params.top_p=1.0 \
   generator.sampling_params.top_k=20 \
   generator.chat_template_kwargs.enable_thinking=false \
-  generator.step_wise_trajectories="$STEP_WISE" \
   generator.traj_dir="$OUTPUT_DIR/trajectories" \
-  generator.exp_config=configs/reward_config_1.7b.yaml \
   "${EXTRA_OVERRIDES[@]}" \
   "$@"

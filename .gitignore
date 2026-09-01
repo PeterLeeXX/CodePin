@@ -9,27 +9,14 @@ __pycache__/
 .env
 .env.*
 
-# Experiment state and generated artifacts
-.codex-tmp/
-autodl_runs/
-archive/
-figures/
-docs/AUTODL_EXPERIMENT_RUNBOOK.md
+# Training outputs and downloaded datasets
 ckpts/
 outputs/
 wandb/
 ray_results/
 *.parquet
+!data/sample/validation.parquet
 
-# Locally materialized datasets (existing tracked fixtures remain tracked)
-data/CodePin-SFT-*/
-data/SWE-smith-*/
-data/orgin_SWE_smith/
-
-# Accidental shell/redirection artifacts
-/NUL
-/PY
-/=*
-
-# Reusable source snapshots downloaded by the SWE-Smith data builder.
-data/.cache/
+data/*/
+!data/sample/
+!data/sample/**
