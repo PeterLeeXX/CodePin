@@ -31,6 +31,8 @@ def test_multilevel_reward_scores_added_and_edited_symbols():
 
     assert reward == 3.0
     assert details["entity_reward"] == 1.0
+    assert details["class_f1"] == 1.0
+    assert details["function_f1"] == 1.0
 
 
 def test_missing_structured_finish_has_zero_reward():

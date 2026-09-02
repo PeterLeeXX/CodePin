@@ -20,6 +20,8 @@ from src.generator.code_search_generator import CodeSearchGenerator
 class CodeSearchGeneratorConfig(GeneratorConfig):
     traj_dir: str = "ckpts/trajectories"
     max_train_length: int = 40960
+    efficiency_weight: float = 0.2
+    result_cache: bool = False
 
 
 @dataclass

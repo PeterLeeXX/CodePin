@@ -25,6 +25,8 @@ def build_assistant_loss_mask(
         raise ValueError("at least one TokenEvent is required")
 
     initial_prompt = list(token_messages[0]["prompt_token_ids"])
+    if not initial_prompt:
+        raise ValueError("the initial prompt cannot be empty")
     final_prompt = list(token_messages[-1]["prompt_token_ids"])
     final_response = list(token_messages[-1]["response_token_ids"])
     merged = final_prompt + final_response
@@ -35,9 +37,14 @@ def build_assistant_loss_mask(
     response = merged[len(initial_prompt) :]
     loss_mask = [0] * len(response)
 
+    previous_end = len(initial_prompt)
     for turn_index, message in enumerate(token_messages):
         prompt_ids = list(message["prompt_token_ids"])
         response_ids = list(message["response_token_ids"])
+        if any(
+            type(token) is not int or token < 0 for token in prompt_ids + response_ids
+        ):
+            raise ValueError(f"TokenEvent {turn_index} contains invalid token IDs")
 
         if merged[: len(prompt_ids)] != prompt_ids:
             raise ValueError(
@@ -46,6 +53,8 @@ def build_assistant_loss_mask(
 
         response_start = len(prompt_ids)
         response_end = response_start + len(response_ids)
+        if response_start < previous_end or not response_ids:
+            raise ValueError(f"TokenEvent {turn_index} is empty or out of order")
         if merged[response_start:response_end] != response_ids:
             raise ValueError(
                 f"TokenEvent {turn_index} response is not preserved in the final trajectory"
@@ -58,5 +67,6 @@ def build_assistant_loss_mask(
                 f"TokenEvent {turn_index} lies outside the merged response"
             )
         loss_mask[relative_start:relative_end] = [1] * len(response_ids)
+        previous_end = response_end
 
     return initial_prompt, response, loss_mask

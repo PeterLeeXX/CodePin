@@ -69,6 +69,14 @@ def test_grep_no_match_is_not_an_error(tmp_path):
     assert observation.text == "No matches found."
 
 
+def test_grep_caps_long_source_lines(tmp_path):
+    (tmp_path / "long.py").write_text("x" * 100000 + "\n")
+    observation = GrepExecutor(str(tmp_path))(GrepAction(pattern="x"))
+    assert not observation.is_error
+    assert observation.truncated
+    assert len("\n".join(observation.matches)) <= 30000
+
+
 def test_grep_rejects_invalid_regex_and_outside_path(tmp_path):
     executor = GrepExecutor(str(tmp_path))
 

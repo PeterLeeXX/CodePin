@@ -21,6 +21,7 @@ dependencies = [
     "rich==15.0.0",
     "pyarrow==25.0.1",
     "unidiff==1.0.0",
+    "mcp>=1.28,<2",
 ]
 
 [build-system]
@@ -30,9 +31,6 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src", "src.*"]
-
-[project.entry-points."vllm.general_plugins"]
-codepin_qwen35_text = "src.vllm_plugin:register_qwen35_text"
 
 [tool.setuptools.package-data]
 "src.prompts" = ["templates/*.j2"]

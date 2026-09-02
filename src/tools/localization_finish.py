@@ -68,6 +68,7 @@ class LocalizationFinishAction(Action):
 
     locations: list[CodeLocation] = Field(
         min_length=1,
+        max_length=64,
         description=(
             "Locations that require modification. Each item has a repository-relative "
             "file and optional class_name and function_name."
@@ -119,11 +120,14 @@ class LocalizationFinishExecutor(
         conversation: LocalConversation | None = None,
     ) -> LocalizationFinishObservation:
         try:
+            from src.context import location_span
+
             for location in action.locations:
                 candidate = (self.workspace_root / location.file).resolve()
                 candidate.relative_to(self.workspace_root)
                 if not candidate.is_file():
                     raise ValueError(f"location file does not exist: {location.file}")
+                location_span(self.workspace_root, location.model_dump())
             if conversation is None:
                 raise ValueError("localization_finish requires an active conversation")
 

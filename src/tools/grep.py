@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 
 
 MAX_RESULTS = 100
+MAX_OUTPUT_CHARS = 30_000
 SEARCH_TIMEOUT_SECONDS = 30
 MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024
 
@@ -66,7 +67,7 @@ class GrepObservation(Observation):
     include_pattern: str | None = Field(
         default=None, description="Optional file glob filter"
     )
-    truncated: bool = Field(description="Whether more than 100 lines matched")
+    truncated: bool = Field(description="Whether the line or character limit was reached")
 
 
 def _resolve_search_path(workspace_root: Path, value: str | None) -> Path:
@@ -123,7 +124,7 @@ class GrepExecutor(ToolExecutor[GrepAction, GrepObservation]):
             text = "\n".join(matches) if matches else "No matches found."
             if truncated:
                 text += (
-                    f"\n\n[Results truncated to {MAX_RESULTS} matching lines; "
+                    f"\n\n[Results truncated by the {MAX_RESULTS}-line or {MAX_OUTPUT_CHARS}-character limit; "
                     "use a narrower pattern, path, or include filter.]"
                 )
             return GrepObservation.from_text(
@@ -177,6 +178,7 @@ class GrepExecutor(ToolExecutor[GrepAction, GrepObservation]):
         def collect_matches() -> tuple[list[str], bool]:
             assert process.stdout is not None
             matches: list[str] = []
+            output_chars = 0
             for raw_line in process.stdout:
                 try:
                     event = json.loads(raw_line)
@@ -194,8 +196,11 @@ class GrepExecutor(ToolExecutor[GrepAction, GrepObservation]):
                 if relative is None:
                     continue
                 source_line = line_text.rstrip("\r\n")
-                matches.append(f"{relative}:{line_number}:{source_line}")
-                if len(matches) > MAX_RESULTS:
+                match = f"{relative}:{line_number}:{source_line}"
+                remaining = MAX_OUTPUT_CHARS - output_chars
+                matches.append(match[:remaining])
+                output_chars += len(matches[-1]) + 1
+                if len(matches) > MAX_RESULTS or len(match) > remaining or output_chars >= MAX_OUTPUT_CHARS:
                     if process.poll() is None:
                         process.terminate()
                     return matches[:MAX_RESULTS], True

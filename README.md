@@ -17,6 +17,13 @@ CodePin contains one production path:
 SWE-Smith data -> Qwen3.5 SFT -> synchronous DAPO/GRPO -> structured locations
 ```
 
+The existing SFT checkpoint also serves localization tasks through MCP, with
+bounded context, native vLLM batching, deployment-aware result caching, and
+shared trajectory validation and cost metrics. See
+[serving, data processing and real-model acceptance](docs/SERVING_AND_EVALUATION.md).
+The [2026-09-03 acceptance report](docs/ACCEPTANCE_20260903.md) records the tested
+checkpoint, environment, passing checks, and evaluation limits.
+
 The agent does not edit code, execute shell commands in target repositories, or
 generate patches. The fixed read-only action space keeps trajectories bounded,
 reproducible, and inexpensive.
@@ -93,6 +100,11 @@ DATA_PATH=data/SWE-smith-code-search \
 The main implementation is in `src/generator/code_search_generator.py`; data
 labeling, tools, reward, SFT, and RL entrypoints each have one corresponding
 module under `src/`.
+
+The released text checkpoint must first be prepared with
+`scripts/prepare_serving_model.py` when used by vLLM. Point `MODEL` at that native
+checkpoint directory. The same SkyRL version and synchronous training path are
+retained; the engineering acceptance workflow does not start training.
 
 ## Released artifacts
 

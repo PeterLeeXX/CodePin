@@ -24,3 +24,14 @@ def test_build_assistant_loss_mask_rejects_broken_prefix():
 
     with pytest.raises(ValueError, match="does not extend"):
         build_assistant_loss_mask(events)
+
+
+def test_build_assistant_loss_mask_rejects_reordered_or_empty_turns():
+    events = [
+        {"prompt_token_ids": [1], "response_token_ids": [2]},
+        {"prompt_token_ids": [1], "response_token_ids": [2]},
+    ]
+    with pytest.raises(ValueError, match="out of order"):
+        build_assistant_loss_mask(events)
+    with pytest.raises(ValueError, match="empty"):
+        build_assistant_loss_mask([{"prompt_token_ids": [1], "response_token_ids": []}])

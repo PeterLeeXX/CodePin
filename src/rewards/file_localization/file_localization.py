@@ -51,6 +51,9 @@ def multilevel_localization_f1_reward(
             "file_reward": 0.0,
             "module_reward": 0.0,
             "entity_reward": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0,
         }
         return 0.0, {"multilevel_localization_f1_reward": 0.0, **scores}
 
@@ -73,4 +76,15 @@ def multilevel_localization_f1_reward(
         "entity_reward": f1(predicted[2], truth_entities),
     }
     total = sum(scores.values())
+    truth_classes = truth_modules - truth_entities
+    predicted_classes = {
+        f"{location['file']}:{location['class_name']}"
+        for location in structured_locations
+        if location.get("class_name")
+    }
+    scores.update(
+        file_f1=scores["file_reward"],
+        class_f1=f1(predicted_classes, truth_classes),
+        function_f1=scores["entity_reward"],
+    )
     return total, {"multilevel_localization_f1_reward": total, **scores}

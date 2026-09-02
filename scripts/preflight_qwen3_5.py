@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import importlib
 import platform
 import shutil
@@ -15,6 +16,9 @@ def version(name: str) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", default="Qwen/Qwen3.5-0.8B")
+    args = parser.parse_args()
     if sys.version_info[:2] != (3, 12):
         raise RuntimeError(f"Python 3.12 is required, got {platform.python_version()}")
     if sys.platform != "linux" or platform.machine() != "x86_64":
@@ -51,7 +55,7 @@ def main() -> None:
     ):
         importlib.import_module(module)
 
-    config = AutoConfig.from_pretrained("Qwen/Qwen3.5-0.8B")
+    config = AutoConfig.from_pretrained(args.model)
     if "qwen3_5" not in str(getattr(config, "model_type", "")):
         raise RuntimeError(f"Unexpected model type: {config.model_type!r}")
 
