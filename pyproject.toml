@@ -31,6 +31,9 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 include = ["src", "src.*"]
 
+[project.entry-points."vllm.general_plugins"]
+codepin_qwen35_text = "src.vllm_plugin:register_qwen35_text"
+
 [tool.setuptools.package-data]
 "src.prompts" = ["templates/*.j2"]
 

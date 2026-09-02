@@ -14,7 +14,7 @@ structured `localization_finish` call.
 CodePin contains one production path:
 
 ```text
-SWE-Smith data -> Qwen3.5 SFT -> synchronous GRPO/GSPO -> structured locations
+SWE-Smith data -> Qwen3.5 SFT -> synchronous DAPO/GRPO -> structured locations
 ```
 
 The agent does not edit code, execute shell commands in target repositories, or
@@ -80,6 +80,14 @@ Continue from the exported SFT model with synchronous on-policy RL:
 MODEL=/absolute/path/to/sft/hf_export \
 DATA_PATH=data/SWE-smith-code-search \
   bash scripts/run_rl_qwen3_5_0_8b.sh
+```
+
+For native SkyRL DAPO (including dynamic sampling and overlong filtering), use:
+
+```bash
+MODEL=/absolute/path/to/sft/hf_export \
+DATA_PATH=data/SWE-smith-code-search \
+  bash scripts/run_dapo_qwen3_5_0_8b.sh
 ```
 
 The main implementation is in `src/generator/code_search_generator.py`; data

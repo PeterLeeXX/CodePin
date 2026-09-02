@@ -29,7 +29,7 @@ from skyrl.train.generators.base import (
     GeneratorOutput,
     TrajectoryID,
 )
-from skyrl.train.generators.utils import get_rollout_metrics
+from skyrl.train.generators.utils import apply_overlong_filtering, get_rollout_metrics
 
 from src.agent.agent import CustomAgent
 from src.rewards.file_localization.file_localization import (
@@ -42,6 +42,10 @@ from src.utils.trajectory_tokens import build_assistant_loss_mask
 
 logger = get_logger(__name__)
 logger.setLevel(logging.ERROR)
+# Keep SkyRL's step metrics at INFO while suppressing the SDK's per-conversation
+# state snapshots, which otherwise serialize large messages from every rollout
+# into the shared Ray log stream.
+logging.getLogger("openhands").setLevel(logging.WARNING)
 PROMPTS_DIR = Path(__file__).resolve().parents[1] / "prompts" / "templates"
 SYSTEM_PROMPT = PROMPTS_DIR / "system_prompt_atomic_search.j2"
 
@@ -99,7 +103,11 @@ def serialize_conversation(
     )
 
 
-@ray.remote(num_cpus=0.01)
+# Each rollout owns a Python/OpenHands process and performs git/file I/O.  The
+# previous fractional reservation let large batches spawn hundreds of workers
+# at once, overwhelming Raylet before vLLM could serve them.  Reserve one CPU
+# so Ray provides bounded, host-aware rollout concurrency.
+@ray.remote(num_cpus=1)
 def init_and_run(
     instance: dict[str, Any],
     model_name: str,
@@ -274,10 +282,17 @@ class CodeSearchGenerator(GeneratorInterface):
             loss_mask = loss_mask[:limit]
             if exhausted:
                 loss_mask = [0] * len(loss_mask)
+            stop_reason = (
+                "stop"
+                if locations is not None
+                else "length"
+                if exhausted
+                else "error"
+            )
             rollout = (
                 response_ids,
                 reward,
-                "complete",
+                stop_reason,
                 loss_mask,
                 prompt_ids,
                 None,
@@ -349,6 +364,8 @@ class CodeSearchGenerator(GeneratorInterface):
         stop_reasons = [item[2] for item in outputs]
         loss_masks = [item[3] for item in outputs]
         prompt_ids = [item[4] for item in outputs]
+        if self.generator_cfg.apply_overlong_filtering:
+            loss_masks = apply_overlong_filtering(loss_masks, stop_reasons)
         tracked: dict[str, float] = {}
         for prefix, rows in (("reward", reward_details), ("metrics", metrics)):
             keys = {

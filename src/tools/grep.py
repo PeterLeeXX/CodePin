@@ -63,7 +63,9 @@ class GrepObservation(Observation):
     matches: list[str] = Field(description="Formatted matching source lines")
     pattern: str = Field(description="Regular expression used for the search")
     search_path: str = Field(description="Repository-relative path searched")
-    include_pattern: str | None = Field(description="Optional file glob filter")
+    include_pattern: str | None = Field(
+        default=None, description="Optional file glob filter"
+    )
     truncated: bool = Field(description="Whether more than 100 lines matched")
 
 
