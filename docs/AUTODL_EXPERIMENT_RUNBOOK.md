@@ -122,3 +122,22 @@
   copies and removed remotely between formal measurements at 16:54:05–06 UTC.
   This recovered 741,879,808 bytes; original `.nsys-rep` files and analysis
   remain. The exact receipt is `configs/derived-sqlite-offload-v130.json`.
+
+## 2026-09-05: larger capacity screen and full real regression
+
+- V98 completed six capacity observations, 28,557 tasks and 130,771 native
+  model requests. All six passed both frozen checks with no infrastructure
+  failures/timeouts. S512 brought little additional tuning throughput and
+  substantially higher P95 than S256; these single observations are not a
+  confirmed saturation boundary. V123 will add two independent engines per
+  capacity before selection and the fixed-engine pressure tests.
+- V99 ran all 82 tests with the real deployment available: zero failures,
+  errors or skips. The following three-task pipeline retained one valid SFT
+  trajectory and filtered two failed ones; RL exported all three tasks.
+  SkyRL readback and the truncated-trajectory zero-mask check passed.
+- This used the original S8 serving configuration and the frozen current
+  source. It does not qualify a final tuning configuration or replace the
+  actual local Codex invocation of the registered MCP tool.
+- Capacity material V129 (137 entries) and functional material V137 (322
+  entries) were retrieved and individually hash-verified. Their original
+  records, XML, logs, trajectories and export files remain available locally.

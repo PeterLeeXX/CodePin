@@ -1,0 +1,595 @@
+{
+  "capacity": {
+    "protocol": {
+      "created_at": "2026-09-04T16:14:37.976094+00:00",
+      "code_commit": "4a1c27a43762d2b8f8f6d16095c30c6ee54658f0",
+      "cases": [
+        {
+          "status": "candidate_under_fresh_comparison_not_qualified",
+          "seqs": 128,
+          "batch_tokens": 8192,
+          "api_count": 1,
+          "prefix_cache": true,
+          "clients": 32,
+          "concurrency": 128,
+          "server_extra": [
+            "--attention-config",
+            "{\"backend\": \"FLASHINFER\"}",
+            "--compilation-config",
+            "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 512, 1024]}"
+          ],
+          "server_environment": {
+            "CUDA_HOME": "/root/autodl-tmp/codepin-cuda12.9-v20",
+            "FLASHINFER_WORKSPACE_BASE": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/flashinfer-cuda129-jit-v20",
+            "MAX_JOBS": "4",
+            "VLLM_BATCH_INVARIANT": "0",
+            "VLLM_USE_V2_MODEL_RUNNER": "0",
+            "LITELLM_LOCAL_MODEL_COST_MAP": "True"
+          },
+          "historical_screen": {
+            "label": "quality-path-v62-b8192-g1024-s64-p4-c16-align",
+            "accepted": false,
+            "source_sha256": "b456b311e471d720297dc4c3e0d89e08c01d50782e79e361e6c323c0bdbc8d55"
+          },
+          "reason": "Systems showed frequent ungraphed mixed batches; G1024 improved same-load throughput versus G128 and G4096 added no benefit. B1024 and disabling async scheduling did not help. APC benefits this append-only workload. Prior small-reference failures are retained; original baseline itself varied, so only fresh runs may be assessed against the complete baseline frozen beforehand.",
+          "capture_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            24,
+            32,
+            40,
+            48,
+            56,
+            64,
+            72,
+            80,
+            88,
+            96,
+            104,
+            112,
+            120,
+            128,
+            136,
+            144,
+            152,
+            160,
+            168,
+            176,
+            184,
+            192,
+            200,
+            208,
+            216,
+            224,
+            232,
+            240,
+            248,
+            256,
+            512,
+            1024
+          ],
+          "native_default_capture_limit": 256
+        },
+        {
+          "status": "candidate_under_fresh_comparison_not_qualified",
+          "seqs": 256,
+          "batch_tokens": 8192,
+          "api_count": 1,
+          "prefix_cache": true,
+          "clients": 32,
+          "concurrency": 256,
+          "server_extra": [
+            "--attention-config",
+            "{\"backend\": \"FLASHINFER\"}",
+            "--compilation-config",
+            "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512, 1024]}"
+          ],
+          "server_environment": {
+            "CUDA_HOME": "/root/autodl-tmp/codepin-cuda12.9-v20",
+            "FLASHINFER_WORKSPACE_BASE": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/flashinfer-cuda129-jit-v20",
+            "MAX_JOBS": "4",
+            "VLLM_BATCH_INVARIANT": "0",
+            "VLLM_USE_V2_MODEL_RUNNER": "0",
+            "LITELLM_LOCAL_MODEL_COST_MAP": "True"
+          },
+          "historical_screen": {
+            "label": "quality-path-v62-b8192-g1024-s64-p4-c16-align",
+            "accepted": false,
+            "source_sha256": "b456b311e471d720297dc4c3e0d89e08c01d50782e79e361e6c323c0bdbc8d55"
+          },
+          "reason": "Systems showed frequent ungraphed mixed batches; G1024 improved same-load throughput versus G128 and G4096 added no benefit. B1024 and disabling async scheduling did not help. APC benefits this append-only workload. Prior small-reference failures are retained; original baseline itself varied, so only fresh runs may be assessed against the complete baseline frozen beforehand.",
+          "capture_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            24,
+            32,
+            40,
+            48,
+            56,
+            64,
+            72,
+            80,
+            88,
+            96,
+            104,
+            112,
+            120,
+            128,
+            136,
+            144,
+            152,
+            160,
+            168,
+            176,
+            184,
+            192,
+            200,
+            208,
+            216,
+            224,
+            232,
+            240,
+            248,
+            256,
+            272,
+            288,
+            304,
+            320,
+            336,
+            352,
+            368,
+            384,
+            400,
+            416,
+            432,
+            448,
+            464,
+            480,
+            496,
+            512,
+            1024
+          ],
+          "native_default_capture_limit": 512
+        },
+        {
+          "status": "candidate_under_fresh_comparison_not_qualified",
+          "seqs": 512,
+          "batch_tokens": 8192,
+          "api_count": 1,
+          "prefix_cache": true,
+          "clients": 32,
+          "concurrency": 512,
+          "server_extra": [
+            "--attention-config",
+            "{\"backend\": \"FLASHINFER\"}",
+            "--compilation-config",
+            "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512, 1024]}"
+          ],
+          "server_environment": {
+            "CUDA_HOME": "/root/autodl-tmp/codepin-cuda12.9-v20",
+            "FLASHINFER_WORKSPACE_BASE": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/flashinfer-cuda129-jit-v20",
+            "MAX_JOBS": "4",
+            "VLLM_BATCH_INVARIANT": "0",
+            "VLLM_USE_V2_MODEL_RUNNER": "0",
+            "LITELLM_LOCAL_MODEL_COST_MAP": "True"
+          },
+          "historical_screen": {
+            "label": "quality-path-v62-b8192-g1024-s64-p4-c16-align",
+            "accepted": false,
+            "source_sha256": "b456b311e471d720297dc4c3e0d89e08c01d50782e79e361e6c323c0bdbc8d55"
+          },
+          "reason": "Systems showed frequent ungraphed mixed batches; G1024 improved same-load throughput versus G128 and G4096 added no benefit. B1024 and disabling async scheduling did not help. APC benefits this append-only workload. Prior small-reference failures are retained; original baseline itself varied, so only fresh runs may be assessed against the complete baseline frozen beforehand.",
+          "capture_sizes": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            24,
+            32,
+            40,
+            48,
+            56,
+            64,
+            72,
+            80,
+            88,
+            96,
+            104,
+            112,
+            120,
+            128,
+            136,
+            144,
+            152,
+            160,
+            168,
+            176,
+            184,
+            192,
+            200,
+            208,
+            216,
+            224,
+            232,
+            240,
+            248,
+            256,
+            272,
+            288,
+            304,
+            320,
+            336,
+            352,
+            368,
+            384,
+            400,
+            416,
+            432,
+            448,
+            464,
+            480,
+            496,
+            512,
+            1024
+          ],
+          "native_default_capture_limit": 512
+        }
+      ],
+      "reference_sha256": "c53c9e27a33c590f687ff4a8c194beb16fe60a29c0345c77ad219ca3979e077f",
+      "basis": "S64 is a control, not a predeclared ceiling. Earlier larger native configurations had higher throughput but failed the old small-reference screen; original baseline repetitions now expose its own variation. Preserve all old failures and test larger capacities prospectively against the same complete baseline rule. Do not select S64 merely because its smaller graph sweep was convenient.",
+      "capture_rule": "Preserve every native default decode graph size for each capacity, then add 512/1024 as needed. No new compiler/framework/model or precision change. Defaults verified in installed vLLM source, whose SHA and relevant lines are recorded.",
+      "vllm_config_sha256": "ba062ec38d075937b73d953059cf1d0e1b96f1474990bc6d45ed45e20ba6a336",
+      "vllm_config_excerpt": [
+        "        if (",
+        "            self.model_config is not None",
+        "            and not self.model_config.enforce_eager",
+        "            and self.compilation_config.cudagraph_mode != CUDAGraphMode.NONE",
+        "        ):",
+        "            # determine the initial max_cudagraph_capture_size",
+        "            max_cudagraph_capture_size = (",
+        "                self.compilation_config.max_cudagraph_capture_size",
+        "            )",
+        "            if max_cudagraph_capture_size is None:",
+        "                decode_query_len = 1",
+        "                if (",
+        "                    self.speculative_config",
+        "                    and self.speculative_config.num_speculative_tokens",
+        "                ):",
+        "                    decode_query_len += self.speculative_config.num_speculative_tokens",
+        "                max_cudagraph_capture_size = min(",
+        "                    self.scheduler_config.max_num_seqs * decode_query_len * 2, 512",
+        "                )",
+        "            max_num_tokens = self.scheduler_config.max_num_batched_tokens",
+        "            max_cudagraph_capture_size = min(max_num_tokens, max_cudagraph_capture_size)",
+        "",
+        "            assert max_cudagraph_capture_size >= 1, (",
+        "                \"Maximum cudagraph size should be greater than or equal to 1 \"",
+        "                \"when using cuda graph.\"",
+        "            )",
+        "",
+        "            # determine the cudagraph_capture_sizes",
+        "            if self.compilation_config.cudagraph_capture_sizes is not None:",
+        "                assert len(self.compilation_config.cudagraph_capture_sizes) > 0, (",
+        "                    \"cudagraph_capture_sizes should contain at least one element \"",
+        "                    \"when using cuda graph.\"",
+        "                )",
+        "                # de-duplicate the sizes provided by the config",
+        "                dedup_sizes = list(set(self.compilation_config.cudagraph_capture_sizes))",
+        "                cudagraph_capture_sizes = [",
+        "                    i for i in dedup_sizes if i <= max_num_tokens",
+        "                ]",
+        "                # sort to make sure the sizes are in ascending order",
+        "                cudagraph_capture_sizes.sort()",
+        "            else:",
+        "                if self.performance_mode == \"interactivity\":",
+        "                    # Fine-grained CUDA graphs at small batch sizes",
+        "                    # for minimal padding overhead",
+        "                    interactivity_max = min(max_cudagraph_capture_size, 32)",
+        "                    cudagraph_capture_sizes = list(range(1, interactivity_max + 1))",
+        "                else:",
+        "                    cudagraph_capture_sizes = [",
+        "                        i for i in [1, 2, 4] if i <= max_cudagraph_capture_size",
+        "                    ]",
+        "                if max_cudagraph_capture_size >= 8:",
+        "                    # Step size 8 for small batch sizes, up to 256(not included)",
+        "                    cudagraph_capture_sizes += list(",
+        "                        range(8, min(max_cudagraph_capture_size + 1, 256), 8)",
+        "                    )",
+        "                if max_cudagraph_capture_size >= 256:",
+        "                    # Step size 16 for larger batch sizes",
+        "                    cudagraph_capture_sizes += list(",
+        "                        range(256, max_cudagraph_capture_size + 1, 16)",
+        "                    )",
+        "                # ensure max_num_tokens is captured if within max capture size",
+        "                if (",
+        "                    max_num_tokens <= max_cudagraph_capture_size",
+        "                    and max_num_tokens not in cudagraph_capture_sizes",
+        "                ):",
+        "                    cudagraph_capture_sizes.append(max_num_tokens)",
+        "                # de-duplicate and sort the sizes",
+        "                cudagraph_capture_sizes = sorted(set(cudagraph_capture_sizes))",
+        "",
+        "            if (",
+        "                self.parallel_config.tensor_parallel_size > 1",
+        "                and self.compilation_config.pass_config.enable_sp",
+        "            ):"
+      ],
+      "timing": "Each candidate gets a fresh engine. Both tuning and validation use 30s real warmup, then 180s continuous load and [60,180) steady statistics. Result cache/NVTX/full trajectory export off. Every failed outcome retained.",
+      "comparison": "Same fixed per-task budgets and effective threshold. Explicit capacity comparison to corresponding original C16 reference; S64 repeated measurements provide a lower-capacity control. Single screens cannot qualify a default or final saturation boundary. Any better candidate requires fresh repeats, matched-load controls and final independent acceptance.",
+      "source_guard": "No source mutation while prior formal runs are active. Only start after the v95 process has completed and released its engine."
+    },
+    "scope": "One fresh engine per capacity, each with tuning and validation. Both engine slots and client concurrency change; this is not a fixed-engine pressure curve. Three-repeat confirmation, fixed-engine neighbors, arrival and long steady acceptance remain.",
+    "retrieval": {
+      "archive": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/capacity-material-v129.tar.gz",
+      "bytes": 14620378,
+      "sha256": "a572b916bdbcef6d6930843d5e0884900e7e3b43681f6daeea8ef4e931f8c513",
+      "entries": 137,
+      "manifest_sha256": "69a38f5db51c3994289fafd92eb3b056b6b6d86f85905c57ecc9fd7fef832004",
+      "started_at": "2026-09-04T17:08:30.367082+00:00",
+      "completed_at": "2026-09-04T17:08:30.861513+00:00",
+      "formal_processes_at_end": [],
+      "comparison_completion": {
+        "driver_completed": true,
+        "completed_at": "2026-09-04T17:08:25.442692+00:00",
+        "results": 6,
+        "expected_results": 6,
+        "failures": [],
+        "collection_complete": true,
+        "final_acceptance": false,
+        "next": "Compare all complete S64 repeats and larger capacity screens. Repeat any promising larger candidate and its neighborhood; keep every failed screen. No winner is selected by this driver."
+      },
+      "verified_at": "2026-09-04T17:12:44.003327+00:00",
+      "local_archive": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\capacity-material-v129.tar.gz",
+      "local_directory": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\capacity-material-v129",
+      "verified_entries": 137,
+      "regular_bytes": 102202225,
+      "failures": []
+    },
+    "rows": [
+      {
+        "label": "capacity-neighborhood-v98-s128-p32-c128",
+        "seqs": 128,
+        "split": "tuning",
+        "clients": 32,
+        "concurrency": 128,
+        "outcomes": 3824,
+        "V86_accepted": true,
+        "V102_accepted": true,
+        "n": 1,
+        "metrics": {
+          "steady_effective_tasks_per_minute": 617.0,
+          "steady_latency_seconds.p50": 4.922735886997543,
+          "steady_latency_seconds.p95": 12.722122335014864,
+          "effective_rate": 0.5,
+          "infrastructure_error_rate": 0.0,
+          "timeout_rate": 0.0,
+          "vllm_metrics.vllm:request_success_total": 18164.0
+        }
+      },
+      {
+        "label": "capacity-neighborhood-v98-s128-validation-p32-c128",
+        "seqs": 128,
+        "split": "validation",
+        "clients": 32,
+        "concurrency": 128,
+        "outcomes": 4530,
+        "V86_accepted": true,
+        "V102_accepted": true,
+        "n": 1,
+        "metrics": {
+          "steady_effective_tasks_per_minute": 594.5,
+          "steady_latency_seconds.p50": 3.6708016255288385,
+          "steady_latency_seconds.p95": 9.175531299988506,
+          "effective_rate": 0.3977924944812362,
+          "infrastructure_error_rate": 0.0,
+          "timeout_rate": 0.0,
+          "vllm_metrics.vllm:request_success_total": 19982.0
+        }
+      },
+      {
+        "label": "capacity-neighborhood-v98-s256-p32-c256",
+        "seqs": 256,
+        "split": "tuning",
+        "clients": 32,
+        "concurrency": 256,
+        "outcomes": 5104,
+        "V86_accepted": true,
+        "V102_accepted": true,
+        "n": 1,
+        "metrics": {
+          "steady_effective_tasks_per_minute": 855.0,
+          "steady_latency_seconds.p50": 7.183944472926669,
+          "steady_latency_seconds.p95": 17.046608693688178,
+          "effective_rate": 0.5,
+          "infrastructure_error_rate": 0.0,
+          "timeout_rate": 0.0,
+          "vllm_metrics.vllm:request_success_total": 24244.0
+        }
+      },
+      {
+        "label": "capacity-neighborhood-v98-s256-validation-p32-c256",
+        "seqs": 256,
+        "split": "validation",
+        "clients": 32,
+        "concurrency": 256,
+        "outcomes": 4970,
+        "V86_accepted": true,
+        "V102_accepted": true,
+        "n": 1,
+        "metrics": {
+          "steady_effective_tasks_per_minute": 654.0,
+          "steady_latency_seconds.p50": 6.428104921011254,
+          "steady_latency_seconds.p95": 15.631569894857238,
+          "effective_rate": 0.3977867203219316,
+          "infrastructure_error_rate": 0.0,
+          "timeout_rate": 0.0,
+          "vllm_metrics.vllm:request_success_total": 21926.0
+        }
+      },
+      {
+        "label": "capacity-neighborhood-v98-s512-p32-c512",
+        "seqs": 512,
+        "split": "tuning",
+        "clients": 32,
+        "concurrency": 512,
+        "outcomes": 5184,
+        "V86_accepted": true,
+        "V102_accepted": true,
+        "n": 1,
+        "metrics": {
+          "steady_effective_tasks_per_minute": 865.0,
+          "steady_latency_seconds.p50": 12.708810738055035,
+          "steady_latency_seconds.p95": 31.532449181354604,
+          "effective_rate": 0.5,
+          "infrastructure_error_rate": 0.0,
+          "timeout_rate": 0.0,
+          "vllm_metrics.vllm:request_success_total": 24624.0
+        }
+      },
+      {
+        "label": "capacity-neighborhood-v98-s512-validation-p32-c512",
+        "seqs": 512,
+        "split": "validation",
+        "clients": 32,
+        "concurrency": 512,
+        "outcomes": 4945,
+        "V86_accepted": true,
+        "V102_accepted": true,
+        "n": 1,
+        "metrics": {
+          "steady_effective_tasks_per_minute": 639.5,
+          "steady_latency_seconds.p50": 13.104334815056063,
+          "steady_latency_seconds.p95": 30.855779158812943,
+          "effective_rate": 0.39716885743174923,
+          "infrastructure_error_rate": 0.0,
+          "timeout_rate": 0.0,
+          "vllm_metrics.vllm:request_success_total": 21831.0
+        }
+      }
+    ]
+  },
+  "functional": {
+    "receipt": {
+      "archive": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/functional-material-v137.tar.gz",
+      "bytes": 283000,
+      "sha256": "712bffee31740437489ca935f2d894b48f622bb4dce8258a52c4bda945c47f33",
+      "entries": 322,
+      "manifest_sha256": "40cc9a6fd0f2a035a291c984ec8e3263ff6eb1e3c01585ae84b56f858670a6ce",
+      "started_at": "2026-09-04T17:18:37.827772+00:00",
+      "completed_at": "2026-09-04T17:18:37.867753+00:00",
+      "formal_processes_at_end": [],
+      "comparison_completion": {
+        "protocol": {
+          "created_at": "2026-09-04T17:08:33.086275+00:00",
+          "code_commit": "4a1c27a43762d2b8f8f6d16095c30c6ee54658f0",
+          "scope": "Existing full project acceptance: native model preflight, every pytest test with real deployment available, three pinned real tasks, data/trajectory/evaluation exports and optional Judge integration. No training and no mock substituted for real model acceptance.",
+          "deployment": "Original native S8/B8192/align/FA2 environment with current committed CodePin source. Separate from timed performance tests and from qualification of any final tuning configuration.",
+          "judging_limit": "The same 0.8B model only checks Judge request/response integration; it is not an independent credible quality rating.",
+          "tasks_path": "/root/autodl-tmp/codepin/runs/20260903-acceptance/tasks-pinned.jsonl",
+          "tasks_sha256": "481fcd4430be431c4a6f24f175ef7e15df587a690cdae42e684d2ed255703850",
+          "command": [
+            "bash",
+            "scripts/run_acceptance.sh"
+          ],
+          "final_performance_acceptance": false
+        },
+        "accepted": true,
+        "test_totals": {
+          "tests": 82,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "completed_at": "2026-09-04T17:10:01.875060+00:00"
+      },
+      "verified_at": "2026-09-04T17:20:00.578047+00:00",
+      "local_archive": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\functional-material-v137.tar.gz",
+      "local_directory": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\functional-material-v137",
+      "verified_entries": 322,
+      "regular_bytes": 1704948,
+      "failures": []
+    },
+    "test_totals": {
+      "tests": 82,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    "test_seconds": 16.29,
+    "tasks": 3,
+    "valid_trajectories": 1,
+    "quality_means": {
+      "file_f1": 0.3333333333333333,
+      "class_f1": 0.3333333333333333,
+      "function_f1": 0.3333333333333333
+    },
+    "export": {
+      "cleaning": {
+        "input": 3,
+        "kept": 3,
+        "rejected": [],
+        "difficulty": {
+          "easy": 3
+        }
+      },
+      "sft_kept": 1,
+      "rejected": [
+        {
+          "instance_id": "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k",
+          "reasons": [
+            "agent_error",
+            "missing_or_multiple_finish",
+            "tool_error"
+          ]
+        },
+        {
+          "instance_id": "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi",
+          "reasons": [
+            "missing_or_multiple_finish",
+            "tool_error"
+          ]
+        }
+      ],
+      "splits": {
+        "sft/train": 1,
+        "rl/train": 3,
+        "sft/validation": 0,
+        "rl/validation": 0
+      }
+    },
+    "skyrl_rollout": {
+      "valid_stop": [
+        "stop"
+      ],
+      "valid_reward": [
+        2.986668
+      ],
+      "valid_loss_tokens": 170,
+      "invalid_stop": [
+        "length"
+      ],
+      "invalid_reward": [
+        0.0
+      ],
+      "invalid_loss_tokens": 0
+    },
+    "skyrl_readback": {
+      "sft_rows": 1,
+      "batch_type": "TrainingInputBatch",
+      "supervised_tokens": [
+        170
+      ],
+      "rl_rows": 3
+    },
+    "limits": "Original S8 deployment with frozen current runtime, not final tuned configuration. Real model MCP test uses a small calculator fixture; three-task real repository pipeline is separate. Neither is the requested actual registered local Codex invocation. Same model Judge only checks integration."
+  },
+  "final_performance_acceptance": false,
+  "local_codex_mcp_invocation_complete": false
+}
