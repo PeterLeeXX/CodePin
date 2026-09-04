@@ -141,3 +141,22 @@
 - Capacity material V129 (137 entries) and functional material V137 (322
   entries) were retrieved and individually hash-verified. Their original
   records, XML, logs, trajectories and export files remain available locally.
+
+## 2026-09-05: source and service attribution
+
+- V100 completed 18 current-source/original-S8 groups, 12,620 real tasks and
+  three fixed replays. C4 gained most of its throughput before changing vLLM;
+  at C16 the source-only throughput stayed near the original while the
+  FI/S64/G1024 combination supplied about 41% additional throughput and cut
+  P95 about 26% relative to source-only.
+- Five source-only conditions passed all three engines. Validation C8 failed
+  V86 and V102 in engines two and three due to repeated python-pptx agent/tool
+  failures. Keep these outcomes; do not qualify source-only S8 as universally
+  quality-neutral or use the failed group in an accepted configuration.
+- vLLM 0.23.0 reports Mamba `align` APC as experimental. Its selector rejects
+  batch-invariant mode for a Mamba backend that does not implement native
+  support; the current GDN path has no such implementation. Do not force this
+  flag or patch the dependency to hide the observed variation.
+- Source-only V100 material contains 382 entries and was archived only after
+  its formal process ended. The local archive is hash-verified before the
+  published attribution is generated.

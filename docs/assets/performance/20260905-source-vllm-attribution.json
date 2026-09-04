@@ -1,0 +1,401 @@
+{
+  "inputs": {
+    "tmp\\verification\\20260904-vllm-performance\\baseline-material-v87\\results\\baseline-report-v92\\report.json": "24c17f975a51a7c9f1bd07ab370f0a4b08494f290e4d50d99bb0716fc7280414",
+    "tmp\\verification\\20260904-vllm-performance\\source-only-comparison-v100-analysis-v144\\evidence.json": "9da04e24b0007fbffe1159138a5bf22f8917516352b4989828819ed7f064e4cb",
+    "tmp\\verification\\20260904-vllm-performance\\complete-comparison-analysis-v119\\evidence.json": "836788f8b8594c090560dee6cb70302e2133fdb0aa8d7d89345d74adb41cf515"
+  },
+  "method": "Three independent engines per stage. Descriptive ratios of run means under the same fixed task/load definitions; stages ran at different wall times and are not paired samples. Full result cache disabled. Source-only uses current CodePin service/client with original S8 vLLM parameters; candidate combines current source with S64/FI/G1024. All failures remain.",
+  "cases": [
+    {
+      "load": "tuning C4",
+      "groups": {
+        "original": "baseline-p1-c4",
+        "source_only": "p1-c4",
+        "source_plus_candidate_vllm": "FI-tuning-p1-c4"
+      },
+      "values": {
+        "original": {
+          "throughput": {
+            "count": 3,
+            "min": 54.5,
+            "max": 59.0,
+            "mean": 56.333333333333336,
+            "stdev": 2.3629078131263044,
+            "ci95_half_width": 5.86978877665922,
+            "p50": 55.5,
+            "p95": 58.65
+          },
+          "p95": {
+            "count": 3,
+            "min": 3.35436623068526,
+            "max": 4.042660377977881,
+            "mean": 3.765711726461691,
+            "stdev": 0.3632961493185037,
+            "ci95_half_width": 0.9024777217405893,
+            "p50": 3.9001085707219314,
+            "p95": 4.028405197252286
+          }
+        },
+        "source_only": {
+          "throughput": {
+            "count": 3,
+            "min": 79.0,
+            "max": 80.5,
+            "mean": 79.83333333333333,
+            "stdev": 0.7637626158259734,
+            "ci95_half_width": 1.897291635967666,
+            "p50": 80.0,
+            "p95": 80.44999999999999
+          },
+          "p95": {
+            "count": 3,
+            "min": 2.6449531352554914,
+            "max": 2.6883204312936866,
+            "mean": 2.666670918402572,
+            "stdev": 0.021683728623947567,
+            "ci95_half_width": 0.05386537138940353,
+            "p50": 2.6667391886585388,
+            "p95": 2.686162307030172
+          }
+        },
+        "source_plus_candidate_vllm": {
+          "throughput": {
+            "count": 3,
+            "min": 80.0,
+            "max": 83.5,
+            "mean": 82.16666666666667,
+            "stdev": 1.8929694486000912,
+            "ci95_half_width": 4.702397089817263,
+            "p50": 83.0,
+            "p95": 83.45
+          },
+          "p95": {
+            "count": 3,
+            "min": 2.4700305667938665,
+            "max": 2.5512931829667647,
+            "mean": 2.4981567120101924,
+            "stdev": 0.04604389744625096,
+            "ci95_half_width": 0.11437938922639018,
+            "p50": 2.4731463862699457,
+            "p95": 2.5434785032970826
+          }
+        }
+      },
+      "changes_percent": {
+        "source_only_vs_original": {
+          "throughput": 41.71597633136093,
+          "p95": -29.185473766782223
+        },
+        "candidate_vllm_increment_vs_source_only": {
+          "throughput": 2.9227557411273697,
+          "p95": -6.319272664259811
+        },
+        "combined_vs_original": {
+          "throughput": 45.857988165680474,
+          "p95": -33.660436765363045
+        }
+      }
+    },
+    {
+      "load": "tuning C16",
+      "groups": {
+        "original": "baseline-p4-c16",
+        "source_only": "p4-c16",
+        "source_plus_candidate_vllm": "FI-tuning-p4-c16"
+      },
+      "values": {
+        "original": {
+          "throughput": {
+            "count": 3,
+            "min": 152.0,
+            "max": 157.5,
+            "mean": 154.16666666666666,
+            "stdev": 2.9297326385411577,
+            "ci95_half_width": 7.27785978986979,
+            "p50": 153.0,
+            "p95": 157.05
+          },
+          "p95": {
+            "count": 3,
+            "min": 5.298185876978096,
+            "max": 5.500733316474361,
+            "mean": 5.401104782492621,
+            "stdev": 0.10131380073929279,
+            "ci95_half_width": 0.2516774489451491,
+            "p50": 5.404395154025406,
+            "p95": 5.491099500229465
+          }
+        },
+        "source_only": {
+          "throughput": {
+            "count": 3,
+            "min": 153.5,
+            "max": 156.5,
+            "mean": 155.16666666666666,
+            "stdev": 1.5275252316519468,
+            "ci95_half_width": 3.794583271935332,
+            "p50": 155.5,
+            "p95": 156.4
+          },
+          "p95": {
+            "count": 3,
+            "min": 5.7512225090758875,
+            "max": 5.826898315426661,
+            "mean": 5.778865277128837,
+            "stdev": 0.041755589532470626,
+            "ci95_half_width": 0.10372664114906972,
+            "p50": 5.758475006883963,
+            "p95": 5.820055984572391
+          }
+        },
+        "source_plus_candidate_vllm": {
+          "throughput": {
+            "count": 3,
+            "min": 215.5,
+            "max": 222.5,
+            "mean": 218.5,
+            "stdev": 3.605551275463989,
+            "ci95_half_width": 8.956686457600954,
+            "p50": 217.5,
+            "p95": 222.0
+          },
+          "p95": {
+            "count": 3,
+            "min": 4.2244256043806665,
+            "max": 4.357319301366806,
+            "mean": 4.301042276244455,
+            "stdev": 0.06874197841810929,
+            "ci95_half_width": 0.17076455169450994,
+            "p50": 4.321381922985893,
+            "p95": 4.353725563528714
+          }
+        }
+      },
+      "changes_percent": {
+        "source_only_vs_original": {
+          "throughput": 0.648648648648642,
+          "p95": 6.994133790196133
+        },
+        "candidate_vllm_increment_vs_source_only": {
+          "throughput": 40.816326530612244,
+          "p95": -25.572892428089645
+        },
+        "combined_vs_original": {
+          "throughput": 41.72972972972975,
+          "p95": -20.367360948337044
+        }
+      }
+    },
+    {
+      "load": "cold validation C4",
+      "groups": {
+        "original": "baseline-validation-p1-c4",
+        "source_only": "validation-p1-c4",
+        "source_plus_candidate_vllm": "FI-validation-cold-p1-c4"
+      },
+      "values": {
+        "original": {
+          "throughput": {
+            "count": 3,
+            "min": 44.60363695076404,
+            "max": 46.39792891361492,
+            "mean": 45.48519945501705,
+            "stdev": 0.8975519184259841,
+            "ci95_half_width": 2.22964270886017,
+            "p50": 45.4540325006722,
+            "p95": 46.30353927232065
+          },
+          "p95": {
+            "count": 3,
+            "min": 2.8510489056003276,
+            "max": 2.878901269380003,
+            "mean": 2.864119816028202,
+            "stdev": 0.014004749546128662,
+            "ci95_half_width": 0.03478972867630669,
+            "p50": 2.8624092731042756,
+            "p95": 2.8772520697524304
+          }
+        },
+        "source_only": {
+          "throughput": {
+            "count": 3,
+            "min": 52.704598885164984,
+            "max": 53.07944268619258,
+            "mean": 52.830129422372636,
+            "stdev": 0.21591338853319042,
+            "ci95_half_width": 0.5363586246158975,
+            "p50": 52.70634669576034,
+            "p95": 53.04213308714936
+          },
+          "p95": {
+            "count": 3,
+            "min": 2.3833158537279813,
+            "max": 2.4153960952011397,
+            "mean": 2.3962030928698366,
+            "stdev": 0.01694424563959956,
+            "ci95_half_width": 0.04209184223428781,
+            "p50": 2.3898973296803883,
+            "p95": 2.4128462186490642
+          }
+        },
+        "source_plus_candidate_vllm": {
+          "throughput": {
+            "count": 3,
+            "min": 54.38191799810875,
+            "max": 55.89254871165657,
+            "mean": 55.215263260447166,
+            "stdev": 0.7673117271785449,
+            "ci95_half_width": 1.9061081178755552,
+            "p50": 55.371323071576185,
+            "p95": 55.84042614764853
+          },
+          "p95": {
+            "count": 3,
+            "min": 2.3341618444654157,
+            "max": 2.411557817383436,
+            "mean": 2.365812318283133,
+            "stdev": 0.040577536387381756,
+            "ci95_half_width": 0.10080019472109766,
+            "p50": 2.351717293000547,
+            "p95": 2.405573764945147
+          }
+        }
+      },
+      "changes_percent": {
+        "source_only_vs_original": {
+          "throughput": 16.147955940304072,
+          "p95": -16.33719094221574
+        },
+        "candidate_vllm_increment_vs_source_only": {
+          "throughput": 4.514722685999084,
+          "p95": -1.2682887638837625
+        },
+        "combined_vs_original": {
+          "throughput": 21.391714056465204,
+          "p95": -17.398276949045144
+        }
+      }
+    },
+    {
+      "load": "validation C16",
+      "groups": {
+        "original": "baseline-validation-capacity-p4-c16",
+        "source_only": "validation-capacity-p4-c16",
+        "source_plus_candidate_vllm": "FI-validation-p4-c16"
+      },
+      "values": {
+        "original": {
+          "throughput": {
+            "count": 3,
+            "min": 123.49999999999999,
+            "max": 130.5,
+            "mean": 127.83333333333333,
+            "stdev": 3.7859388972001904,
+            "ci95_half_width": 9.404794179634546,
+            "p50": 129.5,
+            "p95": 130.4
+          },
+          "p95": {
+            "count": 3,
+            "min": 4.6596699273912225,
+            "max": 5.011239106650463,
+            "mean": 4.8357731229334595,
+            "stdev": 0.17578545582737132,
+            "ci95_half_width": 0.4366753074256627,
+            "p50": 4.836410334758693,
+            "p95": 4.993756229461286
+          }
+        },
+        "source_only": {
+          "throughput": {
+            "count": 3,
+            "min": 125.5,
+            "max": 130.0,
+            "mean": 127.83333333333333,
+            "stdev": 2.254624876411447,
+            "ci95_half_width": 5.600799033131466,
+            "p50": 128.0,
+            "p95": 129.8
+          },
+          "p95": {
+            "count": 3,
+            "min": 4.998939414700725,
+            "max": 5.148451406962704,
+            "mean": 5.088112231970687,
+            "stdev": 0.07881619854316649,
+            "ci95_half_width": 0.19579030339551137,
+            "p50": 5.116945874248631,
+            "p95": 5.145300853691297
+          }
+        },
+        "source_plus_candidate_vllm": {
+          "throughput": {
+            "count": 3,
+            "min": 180.0,
+            "max": 184.5,
+            "mean": 182.0,
+            "stdev": 2.29128784747792,
+            "ci95_half_width": 5.6918749079029975,
+            "p50": 181.5,
+            "p95": 184.2
+          },
+          "p95": {
+            "count": 3,
+            "min": 3.6050577813410203,
+            "max": 3.6942496593459504,
+            "mean": 3.6538778296535988,
+            "stdev": 0.04519211296125628,
+            "ci95_half_width": 0.11226343913202781,
+            "p50": 3.662326048273826,
+            "p95": 3.691057298238738
+          }
+        }
+      },
+      "changes_percent": {
+        "source_only_vs_original": {
+          "throughput": 0.0,
+          "p95": 5.218175100906186
+        },
+        "candidate_vllm_increment_vs_source_only": {
+          "throughput": 42.3728813559322,
+          "p95": -28.187947453383742
+        },
+        "combined_vs_original": {
+          "throughput": 42.3728813559322,
+          "p95": -24.44066880794655
+        }
+      }
+    }
+  ],
+  "quality": {
+    "source_only": {
+      "p1-c4": {
+        "V86": true,
+        "V102": true
+      },
+      "p4-c8": {
+        "V86": true,
+        "V102": true
+      },
+      "p4-c16": {
+        "V86": true,
+        "V102": true
+      },
+      "validation-p1-c4": {
+        "V86": true,
+        "V102": true
+      },
+      "validation-capacity-p4-c8": {
+        "V86": false,
+        "V102": false
+      },
+      "validation-capacity-p4-c16": {
+        "V86": true,
+        "V102": true
+      }
+    },
+    "source_only_validation_C8": "Rejected under V86 and V102; this stage is not a universally qualified serving configuration.",
+    "candidate": "V95 strict failures and the separate frozen V102 interpretation are retained; this is attribution evidence, not final profile selection."
+  },
+  "final_performance_acceptance": false
+}
