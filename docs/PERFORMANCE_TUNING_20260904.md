@@ -8,7 +8,9 @@
 
 已获得可重复执行的基准与实际 Nsight 证据，但三次独立正式对照、最终配置的 15 分钟稳态、新冻结任务集和完整真实模型回归尚待完成。下列单次筛选不得视作最终提升或饱和结论；高吞吐但行为退化的配置仍记为失败。阶段指标及原始文件摘要随仓库提供在 [stage1-evidence.json](assets/performance/20260904-stage1-evidence.json)。
 
-第二阶段完成了五项压力筛选、七项新任务的实际仓库准备，以及 token 来源和 NVTX 系统依赖核验，见 [stage2-evidence.json](assets/performance/20260904-stage2-evidence.json)。运行代码仍是阶段提交 `97ada3bae907b381ab88d20f1b0506c836ad48fb`；本阶段不改变推理实现或质量门槛。正式重复尚未启动，先补充队列/解码拐点的 Nsight 对照，决定是否值得进一步比较原生调度或图执行配置。
+第二阶段完成了五项压力筛选、七项新任务的实际仓库准备，以及 token 来源和 NVTX 系统依赖核验，见 [stage2-evidence.json](assets/performance/20260904-stage2-evidence.json)。运行代码仍是阶段提交 `97ada3bae907b381ab88d20f1b0506c836ad48fb`；本阶段不改变推理实现或质量门槛。
+
+第三阶段完成三项质量邻域测试，以及 S64/C64、S64/C96 各一组 Nsight/无采集对照，见 [stage3-evidence.json](assets/performance/20260904-stage3-evidence.json)。两份新原始 trace、SQLite、八份 CSV 统计和逐任务记录已拉回本地，2,158 个条目全部校验通过；本地目录为 `tmp/verification/20260904-vllm-performance/stage3-material-v60/`。压缩包为 435269860 bytes，SHA-256 `2834ac25d1d3a821db5c98ca9c2165fc46fd61936f504e347919b085ef87392c`。现已开始根据该证据比较原生图捕获范围，尚未采用新的默认配置；完整正式重复和最终验收仍待完成。
 
 ## 硬件、软件与模型身份
 
@@ -119,7 +121,7 @@ FA 组合进一步被模型的混合后端拒绝：`VLLM batch_invariant mode is
 | FA2 / 128 | 4030 | 39.727% | 517.5 | 4.134 / 10.768 | 未通过 |
 | FI / 64 | 2925 | 40.000% | 388.5 | 2.836 / 7.364 | 通过本轮筛选 |
 
-失败配置均出现 python-pptx 定位失败，部分还有 safety 额外工具轮次；不能用总吞吐掩盖这些偏差。FI/S64 的五项各执行 585 次，未出现轮数、工具错误和质量的行为变体；平均运行请求数为 51.10、等待为零、GPU 活动利用率 58.36%、引擎约 1.025 CPU 核。下一步分别增加 S64 下的任务压力，以及测试 S80/S96，判断供给、容量与行为稳定性的关系。当前结果只证明单轮资格通过，不证明长期确定性；每任务直方图、全部失败项及记录摘要保存在 `results/quality-capacity-outcome-audit-v46.json`。
+失败配置均出现 python-pptx 定位失败，部分还有 safety 额外工具轮次；不能用总吞吐掩盖这些偏差。FI/S64 的五项各执行 585 次，未出现轮数、工具错误和质量的行为变体；平均运行请求数为 51.10、等待为零、GPU 活动利用率 58.36%、引擎约 1.025 CPU 核。随后分别增加 S64 下的任务压力，以及测试 S80/S96，判断供给、容量与行为稳定性的关系。这次结果只证明单轮资格通过，不证明长期确定性；每任务直方图、全部失败项及记录摘要保存在 `results/quality-capacity-outcome-audit-v46.json`。
 
 ![保留质量失败配置的单轮容量筛选](assets/performance/20260904-quality-capacity-screen.png)
 
@@ -137,7 +139,17 @@ FA 组合进一步被模型的混合后端拒绝：`VLLM batch_invariant mode is
 
 ![分别改变原生容量和任务压力的质量筛选曲线](assets/performance/20260904-quality-pressure-screen.png)
 
-原生请求计数进一步显示，S64/C64 与 S64/C96 的前缀命中率分别为 92.386% / 92.377%，prefill 均值为 57.815 / 53.160 ms；模型排队均值却从 0.137 增至 532.496 ms，TPOT 从 11.625 增至 21.093 ms，decode 从 0.681 增至 1.234 秒。这些请求均值覆盖完整诊断，不能与表内稳态任务分位数相加当作关键路径。它们把后续排查集中到排队及 decode 路径，但没有独自证明 CPU、CUDA Graph 或某个 kernel 是原因。`results/pressure-path-audit-v54.json` 保留边界和原始摘要；已安排同 S64/C64、S64/C96 的真实 Nsight 与无采集对照，正式重复等待该证据分析。
+原生请求计数进一步显示，S64/C64 与 S64/C96 的前缀命中率分别为 92.386% / 92.377%，prefill 均值为 57.815 / 53.160 ms；模型排队均值却从 0.137 增至 532.496 ms，TPOT 从 11.625 增至 21.093 ms，decode 从 0.681 增至 1.234 秒。这些请求均值覆盖完整诊断，不能与表内稳态任务分位数相加当作关键路径。它们把后续排查集中到排队及 decode 路径，但没有独自证明 CPU、CUDA Graph 或某个 kernel 是原因。`results/pressure-path-audit-v54.json` 保留边界和原始摘要；随后完成的 S64/C64、S64/C96 真实 Nsight 与无采集对照见下文。
+
+v49 进一步隔离并发和原生序列容量的邻域变化，仍使用相同五任务、P32/B8192、30 秒预热、180 秒真实运行和 `[60,180)` 窗口。三项均有模型行为偏差，实际请求数仍与轮次相等，基础设施错误和超时均为零。完整记录与逐任务变体计数见 `results/quality-neighbor-outcome-audit-v56.json`。
+
+| S / C | 真实任务数 | 全量有效率 | 稳态有效 tasks/min | P50 / P95 秒 | 未通过的具体行为 |
+|---|---:|---:|---:|---:|---|
+| 64 / 48 | 2490 | 39.799% | 325.5 | 2.520 / 6.471 | astroid 4/498 次增加错误轮次；python-pptx 5/498 次定位失败 |
+| 64 / 80 | 2050 | 39.902% | 264.0 | 4.887 / 13.048 | python-pptx 2/410 次定位失败 |
+| 80 / 64 | 2730 | 39.817% | 355.0 | 3.112 / 8.173 | safety 1/546 次增加错误轮次；python-pptx 5/546 次定位失败 |
+
+降低并发或只提高序列容量都没有消除这些偏差，不能将一次合格点直接解释为稳定阈值。v55 的 S64/C64 无采集配对对照还保留了 505 个真实任务：全量有效率为 40%，但 safety 出现额外错误轮次，因此同样未通过严格门槛；2223 个实际模型请求与 2223 个轨迹轮次一致。该对照启用了与 Nsight 配对相同的原生 NVTX 和完整轨迹导出，仅用于采集开销诊断，不计作正式重复。
 
 任务顺序 seed 固定为 20260904，每个完整任务块使用 seed + 块号打乱顺序；vLLM 引擎 seed 保持原值 0。temperature 0、top_p 1、top_k 20、最多 8 轮，每轮输出上限 2048。所有主对照关闭完整定位结果缓存。任务集重复产生的是可复现的固定混合负载，不能将其热前缀命中率推广到任意新问题。
 
@@ -303,6 +315,39 @@ python -m scripts.benchmark_performance aggregate \
 按用户指定，完整阅读 Tim在路上的[《使用Nsight Profiling工具对大模型进行性能调优》](https://zhuanlan.zhihu.com/p/718956195)（2024-09-08），并把其中的整体时间线、阶段拆分、NVTX、CUDA Stream/同步及内存拷贝检查用于本次分析。采集参数以本机 2025.1 的实际帮助和运行结果为准；文章中的训练、混合精度和两流示例不能直接作为当前混合注意力推理服务的优化依据。
 
 新增 `analyze_nsight --cuda-details` 对原始 SQLite 按进程及 correlation ID 关联 CUDA API 与 GPU 操作，保留 Stream、拷贝方向、Pageable/Pinned 内存类型、字节数，以及主机同步区间与 GPU 工作的重叠。指定 `--steady-window 40 60` 时仅分析该稳态窗口；不把不同 Stream 的累计时间相加。原生 API 名称可能带 `_v3020` 等版本后缀，统计覆盖这些真实名称。
+
+针对较新观察到的排队/解码拐点，v55 固定 FI/S64/B8192/API1/P32，分别测试任务并发 64、96。每项均重新启动引擎，真实预热 30 秒，正式诊断至少 30 秒；保留预热后的原生前缀缓存，观察相同 `[10,25)` 窗口。配对的无采集条件同样开启原生 NVTX 和完整轨迹导出，因此表中数据只用于诊断及采集扰动检查。
+
+| 并发 / 采集 | 真实任务数 | 有效 tasks/min | P50 / P95 秒 | 冻结逐任务门槛 |
+|---|---:|---:|---:|---|
+| 64 / 无 Nsight | 505 | 362.136 | 2.989 / 7.497 | 未通过：safety 额外错误轮次 |
+| 64 / Nsight | 450 | 314.241 | 3.405 / 8.316 | 通过本次短诊断 |
+| 96 / 无 Nsight | 400 | 269.468 | 5.922 / 15.041 | 通过本次短诊断 |
+| 96 / Nsight | 350 | 230.051 | 6.728 / 16.992 | 通过本次短诊断 |
+
+四项的有效率均为 40%、正常终止率均为 60%，基础设施异常和超时均为零；文件/类/函数 F1 均值分别为 0.400 / 0.333 / 0.200。实际模型请求数均等于工具轨迹轮数。短诊断通过不推翻 v45/v49 中保留的长窗口失败；总有效率与平均 F1 相同也不掩盖 safety 的额外错误调用。Nsight 对 C64/C96 的单对有效吞吐扰动分别为 −13.23% / −14.63%，P95 分别增加 10.92% / 12.97%；不把这些数值混入无采集正式对照。
+
+两份节点级 trace 分别把 1980 / 1540 个 Agent step 关联到实际模型 response ID。每份按首次提交选择全部五种任务，共 22 轮、17 次跨轮连接，均保持严格 token 追加；实际 prompt 为 1899–6024 tokens，跨任务公共前缀按 544 对齐后为 1632 tokens。原始 TokenEvent、轨迹选择摘要和校验输出完整保留。
+
+`configs/analyze_native_window_v57.py` 进一步按相同主机线程关联完整的 `gpu_model_runner: forward` 范围与原生 CUDA 启动 API。C64 的 1053 个完整前向中，741 个走单次 Graph 路径、24 个混合 Graph 与普通启动、288 个没有 Graph；C96 的 615 个前向对应 225 / 36 / 354。无 Graph 路径占比从 27.35% 升至 57.56%，这类主机范围均值仍约为 28.551 / 28.329 ms；单次 Graph 路径约为 0.608 / 0.688 ms。GPU 执行区间并集则从 7.214/15 秒降至 4.965/15 秒。此处统计的是 API 记录，runtime/driver 调用可嵌套，不等于独立 GPU kernel 数。
+
+![同一稳态窗口中的原生前向路径、主机范围与 GPU 活动](assets/performance/20260904-nsys-quality-boundary.png)
+
+图中的主机前向、预处理和 GPU 活动有重叠，不能相加成任务关键路径，也不能把 GPU 区间并集当成 SM 利用率。当前 trace 没有记录每个调度批次的 token 数，因此不能仅据这些占比断言每一次无 Graph 执行的具体原因。实际启动日志显示 S64 默认只捕获到 128 tokens；锁定源码 `vllm/v1/cudagraph_dispatcher.py:276–285` 在批 token 数超过捕获上限时返回 NONE，默认上限则为 `min(max_num_seqs*2, 512)`。这些证据支持下一步只扩大原生捕获范围，而不是直接宣称已完成优化。
+
+已启动的 v59 对照保留 19 个原生 decode/小批捕获尺寸，并分别补充至 1024 或 4096 tokens，在相同 S64/B8192 下测试 C64/C96，同时保留 G128 原生对照。`FULL_AND_PIECEWISE` 模式保持不变；GDN 的 `UNIFORM_BATCH` 支持不能解释为任意混合 prefill/decode 都能完整捕获。候选可能降低主机启动开销，也可能增加填充计算、显存和启动成本；六项筛选尚未完成，质量门槛、模型、预算和工具均未改变。决策和原生源码摘要见 `configs/native-graph-experiment-decision-v59.json`、`configs/native-graph-source-v57.json`。
+
+本阶段实际执行的完整采集/导出参数保存在 `configs/command-quality-boundary-*-v55.json`，原始文件为 `profiles/quality-boundary-c{64,96}-nsys-v55.nsys-rep` 及同名 SQLite。另通过以下实际命令分别导出了四种 CSV（C96 使用对应文件名）：
+
+```bash
+NSYS=/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys
+RUN=/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance
+"$NSYS" stats --report cuda_gpu_kern_sum,cuda_api_sum,nvtx_sum,osrt_sum \
+  --format csv --output "$RUN/profiles/quality-boundary-c64-stats-v60" \
+  "$RUN/profiles/quality-boundary-c64-nsys-v55.sqlite"
+```
+
+本阶段实际通过统计、SQLite 查询和导出的时间线查看采集结果；GUI 方法供后续离线查看。采集源进程、窗口、质量失败和采集开销均与正式性能结论分开记录。
 
 在高并发 `final-capacity-nsys-v11` 的 `[40,60)` 秒中，1446 次 `cudaEventSynchronize` 的主机区间并集为 2.821176 秒，其中 2.808275 秒与 GPU 工作重叠，仅 12.901 ms 没有重叠。由此不能把同步 API 的总耗时解释为可消除的 GPU 空闲。主计算 Stream 7 的 GPU 活动并集为 17.883187 秒；Stream 13 承担 723 次 Device-to-Host 拷贝，累计 0.636 ms。
 
