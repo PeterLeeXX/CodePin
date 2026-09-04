@@ -1,0 +1,751 @@
+{
+  "status": "Second stage: complete pressure diagnostics and prepared independent task set; final acceptance remains open.",
+  "code_commit": "97ada3bae907b381ab88d20f1b0506c836ad48fb",
+  "source_files_sha256": {
+    "results\\quality-pressure-screen-v45.json": "65299456b319aa82d856621ec93b703f8aa042f5e90ece0b0bafdd585bb49b86",
+    "results\\quality-pressure-outcome-audit-v54.json": "b488c5bf24fec0e1bc9c02224a08f78effb415e084184e0ac584177535b69c5b",
+    "results\\pressure-path-audit-v54.json": "424bd5ec5893295f547f5d2010459382b21c2da1b775a995d5aec75a881690df",
+    "configs\\final-holdout-manifest-v47.json": "faeb8c8fbfdedfee70c55eb7de144f5596377e7176886e13352774e63472524c",
+    "configs\\nvtx-library-provenance-v52.json": "ac304791d888ea95c15482b6a2cf0013e6c10b0f6f98adea5db446789b90d977",
+    "configs\\token-id-source-provenance-v53.json": "4ca161c1d93b8dd7ab53efae4ce84ed6137eaa378b2380ac78d74ba19de14fb2"
+  },
+  "pressure_screen": [
+    {
+      "case": {
+        "variant": "fi-s64-c96",
+        "backend": "FLASHINFER",
+        "seqs": 64,
+        "concurrency": 96
+      },
+      "label": "quality-pressure-v45-fi-s64-c96-p32-c96",
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1342,
+        "steady_submitted_count": 1342,
+        "steady_effective_tasks_per_minute": 268.0,
+        "steady_terminal_tasks_per_minute": 671.0,
+        "steady_admitted_terminal_tasks_per_minute": 671.0,
+        "steady_successful_tasks_per_minute": 402.5,
+        "steady_latency_seconds.p95": 15.326530177309179,
+        "steady_latency_seconds.p50": 5.853537697927095,
+        "steady_admitted_latency_seconds.p95": 15.326530177309179,
+        "steady_effective_rate": 0.40014903129657226,
+        "steady_resources.io_write_bytes_per_second": 24753.627141383713,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.mcp_cpu_seconds_per_second": 2.7763918067677755,
+        "steady_resources.memory_current_bytes": 31020072369.898304,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.021350445632561,
+        "steady_resources.network_receive_bytes_per_second": 1813975.6167252224,
+        "steady_resources.gpu_sm_clock_mhz": 2415.0593220338983,
+        "steady_resources.gpu_memory_utilization_percent": 25.694915254237287,
+        "steady_resources.mcp_rss_bytes": 15094266827.932203,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.vllm_waiting_requests": 27.38135593220339,
+        "steady_resources.cpu_quota_utilization_percent": 20.929026447329434,
+        "steady_resources.api_cpu_seconds_per_second": 0.641669545109209,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.vllm_running_requests": 62.46610169491525,
+        "steady_resources.mcp_threads": 2347.14406779661,
+        "steady_resources.api_rss_bytes": 1944616404.6101694,
+        "steady_resources.cpu_seconds_per_second": 4.604385818412476,
+        "steady_resources.memory_anon_bytes": 16789990382.644068,
+        "steady_resources.network_send_bytes_per_second": 1813966.259883554,
+        "steady_resources.engine_rss_bytes": 2763876039.59322,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.gpu_power_watts": 188.49077966101694,
+        "steady_resources.memory_file_bytes": 13675463003.118645,
+        "steady_resources.gpu_utilization_percent": 39.13559322033898,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.05160773906317235,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.09760153423443098,
+        "steady_resources.gpu_memory_used_bytes": 64257916928.0,
+        "steady_resources.vllm_kv_cache_usage": 0.034890848994965216,
+        "steady_resources.client_rss_bytes": 101477671.05084746,
+        "steady_resources.gpu_temperature_c": 50.17796610169491
+      },
+      "effective_rate": 0.3995133819951338,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 9050.0,
+      "model_turns": 9050.0,
+      "accepted": false,
+      "outcomes": 2055
+    },
+    {
+      "case": {
+        "variant": "fi-s64-c128",
+        "backend": "FLASHINFER",
+        "seqs": 64,
+        "concurrency": 128
+      },
+      "label": "quality-pressure-v45-fi-s64-c128-p32-c128",
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1403,
+        "steady_submitted_count": 1403,
+        "steady_effective_tasks_per_minute": 279.5,
+        "steady_terminal_tasks_per_minute": 701.5,
+        "steady_admitted_terminal_tasks_per_minute": 701.5,
+        "steady_successful_tasks_per_minute": 419.5,
+        "steady_latency_seconds.p95": 18.907874329155312,
+        "steady_latency_seconds.p50": 7.469908513943665,
+        "steady_admitted_latency_seconds.p95": 18.907874329155312,
+        "steady_effective_rate": 0.39914468995010693,
+        "steady_resources.io_write_bytes_per_second": 30873.73937158885,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.mcp_cpu_seconds_per_second": 3.0076068579912207,
+        "steady_resources.memory_current_bytes": 31847088058.57627,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0254130377700923,
+        "steady_resources.network_receive_bytes_per_second": 1905904.97540739,
+        "steady_resources.gpu_sm_clock_mhz": 2415.0,
+        "steady_resources.gpu_memory_utilization_percent": 26.440677966101696,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.mcp_rss_bytes": 15889439726.644068,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.vllm_waiting_requests": 59.46610169491525,
+        "steady_resources.cpu_quota_utilization_percent": 22.014893696386533,
+        "steady_resources.api_cpu_seconds_per_second": 0.6790223059336951,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.vllm_running_requests": 62.355932203389834,
+        "steady_resources.api_rss_bytes": 1952804794.5762713,
+        "steady_resources.mcp_threads": 2393.6610169491523,
+        "steady_resources.cpu_seconds_per_second": 4.843276613205037,
+        "steady_resources.memory_anon_bytes": 17603019654.508476,
+        "steady_resources.network_send_bytes_per_second": 1906020.5375887628,
+        "steady_resources.engine_rss_bytes": 2727937735.59322,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.gpu_power_watts": 193.22265254237288,
+        "steady_resources.memory_file_bytes": 13685788984.40678,
+        "steady_resources.gpu_utilization_percent": 40.36440677966102,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.09381510144444186,
+        "steady_resources.gpu_memory_used_bytes": 64054493184.0,
+        "steady_resources.vllm_kv_cache_usage": 0.03495426419155233,
+        "steady_resources.client_rss_bytes": 102450505.76271187,
+        "steady_resources.gpu_temperature_c": 51.16949152542373
+      },
+      "effective_rate": 0.39954233409610984,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 9624.0,
+      "model_turns": 9624.0,
+      "accepted": false,
+      "outcomes": 2185
+    },
+    {
+      "case": {
+        "variant": "fi-s64-c192",
+        "backend": "FLASHINFER",
+        "seqs": 64,
+        "concurrency": 192
+      },
+      "label": "quality-pressure-v45-fi-s64-c192-p32-c192",
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1352,
+        "steady_submitted_count": 1352,
+        "steady_effective_tasks_per_minute": 270.0,
+        "steady_terminal_tasks_per_minute": 676.0,
+        "steady_admitted_terminal_tasks_per_minute": 676.0,
+        "steady_successful_tasks_per_minute": 405.0,
+        "steady_latency_seconds.p95": 28.781577568274223,
+        "steady_latency_seconds.p50": 11.627625457011163,
+        "steady_admitted_latency_seconds.p95": 28.781577568274223,
+        "steady_effective_rate": 0.3994082840236686,
+        "steady_resources.io_write_bytes_per_second": 27822.227127706068,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.mcp_cpu_seconds_per_second": 2.848482009378211,
+        "steady_resources.memory_current_bytes": 33210586788.881355,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0222843183218542,
+        "steady_resources.network_receive_bytes_per_second": 1830499.064192164,
+        "steady_resources.gpu_sm_clock_mhz": 2415.0,
+        "steady_resources.gpu_memory_utilization_percent": 25.838983050847457,
+        "steady_resources.mcp_rss_bytes": 17153435231.457626,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.vllm_waiting_requests": 123.5,
+        "steady_resources.cpu_quota_utilization_percent": 21.086267904568242,
+        "steady_resources.api_cpu_seconds_per_second": 0.6427277032864595,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.vllm_running_requests": 62.38135593220339,
+        "steady_resources.api_rss_bytes": 1979437507.2542372,
+        "steady_resources.mcp_threads": 2465.1186440677966,
+        "steady_resources.cpu_seconds_per_second": 4.638978939005013,
+        "steady_resources.memory_anon_bytes": 18947748256.542374,
+        "steady_resources.network_send_bytes_per_second": 1830496.1624736437,
+        "steady_resources.engine_rss_bytes": 2778778051.254237,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.gpu_power_watts": 187.43555084745762,
+        "steady_resources.memory_file_bytes": 13698355408.271187,
+        "steady_resources.gpu_utilization_percent": 39.152542372881356,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.09305377331787364,
+        "steady_resources.gpu_memory_used_bytes": 64536838144.0,
+        "steady_resources.vllm_kv_cache_usage": 0.03458145970252508,
+        "steady_resources.client_rss_bytes": 102913735.59322034,
+        "steady_resources.gpu_temperature_c": 50.144067796610166
+      },
+      "effective_rate": 0.3990740740740741,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 9516.0,
+      "model_turns": 9516.0,
+      "accepted": false,
+      "outcomes": 2160
+    },
+    {
+      "case": {
+        "variant": "fi-s80-c80",
+        "backend": "FLASHINFER",
+        "seqs": 80,
+        "concurrency": 80
+      },
+      "label": "quality-pressure-v45-fi-s80-c80-p32-c80",
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 117,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 2066,
+        "steady_submitted_count": 2066,
+        "steady_effective_tasks_per_minute": 411.0,
+        "steady_terminal_tasks_per_minute": 1033.0,
+        "steady_admitted_terminal_tasks_per_minute": 1033.0,
+        "steady_successful_tasks_per_minute": 617.5,
+        "steady_latency_seconds.p95": 8.743347122712294,
+        "steady_latency_seconds.p50": 3.373382939491421,
+        "steady_admitted_latency_seconds.p95": 8.743347122712294,
+        "steady_effective_rate": 0.3978702807357212,
+        "steady_resources.io_write_bytes_per_second": 29914.178881646494,
+        "steady_resources.memory_shmem_bytes": 162873344.0,
+        "steady_resources.mcp_cpu_seconds_per_second": 4.641215292807862,
+        "steady_resources.memory_current_bytes": 32020883263.45299,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0218800909342334,
+        "steady_resources.network_receive_bytes_per_second": 2782903.051860866,
+        "steady_resources.gpu_sm_clock_mhz": 2414.803418803419,
+        "steady_resources.gpu_memory_utilization_percent": 40.27350427350427,
+        "steady_resources.mcp_rss_bytes": 15480657202.324787,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.vllm_waiting_requests": 0.008547008547008548,
+        "steady_resources.cpu_quota_utilization_percent": 30.622161112450815,
+        "steady_resources.api_cpu_seconds_per_second": 0.9089199868867092,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.vllm_running_requests": 61.72649572649573,
+        "steady_resources.mcp_threads": 2351.4700854700855,
+        "steady_resources.api_rss_bytes": 1969072110.4957266,
+        "steady_resources.cpu_seconds_per_second": 6.736875444739179,
+        "steady_resources.memory_anon_bytes": 17529101670.83761,
+        "steady_resources.network_send_bytes_per_second": 2782844.891308995,
+        "steady_resources.engine_rss_bytes": 3177971922.051282,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.gpu_power_watts": 252.91066666666666,
+        "steady_resources.memory_file_bytes": 13928398007.794872,
+        "steady_resources.gpu_utilization_percent": 59.92307692307692,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.13402161571660928,
+        "steady_resources.gpu_memory_used_bytes": 63874138112.0,
+        "steady_resources.vllm_kv_cache_usage": 0.034382837801641225,
+        "steady_resources.client_rss_bytes": 105406464.0,
+        "steady_resources.gpu_temperature_c": 56.623931623931625
+      },
+      "effective_rate": 0.39839228295819934,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 13712.0,
+      "model_turns": 13712.0,
+      "accepted": false,
+      "outcomes": 3110
+    },
+    {
+      "case": {
+        "variant": "fi-s96-c96",
+        "backend": "FLASHINFER",
+        "seqs": 96,
+        "concurrency": 96
+      },
+      "label": "quality-pressure-v45-fi-s96-c96-p32-c96",
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 117,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 2414,
+        "steady_submitted_count": 2414,
+        "steady_effective_tasks_per_minute": 480.5,
+        "steady_terminal_tasks_per_minute": 1207.0,
+        "steady_admitted_terminal_tasks_per_minute": 1207.0,
+        "steady_successful_tasks_per_minute": 722.0,
+        "steady_latency_seconds.p95": 8.877008618711262,
+        "steady_latency_seconds.p50": 3.481521674024407,
+        "steady_admitted_latency_seconds.p95": 8.877008618711262,
+        "steady_effective_rate": 0.3980944490472245,
+        "steady_resources.io_write_bytes_per_second": 32481.187226005262,
+        "steady_resources.memory_shmem_bytes": 179650560.0,
+        "steady_resources.mcp_cpu_seconds_per_second": 5.5120315059940035,
+        "steady_resources.memory_current_bytes": 33106766891.760685,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0235175848491043,
+        "steady_resources.network_receive_bytes_per_second": 3235887.1670401944,
+        "steady_resources.gpu_sm_clock_mhz": 2414.4102564102564,
+        "steady_resources.gpu_memory_utilization_percent": 46.965811965811966,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.mcp_rss_bytes": 16301876180.239317,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.vllm_waiting_requests": 0.17094017094017094,
+        "steady_resources.cpu_quota_utilization_percent": 35.29475032545474,
+        "steady_resources.api_cpu_seconds_per_second": 1.045238466958596,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.vllm_running_requests": 68.01709401709402,
+        "steady_resources.api_rss_bytes": 1965387460.9230769,
+        "steady_resources.mcp_threads": 2397.7008547008545,
+        "steady_resources.cpu_seconds_per_second": 7.764845071600044,
+        "steady_resources.memory_anon_bytes": 18365898471.931625,
+        "steady_resources.network_send_bytes_per_second": 3235928.9654571414,
+        "steady_resources.engine_rss_bytes": 3114486897.7777777,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.gpu_power_watts": 277.0713333333333,
+        "steady_resources.memory_file_bytes": 14166163035.897436,
+        "steady_resources.gpu_utilization_percent": 69.76923076923077,
+        "steady_resources.cpu_throttled_seconds_per_second": 2.6415632493209273e-05,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.15261748038983025,
+        "steady_resources.gpu_memory_used_bytes": 63908230275.28205,
+        "steady_resources.vllm_kv_cache_usage": 0.03737452580229914,
+        "steady_resources.client_rss_bytes": 107884754.05128205,
+        "steady_resources.gpu_temperature_c": 60.64102564102564
+      },
+      "effective_rate": 0.39508867667121417,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 16217.0,
+      "model_turns": 16217.0,
+      "accepted": false,
+      "outcomes": 3665
+    }
+  ],
+  "native_request_path": {
+    "scope": "Native request timing histograms cover the complete diagnostic including ramp/drain; task/resource steady windows are reported separately. Histogram percentile fields are bucket upper bounds, not exact request percentiles. This is not Nsight evidence.",
+    "cases": [
+      {
+        "label": "quality-capacity-v40-fi-s64-p32-c64",
+        "summary_sha256": "f336fd773033070a9699cade6a7aa8e293f5b0fefc906f9ace29297951ecf992",
+        "mcp_startup_seconds_excluded_from_task_timing": 112.61637274501845,
+        "duration_seconds": 183.70325821603183,
+        "model_request_metrics": {
+          "vllm:request_success_total": 12870.0,
+          "vllm:time_to_first_token_seconds": {
+            "count": 12870.0,
+            "mean": 0.14529189870815085,
+            "p50_bucket_upper_bound": 0.25,
+            "p95_bucket_upper_bound": 0.5
+          },
+          "vllm:request_time_per_output_token_seconds": {
+            "count": 12870.0,
+            "mean": 0.011624514597051262,
+            "p50_bucket_upper_bound": 0.025,
+            "p95_bucket_upper_bound": 0.025
+          },
+          "vllm:request_queue_time_seconds": {
+            "count": 12870.0,
+            "mean": 0.00013669282217852326,
+            "p50_bucket_upper_bound": 0.3,
+            "p95_bucket_upper_bound": 0.3
+          },
+          "vllm:request_prefill_time_seconds": {
+            "count": 12870.0,
+            "mean": 0.057814620273350936,
+            "p50_bucket_upper_bound": 0.3,
+            "p95_bucket_upper_bound": 0.3
+          },
+          "vllm:request_decode_time_seconds": {
+            "count": 12870.0,
+            "mean": 0.6806353898360028,
+            "p50_bucket_upper_bound": 0.8,
+            "p95_bucket_upper_bound": 1.5
+          },
+          "prefix_cache_hit_rate": 0.9238552659824752,
+          "prompt_tokens_by_source": {
+            "local_compute": 4035977.0,
+            "local_cache_hit": 48957280.0,
+            "external_kv_transfer": 0.0
+          }
+        }
+      },
+      {
+        "label": "quality-pressure-v45-fi-s64-c96-p32-c96",
+        "summary_sha256": "0f968f888f79fbb08dd844a01beb7a270f33135166268c39950e8373d205a00e",
+        "mcp_startup_seconds_excluded_from_task_timing": 115.2516916829627,
+        "duration_seconds": 185.57029997603968,
+        "model_request_metrics": {
+          "vllm:request_success_total": 9050.0,
+          "vllm:time_to_first_token_seconds": {
+            "count": 9050.0,
+            "mean": 0.6240321865397922,
+            "p50_bucket_upper_bound": 0.75,
+            "p95_bucket_upper_bound": 0.75
+          },
+          "vllm:request_time_per_output_token_seconds": {
+            "count": 9050.0,
+            "mean": 0.021092661936071285,
+            "p50_bucket_upper_bound": 0.025,
+            "p95_bucket_upper_bound": 0.025
+          },
+          "vllm:request_queue_time_seconds": {
+            "count": 9050.0,
+            "mean": 0.5324963208023351,
+            "p50_bucket_upper_bound": 0.8,
+            "p95_bucket_upper_bound": 0.8
+          },
+          "vllm:request_prefill_time_seconds": {
+            "count": 9050.0,
+            "mean": 0.053159527146651085,
+            "p50_bucket_upper_bound": 0.3,
+            "p95_bucket_upper_bound": 0.3
+          },
+          "vllm:request_decode_time_seconds": {
+            "count": 9050.0,
+            "mean": 1.233667692208678,
+            "p50_bucket_upper_bound": 1.5,
+            "p95_bucket_upper_bound": 2.0
+          },
+          "prefix_cache_hit_rate": 0.9237657896297892,
+          "prompt_tokens_by_source": {
+            "local_compute": 2842488.0,
+            "local_cache_hit": 34433024.0,
+            "external_kv_transfer": 0.0
+          }
+        }
+      },
+      {
+        "label": "quality-pressure-v45-fi-s64-c128-p32-c128",
+        "summary_sha256": "4517f9ce87008747661be8f227d10f0719c1a6cd50e887d2587f7b62d9fa10da",
+        "mcp_startup_seconds_excluded_from_task_timing": 114.41376745596062,
+        "duration_seconds": 187.50251084403135,
+        "model_request_metrics": {
+          "vllm:request_success_total": 9624.0,
+          "vllm:time_to_first_token_seconds": {
+            "count": 9624.0,
+            "mean": 1.186214944148004,
+            "p50_bucket_upper_bound": 2.5,
+            "p95_bucket_upper_bound": 2.5
+          },
+          "vllm:request_time_per_output_token_seconds": {
+            "count": 9624.0,
+            "mean": 0.020030068189715772,
+            "p50_bucket_upper_bound": 0.025,
+            "p95_bucket_upper_bound": 0.025
+          },
+          "vllm:request_queue_time_seconds": {
+            "count": 9624.0,
+            "mean": 1.0972168063018395,
+            "p50_bucket_upper_bound": 1.5,
+            "p95_bucket_upper_bound": 1.5
+          },
+          "vllm:request_prefill_time_seconds": {
+            "count": 9624.0,
+            "mean": 0.050361947353284496,
+            "p50_bucket_upper_bound": 0.3,
+            "p95_bucket_upper_bound": 0.3
+          },
+          "vllm:request_decode_time_seconds": {
+            "count": 9624.0,
+            "mean": 1.1718390849451719,
+            "p50_bucket_upper_bound": 1.5,
+            "p95_bucket_upper_bound": 2.0
+          },
+          "prefix_cache_hit_rate": 0.9238236261928265,
+          "prompt_tokens_by_source": {
+            "local_compute": 3020317.0,
+            "local_cache_hit": 36623168.0,
+            "external_kv_transfer": 0.0
+          }
+        }
+      },
+      {
+        "label": "quality-pressure-v45-fi-s64-c192-p32-c192",
+        "summary_sha256": "1c485e19dc9b683e7af630cd1bdf4e07c0c57cdd8ed1d8296c9a8d423fc27314",
+        "mcp_startup_seconds_excluded_from_task_timing": 113.22205712494906,
+        "duration_seconds": 191.28473242896143,
+        "model_request_metrics": {
+          "vllm:request_success_total": 9516.0,
+          "vllm:time_to_first_token_seconds": {
+            "count": 9516.0,
+            "mean": 2.4354790866299805,
+            "p50_bucket_upper_bound": 5.0,
+            "p95_bucket_upper_bound": 5.0
+          },
+          "vllm:request_time_per_output_token_seconds": {
+            "count": 9516.0,
+            "mean": 0.020650695743250756,
+            "p50_bucket_upper_bound": 0.025,
+            "p95_bucket_upper_bound": 0.025
+          },
+          "vllm:request_queue_time_seconds": {
+            "count": 9516.0,
+            "mean": 2.3418826040884726,
+            "p50_bucket_upper_bound": 2.5,
+            "p95_bucket_upper_bound": 5.0
+          },
+          "vllm:request_prefill_time_seconds": {
+            "count": 9516.0,
+            "mean": 0.05217533263623448,
+            "p50_bucket_upper_bound": 0.3,
+            "p95_bucket_upper_bound": 0.3
+          },
+          "vllm:request_decode_time_seconds": {
+            "count": 9516.0,
+            "mean": 1.2078801879395342,
+            "p50_bucket_upper_bound": 1.5,
+            "p95_bucket_upper_bound": 2.0
+          },
+          "prefix_cache_hit_rate": 0.9234036349824123,
+          "prompt_tokens_by_source": {
+            "local_compute": 2999827.0,
+            "local_cache_hit": 36198304.0,
+            "external_kv_transfer": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "independent_tasks": [
+    {
+      "dataset_index": 24,
+      "instance_id": "marshmallow-code__marshmallow.9716fc62.func_basic__vodq0mdv",
+      "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+      "base_commit": "f817ef2c570f1a9099f1861cd6f858aa5a3647d3",
+      "benchmark_split": "validation",
+      "difficulty": "easy",
+      "repository": "swesmith_marshmallow-code__marshmallow.9716fc62_marshmallow-code__marshmallow.9716fc62.func_basic__vodq0mdv",
+      "workspace_metadata": {
+        "source_files": 88,
+        "source_bytes": 809055,
+        "source_sha256": "8a3f23be7595d52ee6fb25741a5860621917cbd9d873f0148f28315c9a39462c",
+        "source_manifest": "source-24.json",
+        "target_audit": {
+          "checked_symbol_references": 2,
+          "missing_added_targets": []
+        },
+        "snapshot": "5f9679dc0c8629e45a1eb27b14360f794401541a4db1b48d9e734144da4859d9",
+        "tree_digest_seconds": 0.001840805052779615,
+        "prepare_seconds": 0.08853086398448795,
+        "patch_sha256": "674b6b39332eb488a91d101b4962e71117992f1f3ce7949e03c2e0878e330172"
+      }
+    },
+    {
+      "dataset_index": 18,
+      "instance_id": "cknd__stackprinter.219fcc52.func_pm_ctrl_shuffle__916us88k",
+      "repo": "swesmith/cknd__stackprinter.219fcc52",
+      "base_commit": "60ab1766145487cbfb0d7c2fab2f5f1045c8de5b",
+      "benchmark_split": "validation",
+      "difficulty": "easy",
+      "repository": "swesmith_cknd__stackprinter.219fcc52_cknd__stackprinter.219fcc52.func_pm_ctrl_shuffle__916us88k",
+      "workspace_metadata": {
+        "source_files": 32,
+        "source_bytes": 814547,
+        "source_sha256": "c55c1f0f817e2ffa5d4c47760610b4a7f780570f09947f55669f4c65bb4adda9",
+        "source_manifest": "source-18.json",
+        "target_audit": {
+          "checked_symbol_references": 2,
+          "missing_added_targets": []
+        },
+        "snapshot": "f1f8ba5d8ff3d6057ec8935a6ca98c37d5e73c8626d5f95d111cf5d732369115",
+        "tree_digest_seconds": 0.002096384996548295,
+        "prepare_seconds": 0.11569728993345052,
+        "patch_sha256": "83a72497dff16897fbf072676f944dc216dbc3e3ae40fa07ecd2a92e64dc8021"
+      }
+    },
+    {
+      "dataset_index": 30,
+      "instance_id": "pandas-dev__pandas.95280573.func_pm_remove_cond__7k2811ye",
+      "repo": "swesmith/pandas-dev__pandas.95280573",
+      "base_commit": "53b043ab929fc0d04be16a1a24c05201270f1494",
+      "benchmark_split": "validation",
+      "difficulty": "easy",
+      "repository": "swesmith_pandas-dev__pandas.95280573_pandas-dev__pandas.95280573.func_pm_remove_cond__7k2811ye",
+      "workspace_metadata": {
+        "source_files": 2482,
+        "source_bytes": 46109648,
+        "source_sha256": "a12cf3016a21b7d773b434dcc186d298a09511a84a092eb5847ecf274685ba47",
+        "source_manifest": "source-30.json",
+        "target_audit": {
+          "checked_symbol_references": 2,
+          "missing_added_targets": []
+        },
+        "snapshot": "6b73d2b935ed8292ff812849735e7f2e8e388387ae6fdcb17b2293378b4a3e49",
+        "tree_digest_seconds": 0.07112927199341357,
+        "prepare_seconds": 1.007115421933122,
+        "patch_sha256": "1aa2e3fd7fecaf8a3a021f51a346daaf8a746015a1045d2cec9355d43d0fcdc6"
+      }
+    },
+    {
+      "dataset_index": 93,
+      "instance_id": "matthewwithanm__python-markdownify.6258f5c3.lm_rewrite__bdfqgtrq",
+      "repo": "swesmith/matthewwithanm__python-markdownify.6258f5c3",
+      "base_commit": "f471b8049ffab44252718ee04b112d24ac998e19",
+      "benchmark_split": "validation",
+      "difficulty": "easy",
+      "repository": "swesmith_matthewwithanm__python-markdownify.6258f5c3_matthewwithanm__python-markdownify.6258f5c3.lm_rewrite__bdfqgtrq",
+      "workspace_metadata": {
+        "source_files": 18,
+        "source_bytes": 63229,
+        "source_sha256": "13f3e99f9d1ff1d16cb9a65d696227c03dd39554127944e13470300b7c5ae736",
+        "source_manifest": "source-93.json",
+        "target_audit": {
+          "checked_symbol_references": 2,
+          "missing_added_targets": []
+        },
+        "snapshot": "18f77f7ba9dcfb38516d2b38593f4af534b421b77455694033325bfa9520a4af",
+        "tree_digest_seconds": 0.0006369570037350059,
+        "prepare_seconds": 0.0840905369259417,
+        "patch_sha256": "62ede9a377c71e4ff012147aecee53f75a4fdc8948dedb6f227369bcd1e14693"
+      }
+    },
+    {
+      "dataset_index": 42,
+      "instance_id": "rubik__radon.54b88e58.func_basic__j97g394f",
+      "repo": "swesmith/rubik__radon.54b88e58",
+      "base_commit": "22f6654c53433a6ad37004db5063d628dd50b876",
+      "benchmark_split": "validation",
+      "difficulty": "easy",
+      "repository": "swesmith_rubik__radon.54b88e58_rubik__radon.54b88e58.func_basic__j97g394f",
+      "workspace_metadata": {
+        "source_files": 304,
+        "source_bytes": 3790012,
+        "source_sha256": "37fa3964942c609407f76633b262afb201459aa389867017ed25b0781f422fe7",
+        "source_manifest": "source-42.json",
+        "target_audit": {
+          "checked_symbol_references": 2,
+          "missing_added_targets": []
+        },
+        "snapshot": "771d10796f45e4c6b7bb0df147933c168b82dd06a444b0a0de27590cd5aef231",
+        "tree_digest_seconds": 0.0074996380135416985,
+        "prepare_seconds": 0.17032150004524738,
+        "patch_sha256": "c72ed187dc571301fbba25aaa883c2236db370c10e49ebeb7e181bc9431097cf"
+      }
+    },
+    {
+      "dataset_index": 47,
+      "instance_id": "mahmoud__boltons.3bfcfdd0.pr_375",
+      "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
+      "base_commit": "1c4d56a384cef82eeb63232cbd266ce2482bbd90",
+      "benchmark_split": "validation",
+      "difficulty": "medium",
+      "repository": "swesmith_mahmoud__boltons.3bfcfdd0_mahmoud__boltons.3bfcfdd0.pr_375",
+      "workspace_metadata": {
+        "source_files": 111,
+        "source_bytes": 897367,
+        "source_sha256": "a8eb54d123c80fa68dedc68010a57a319b594aa1d90d318c12d2688a98b5987a",
+        "source_manifest": "source-47.json",
+        "target_audit": {
+          "checked_symbol_references": 3,
+          "missing_added_targets": [
+            {
+              "field": "added_entities",
+              "target": "boltons/typeutils.py:Sentinel.__copy__"
+            },
+            {
+              "field": "added_entities",
+              "target": "boltons/typeutils.py:Sentinel.__deepcopy__"
+            }
+          ]
+        },
+        "snapshot": "1472184d063e3e022b3b5df968ef094a35b1f9bc47bde86c8ab17984d06d6a6c",
+        "tree_digest_seconds": 0.0020533769857138395,
+        "prepare_seconds": 0.07659709302242845,
+        "patch_sha256": "f01a8d97e271a9337608cf04355f26634c1085eca4394d7d90f1d6d1714eb08d"
+      }
+    },
+    {
+      "dataset_index": 83,
+      "instance_id": "alanjds__drf-nested-routers.6144169d.combine_file__0cfigj6z",
+      "repo": "swesmith/alanjds__drf-nested-routers.6144169d",
+      "base_commit": "d01dfb41640f05c596486b01624fe5d718f69206",
+      "benchmark_split": "validation",
+      "difficulty": "medium",
+      "repository": "swesmith_alanjds__drf-nested-routers.6144169d_alanjds__drf-nested-routers.6144169d.combine_file__0cfigj6z",
+      "workspace_metadata": {
+        "source_files": 41,
+        "source_bytes": 92523,
+        "source_sha256": "4d74e0401de7ec0dea07bf455458bacf74629b4b4d02f4b88a8026165b9624a4",
+        "source_manifest": "source-83.json",
+        "target_audit": {
+          "checked_symbol_references": 6,
+          "missing_added_targets": []
+        },
+        "snapshot": "f1eb929873e8a5d62d2e57b32973fd2b639a2d7a58a447d3ba0e9174daca285c",
+        "tree_digest_seconds": 0.0007785789202898741,
+        "prepare_seconds": 0.06920424406416714,
+        "patch_sha256": "fae068f9bc5de9f5f350671ec89415dca4caa830227fe419650a638ad419772c"
+      }
+    }
+  ],
+  "independent_tasks_model_requests": 0,
+  "nvtx_dependency": {
+    "nvtx_shared_libraries": [
+      {
+        "path": "/usr/local/cuda-12.8/targets/x86_64-linux/lib/libnvToolsExt.so.1.0.0",
+        "sha256": "c498fcbab0202886c27a0adeac44abf233ade03d30680ffa2d2abe93ab88d913",
+        "package_owner": "cuda-nvtx-12-8: /usr/local/cuda-12.8/targets/x86_64-linux/lib/libnvToolsExt.so.1.0.0",
+        "owner_lookup_exit": 0
+      }
+    ],
+    "purpose": "Record the actual C NVTX dependency used by the opt-in process ranges, without creating a CUDA context."
+  },
+  "token_id_source": {
+    "files": [
+      {
+        "path": "src/rollout.py",
+        "sha256": "55b72776cf4014deae31ebb22e799abfc2a88002fecc92b5cd9ccb325aff65a8",
+        "inspected_lines": [
+          83,
+          103
+        ],
+        "role": "CodePin explicitly requests return_token_ids in the native extra body."
+      },
+      {
+        "path": ".venv/lib/python3.12/site-packages/openhands/sdk/agent/agent.py",
+        "sha256": "8d3a407017a152f1fa7236adf614fb041426dc1b56b1c07c81c38a3b32e0248f",
+        "inspected_lines": [
+          530,
+          542
+        ],
+        "role": "The installed SDK copies prompt_token_ids and provider_specific_fields.token_ids from the raw response into TokenEvent."
+      },
+      {
+        "path": ".venv/lib/python3.12/site-packages/vllm/entrypoints/openai/chat_completion/serving.py",
+        "sha256": "b6f42caa8aa6b45ccaefd266c1ff8994e55e3e3ab41e829ed0fb9c454487d9a2",
+        "inspected_lines": [
+          1265,
+          1330
+        ],
+        "role": "Native response choices use output.token_ids and the response prompt field uses final_res.prompt_token_ids when requested."
+      }
+    ],
+    "interpretation": "The audited TokenEvent arrays originate in native model API response token fields. The append-only checks do not re-encode generated text to manufacture matching prefixes. The separate render audit checks actual prompt arrays against native rendering."
+  },
+  "remaining": "Neighborhood diagnostics, matched queue-boundary Nsight interpretation, three formal repeats, paced load boundary, fifteen-minute steady-state, independent holdout model checks, full live acceptance and final retrieval."
+}

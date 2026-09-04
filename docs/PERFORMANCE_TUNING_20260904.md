@@ -8,6 +8,8 @@
 
 已获得可重复执行的基准与实际 Nsight 证据，但三次独立正式对照、最终配置的 15 分钟稳态、新冻结任务集和完整真实模型回归尚待完成。下列单次筛选不得视作最终提升或饱和结论；高吞吐但行为退化的配置仍记为失败。阶段指标及原始文件摘要随仓库提供在 [stage1-evidence.json](assets/performance/20260904-stage1-evidence.json)。
 
+第二阶段完成了五项压力筛选、七项新任务的实际仓库准备，以及 token 来源和 NVTX 系统依赖核验，见 [stage2-evidence.json](assets/performance/20260904-stage2-evidence.json)。运行代码仍是阶段提交 `97ada3bae907b381ab88d20f1b0506c836ad48fb`；本阶段不改变推理实现或质量门槛。正式重复尚未启动，先补充队列/解码拐点的 Nsight 对照，决定是否值得进一步比较原生调度或图执行配置。
+
 ## 硬件、软件与模型身份
 
 | 项目 | 本次实测 |
@@ -77,6 +79,16 @@ B4096 与 B16384 在 S256/C256 下分别得到 841.0 和 845.5 有效 tasks/min�
 
 上述五项已完成快照及目标符号审计，仓库范围为 18–2482 个源文件、约 0.063–46.11 MB。静态清洗发现它们均为 easy，因此在任何新集合模型请求之前保留这五项，并按相同随机排列补入前两个未见仓库的 medium 任务 `[47,83]`（boltons、drf-nested-routers）；补充选择记录为 `configs/final-holdout-selection-v47.json`。全量 100 行的实际清洗结果是 82 easy、15 medium、3 hard，零拒绝；三个 hard 索引 `[63,67,86]` 全已进入原集合。最终新集合没有困难任务，原集合困难任务的结果仍完整报告，不声称其为新的独立验证，也不重新标注或合成任务补足这一限制。
 
+七项现在均已实际物化，完整不可变规格随仓库提供在 `scripts/performance_final_workload.json`。新增 boltons 快照有 111 个源文件、897367 bytes，drf-nested-routers 有 41 个源文件、92523 bytes；前五项的源码摘要保持一致。目标审计保留了 boltons 的两个尚不存在的新增方法标签 `Sentinel.__copy__`、`Sentinel.__deepcopy__`，它们使该任务的函数级满分不可达；没有删除目标或更换任务。准备报告位于 `configs/final-holdout-workload-v47/manifest.json`，本阶段七项模型请求仍为零。复现准备命令为：
+
+```bash
+.venv/bin/python -m scripts.prepare_performance_workload \
+  --dataset data/sample/validation.parquet \
+  --spec scripts/performance_final_workload.json \
+  --output outputs/final-performance-workload \
+  --workspace-root /root/autodl-tmp/codepin-final-performance-workspaces
+```
+
 额外审计了 107 个目标符号引用：104 个在应用变异补丁后的快照中存在；三个 `added_*` 标签引用了补丁删除的定义（feedparser 的 `parse_content_type` 两种层级及 astroid 的 `ImportlibFinder.contribute_to_path`）。原有 F1 仍包含这些标签，因此这两个任务的部分分项满分不可达。这是原数据/指标的局限；保留全部任务、原标签和冻结门槛，不重新标注以抬高有效率。实际返回仍必须通过现有符号校验，且最终回归按任务比较输出和工具行为。
 
 **有效任务**在测量前定义为：正常结束、无轨迹错误、结果缓存未命中、原有定位奖励至少 0.5、工具错误为零，且返回非空且不超过 12000 字符/160 行的上下文。原奖励是 file/module/entity 三个 F1 的和，范围 0–3；module 包含类和顶层函数，因此它不等于另行报告的 file/class/function F1 之和。全部失败、超时、限流任务均保留；定位有效率本身较低是模型在此负载上的结果，不因优化而排除困难任务。
@@ -111,6 +123,22 @@ FA 组合进一步被模型的混合后端拒绝：`VLLM batch_invariant mode is
 
 ![保留质量失败配置的单轮容量筛选](assets/performance/20260904-quality-capacity-screen.png)
 
+随后 v45 的五项压力筛选全部执行完毕，使用相同旧五任务、P32/API1/B8192、30 秒预热和 180 秒真实执行。五项均无基础设施错误或超时，实际模型请求等于轨迹轮数，但均有逐任务质量或工具行为偏差，不能采用为合格部署。每条结果、行为直方图和源文件摘要见 `results/quality-pressure-outcome-audit-v54.json`。
+
+| 原生序列上限 S / 任务并发 C | 真实任务数 | 全量有效率 | 稳态有效 tasks/min | P50 / P95 秒 | 平均引擎排队 | GPU 活动均值 |
+|---|---:|---:|---:|---:|---:|---:|
+| 64 / 96 | 2055 | 39.951% | 268.0 | 5.854 / 15.327 | 27.38 | 39.14% |
+| 64 / 128 | 2185 | 39.954% | 279.5 | 7.470 / 18.908 | 59.47 | 40.36% |
+| 64 / 192 | 2160 | 39.907% | 270.0 | 11.628 / 28.782 | 123.50 | 39.15% |
+| 80 / 80 | 3110 | 39.839% | 411.0 | 3.373 / 8.743 | 0.01 | 59.92% |
+| 96 / 96 | 3665 | 39.509% | 480.5 | 3.482 / 8.877 | 0.17 | 69.77% |
+
+固定 S64 加压与同步增加 S/C 的行为不同：前者排队持续上升，吞吐反而低于 S64/C64 的单轮 388.5，后者的吞吐继续增长但质量仍失败。图中的 GPU 数值是采样活动利用率，不能代替 Nsight 的 GPU 区间并集或硬件带宽计数器。
+
+![分别改变原生容量和任务压力的质量筛选曲线](assets/performance/20260904-quality-pressure-screen.png)
+
+原生请求计数进一步显示，S64/C64 与 S64/C96 的前缀命中率分别为 92.386% / 92.377%，prefill 均值为 57.815 / 53.160 ms；模型排队均值却从 0.137 增至 532.496 ms，TPOT 从 11.625 增至 21.093 ms，decode 从 0.681 增至 1.234 秒。这些请求均值覆盖完整诊断，不能与表内稳态任务分位数相加当作关键路径。它们把后续排查集中到排队及 decode 路径，但没有独自证明 CPU、CUDA Graph 或某个 kernel 是原因。`results/pressure-path-audit-v54.json` 保留边界和原始摘要；已安排同 S64/C64、S64/C96 的真实 Nsight 与无采集对照，正式重复等待该证据分析。
+
 任务顺序 seed 固定为 20260904，每个完整任务块使用 seed + 块号打乱顺序；vLLM 引擎 seed 保持原值 0。temperature 0、top_p 1、top_k 20、最多 8 轮，每轮输出上限 2048。所有主对照关闭完整定位结果缓存。任务集重复产生的是可复现的固定混合负载，不能将其热前缀命中率推广到任意新问题。
 
 预先物化固定快照，准备耗时单列；任务时延包含提交、客户端/服务端排队、完整仓库前后内容哈希、多轮模型和真实工具、结构化校验及有界上下文返回。文件系统保持自然热缓存，不调用全局 drop_caches。压测端、MCP 和模型均在云主机本地；公网用户到主机的 WAN 延迟不计入此主对照。
@@ -126,6 +154,8 @@ FA 组合进一步被模型的混合后端拒绝：`VLLM batch_invariant mode is
 ## Append-only 与混合缓存
 
 真实 TokenEvent 表明，后一轮 prompt token 数组以“前一轮 prompt + 前一轮实际生成”为完整前缀；工具观察追加在后面。SDK 每轮仍发送完整历史，服务端仍要接收、解析、tokenize 和查询缓存。逻辑追加、线上的完整请求和真正免算的缓存 token 是三个不同量。
+
+另检查了这些数组的来源：CodePin 显式请求 `return_token_ids`；固定 OpenHands SDK 从原始响应的 `prompt_token_ids` 和 choice 的 `provider_specific_fields.token_ids` 构造 TokenEvent；固定 vLLM 从实际 `output.token_ids`、`final_res.prompt_token_ids` 填充对应返回字段。检查没有用本地重编码后的生成文本替代原生返回数组。代码位置和文件摘要保存在 `configs/token-id-source-provenance-v53.json`，下述 render 对照另行核验请求侧 token。
 
 数据生成入口最初八条轨迹的跨任务 LCP 约 1624 token，对齐后为 1088；实际 MCP 连续负载导出的轨迹，跨任务最短 LCP 为 1646，对齐后为 1632。区别来自工作目录前缀，不能用前一种入口的观察推断后一种入口的优化收益。任务内每轮复用机会、任务间公共前缀及 vLLM 实际命中 token 分开记录。
 
@@ -290,6 +320,8 @@ Host-to-Device 与主计算在此 trace 中没有重叠，但两类 H2D 合计�
 ![真实 Nsight 时间线中主机同步与 GPU 执行的重叠](assets/performance/20260904-nsys-cuda-slice.png)
 
 本机已有 `/opt/nvidia/nsight-compute/2025.1.1/host/target-linux-x64/nsys`，实际版本 2025.1.1.0；无需重新安装系统工具。vLLM NVTX 范围需要 `nvtx==0.2.15`，首次缺包启动失败已记录，补齐声明依赖后成功。CPU perf sampling / context switch 权限不可用（perf_event_paranoid=4、相关 syscall 受限），故使用 `--sample=none --cpuctxsw=none`。CUDA、NVTX 和 OS Runtime 采集真实可用。普通利用率数据不替代缺失的 CPU 采样证据。
+
+CodePin 的可选进程级范围还使用 CUDA Toolkit 的 `libnvToolsExt.so.1`，用于跨线程/异步等待的 start/end 范围。本机通过动态加载和 `/proc/self/maps` 核验，实际文件为 `/usr/local/cuda-12.8/targets/x86_64-linux/lib/libnvToolsExt.so.1.0.0`，由已安装的 `cuda-nvtx-12-8` 提供，SHA-256 为 `c498fcbab0202886c27a0adeac44abf233ade03d30680ffa2d2abe93ab88d913`；记录在 `configs/nvtx-library-provenance-v52.json`。复现采集时需要相应 CUDA NVTX 共享库位于动态加载器搜索路径；仅安装 Python profiling 依赖不等于已具备这项系统组件。请求开启埋点而缺少共享库时会明确报错，常规关闭埋点的服务不加载它。本次复用现有组件，没有重新安装系统 NVTX。
 
 一次额外的 `cudaProfilerApi` 门控尝试中，真实预热通过，`/start_profile` 返回 200，但随后请求停止推进，`/stop_profile` 也未正常返回。保留 `final-serial-cuda-v11.nsys-rep`、进程终止记录和原日志；该失败采集不参与性能统计。交付的采集脚本使用已经验证的 NVTX 窗口，不保留这一未通过验证的控制入口；没有据此推断模型推理服务本身的稳定性退化。
 

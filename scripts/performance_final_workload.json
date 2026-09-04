@@ -1,0 +1,47 @@
+{
+  "name": "codepin-sft-final-independent-holdout-v47",
+  "dataset": "data/sample/validation.parquet",
+  "dataset_sha256": "e760f58ab69bd8ecf59c2b5010729f98b8e2b25b635a170ac969f58f359a217e",
+  "seed": 20260904,
+  "effective_task": {
+    "status": "ok",
+    "minimum_multilevel_localization_f1": 0.5,
+    "maximum_tool_errors": 0,
+    "require_bounded_context": true
+  },
+  "tuning_indices": [],
+  "validation_indices": [
+    24,
+    18,
+    30,
+    93,
+    42,
+    47,
+    83
+  ],
+  "revisions": {
+    "swesmith/marshmallow-code__marshmallow.9716fc62": "f817ef2c570f1a9099f1861cd6f858aa5a3647d3",
+    "swesmith/cknd__stackprinter.219fcc52": "60ab1766145487cbfb0d7c2fab2f5f1045c8de5b",
+    "swesmith/pandas-dev__pandas.95280573": "53b043ab929fc0d04be16a1a24c05201270f1494",
+    "swesmith/matthewwithanm__python-markdownify.6258f5c3": "f471b8049ffab44252718ee04b112d24ac998e19",
+    "swesmith/rubik__radon.54b88e58": "22f6654c53433a6ad37004db5063d628dd50b876",
+    "swesmith/mahmoud__boltons.3bfcfdd0": "1c4d56a384cef82eeb63232cbd266ce2482bbd90",
+    "swesmith/alanjds__drf-nested-routers.6144169d": "d01dfb41640f05c596486b01624fe5d718f69206"
+  },
+  "selection_rule": "Retain all five v42 tasks. Using the original Random(seed) shuffled order, append the first two medium tasks in distinct repositories outside both original splits and the five reserved repositories. Only task metadata is consulted.",
+  "prior_splits": [
+    3,
+    4,
+    9,
+    13,
+    32,
+    56,
+    63,
+    67,
+    7,
+    58,
+    85,
+    86,
+    97
+  ]
+}
