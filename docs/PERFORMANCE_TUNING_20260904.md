@@ -10,9 +10,11 @@
 
 第二阶段完成了五项压力筛选、七项新任务的实际仓库准备，以及 token 来源和 NVTX 系统依赖核验，见 [stage2-evidence.json](assets/performance/20260904-stage2-evidence.json)。运行代码仍是阶段提交 `97ada3bae907b381ab88d20f1b0506c836ad48fb`；本阶段不改变推理实现或质量门槛。
 
-第三阶段完成三项质量邻域测试，以及 S64/C64、S64/C96 各一组 Nsight/无采集对照，见 [stage3-evidence.json](assets/performance/20260904-stage3-evidence.json)。两份新原始 trace、SQLite、八份 CSV 统计和逐任务记录已拉回本地，2,158 个条目全部校验通过；本地目录为 `tmp/verification/20260904-vllm-performance/stage3-material-v60/`。压缩包为 435269860 bytes，SHA-256 `2834ac25d1d3a821db5c98ca9c2165fc46fd61936f504e347919b085ef87392c`。现已开始根据该证据比较原生图捕获范围，尚未采用新的默认配置；完整正式重复和最终验收仍待完成。
+第三阶段完成三项质量邻域测试，以及 S64/C64、S64/C96 各一组 Nsight/无采集对照，见 [stage3-evidence.json](assets/performance/20260904-stage3-evidence.json)。两份新原始 trace、SQLite、八份 CSV 统计和逐任务记录已拉回本地，2,158 个条目全部校验通过；本地目录为 `tmp/verification/20260904-vllm-performance/stage3-material-v60/`。压缩包为 435269860 bytes，SHA-256 `2834ac25d1d3a821db5c98ca9c2165fc46fd61936f504e347919b085ef87392c`。随后根据该证据完成原生图捕获范围对照，结果见阶段四；尚未采用新的默认配置。
 
-第四阶段完成六组原生 CUDA Graph 范围对照，保留 15,805 次真实任务执行与 69,642 次模型请求，见 [stage4-evidence.json](assets/performance/20260904-stage4-evidence.json)。全部请求数与实际轨迹轮数相符，无基础设施异常或超时，但六组均有逐任务质量或工具行为退化，未采用为默认配置。155 个原始材料条目已拉回并逐件校验；下一轮批量预算与低负载缓存路径实验正在进行，最终验收仍未完成。
+第四阶段完成六组原生 CUDA Graph 范围对照，保留 15,805 次真实任务执行与 69,642 次模型请求，见 [stage4-evidence.json](assets/performance/20260904-stage4-evidence.json)。全部请求数与实际轨迹轮数相符，无基础设施异常或超时，但六组均有逐任务质量或工具行为退化，未采用为默认配置。155 个原始材料条目已拉回并逐件校验；后续批量预算、缓存与调度对照见阶段五。
+
+第五阶段完成八组原生批量、缓存和同步调度对照，保留 11,650 次真实任务与 51,321 次模型请求，见 [stage5-evidence.json](assets/performance/20260904-stage5-evidence.json)。所有请求数与实际轮次相符，基础设施异常和超时均为零；三组低负载配置通过单次严格筛选，其他五组失败。234 个原始条目已拉回并核验，另以五条真实轨迹核对了 22 轮原生贪心采样与 token 追加。目前补齐三次原部署基线，未选择最终配置、未完成饱和及最终验收。
 
 ## 硬件、软件与模型身份
 
@@ -190,11 +192,45 @@ v49 进一步隔离并发和原生序列容量的邻域变化，仍使用相同�
 
 首次 G1024/G4096 服务准备分别约 108/105 秒，随后使用已留存编译缓存的相应配置约 31 秒。每组确实重启引擎，但文件系统与编译缓存自然保留；不能把首次编译成本全部归为扩大 Graph，也不能用后续热缓存启动时间代表冷启动。逐次实测时间随证据保存。
 
-本阶段尚未对扩大 Graph 后的服务重新采集 Nsight，因此“扩大覆盖减少普通 kernel 发射”的具体机制仍需最终时间线验证。下一步比较 B1024/G1024 与 B8192/G1024，以及同配置下 C16/C4 的原生 APC align/关闭配对；它们用于检查批量、捕获范围和质量约束的交互，不改变模型或工具语义。
+本阶段尚未对扩大 Graph 后的服务重新采集 Nsight，因此“扩大覆盖减少普通 kernel 发射”的具体机制仍需最终时间线验证。B1024/G1024 与 B8192/G1024、C16/C4 的原生 APC 配对已在阶段五完成，用于检查批量、捕获范围和质量约束的交互，模型与工具语义保持不变。
 
 全部六组原始记录已拉回，逐件核验 155 个条目，零失败。压缩包 `stage4-material-v63.tar.gz` 为 6706774 bytes，SHA-256 `d4d926aea4bb8601df59745ceecaf9abd80589c4079398da868c168b68957c36`；本地解压目录为 `tmp/verification/20260904-vllm-performance/stage4-material-v63/`。
 
 实际执行入口为材料包中的 `configs/start-native-graph-screen-v59.sh`，六项完整服务命令和基准命令位于对应的 `configs/serve-native-graph-v59-*.sh`、`configs/command-native-graph-v59-*.json`，无需从报告中的缩写猜测参数。
+
+## 原生批量、混合缓存与调度对照（阶段五）
+
+固定 FI/S64/G1024/API1、模型和完整工具预算，完成六组批量/缓存对照及两组同步调度对照。每组新引擎、30 秒预热、180 秒测量，表中吞吐和时延使用 `[60,180)` 稳态窗口；任务数和有效率覆盖全程。完整结果缓存、Nsight、NVTX 和轨迹导出关闭。前阶段相同参数的 G1024/B8192 结果作为批量和高并发调度配对对照，保留测量时间不同这一边界。
+
+| Batch tokens | 并发 | 混合前缀缓存 | 调度 | 全程任务数 | 有效 tasks/min | P50 / P95（秒） | 全程有效率 | 原严格门槛 |
+| ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | --- |
+| 1024 | 64 | align | 异步 | 2745 | 362.5 | 2.952 / 7.772 | 39.927% | 未通过 |
+| 1024 | 96 | align | 异步 | 2335 | 302.5 | 5.166 / 13.385 | 39.914% | 未通过 |
+| 8192 | 16 | align | 异步 | 1380 | 181.5 | 1.552 / 3.641 | 39.855% | 未通过 |
+| 8192 | 16 | none | 异步 | 765 | 100.0 | 2.664 / 6.978 | 40.000% | 通过单次筛选 |
+| 8192 | 4 | none | 异步 | 420 | 55.0 | 1.403 / 2.812 | 40.000% | 通过单次筛选 |
+| 8192 | 4 | align | 异步 | 525 | 69.5 | 1.160 / 2.139 | 40.000% | 通过单次筛选 |
+| 8192 | 64 | align | 同步 | 2370 | 310.5 | 3.368 / 9.112 | 39.916% | 未通过 |
+| 8192 | 16 | align | 同步 | 1110 | 148.0 | 1.857 / 4.629 | 39.910% | 未通过 |
+
+![原生批量、混合缓存和调度的真实任务对照](assets/performance/20260904-native-path-screen.png)
+
+较小 B1024 在 C64/C96 均未显示收益，并且仍未通过质量筛选；低并发前缀缓存带来明显吞吐差异，但 C16 的 align 路径仍有稀少质量/工具行为变动。关闭缓存通过一次筛选不等于证明缓存存在缺陷，调度对照同样只能检查路径差异。同步/异步实际状态均从 API 与引擎启动日志核验，没有修改依赖实现。
+
+原部署日志已经显示异步调度启用，因此没有将“再次开启异步”列为新优化。每个配对的原始配置、逐任务有效数、轮次/工具错误分布、质量、资源和变化幅度见 [stage5-evidence.json](assets/performance/20260904-stage5-evidence.json)。图中每点仅一次独立引擎运行，尚无重复波动或置信区间。
+
+C4 align 的原生指标记录实际复用 8,768,192 prompt tokens，仍计算 742,949 tokens；关闭缓存的 C4 对照实际复用为零。C16 关闭缓存的对照也核验了查询、命中和实际复用均为零。查询命中计数与已完成请求实际复用量分别保存，不能用命中率替代端到端吞吐，也不能把逻辑 append-only 解释为完全免除重复计算。
+
+另用独立服务开启原生请求参数日志，五项真实任务共 22 轮请求全部关联到唯一实际 request ID。引擎最终解析的设置为 `temperature=0.0`、`top_p=1.0`、`top_k=0`、`min_p=0.0`、`max_tokens=2048`、`n=1`、`seed=None`。锁定版本的原生 SamplingParams 在零温度下将 top_k 规范化为 0 并走 GREEDY；不能把它误判为随机采样。此参数诊断开启请求日志，完全排除在性能对照之外；它不证明稀少输出差异的底层原因。源码摘要、逐请求原生日志及五条实际轨迹均保存。
+
+参数诊断的驱动 stdout 与基准子进程曾使用同一个文本日志路径，部分文本发生覆盖；这一采集缺陷保留，不把该文件当作完整 stdout。独立保存的原生服务请求日志、参数 JSON、结果、summary 和五条 TokenEvent 轨迹均完整。拉回后再次逐项核对 22 个唯一请求及参数，22 轮、17 次跨轮连接全部保持严格 token 追加。交叉核验为 `results/sampling-material-audit-v79.json`，没有重新生成或修饰模型结果。复现时驱动输出应重定向到 `logs/sampling-wire-driver-v72.log`，为基准子进程保留其独立日志文件名。
+
+原部署首轮长测本身出现过少量决策变动。为避免用少量基线样本判定候选退化，已顺延尚未启动的正式候选复测，先补齐三次原部署基线：原 S8/B8192、相同代码与模型、P1/C4、P4/C8、P4/C16、冷缓存验证和固定真实轨迹回放。既有严格筛选失败记录和有效任务定义均保留，未因候选失败放宽门槛。补测完成前不宣称已经选出默认配置或达到质量约束下的饱和边界。
+
+本阶段材料已拉回并逐件核验 234 个条目，零失败。`stage5-material-v69.tar.gz` 为 5939345 bytes，SHA-256 `68e02c5df9d676cd2b196249d7fdd90568e86ecbba670d9d531667977822532e`；本地解压目录为 `tmp/verification/20260904-vllm-performance/stage5-material-v69/`。
+
+实际入口为材料包中的 `configs/start-native-quality-path-screen-v62.sh`、`configs/start-native-async-path-screen-v67.sh` 和独立 `configs/sampling-wire-diagnostic-v72.py`；每组完整服务参数、压测命令、原始日志和参数审计均在对应 configs/results/logs 中。尚未执行的正式候选脚本属于复现准备材料，不作为通过验收的证据。
+本阶段图表与机器可读结果先由 `configs/build-stage5-evidence-v76.py` 从已校验材料生成，再执行 `configs/audit-sampling-material-v79.py` 的独立数据核对及 `configs/finish-stage5-report-v80.py` 的说明补充；新增派生材料保存在原始包之外，其摘要包含在阶段 JSON 中。
 
 ## Append-only 与混合缓存
 
@@ -368,7 +404,7 @@ python -m scripts.benchmark_performance aggregate \
 
 图中的主机前向、预处理和 GPU 活动有重叠，不能相加成任务关键路径，也不能把 GPU 区间并集当成 SM 利用率。当前 trace 没有记录每个调度批次的 token 数，因此不能仅据这些占比断言每一次无 Graph 执行的具体原因。实际启动日志显示 S64 默认只捕获到 128 tokens；锁定源码 `vllm/v1/cudagraph_dispatcher.py:276–285` 在批 token 数超过捕获上限时返回 NONE，默认上限则为 `min(max_num_seqs*2, 512)`。这些证据支持下一步只扩大原生捕获范围，而不是直接宣称已完成优化。
 
-已启动的 v59 对照保留 19 个原生 decode/小批捕获尺寸，并分别补充至 1024 或 4096 tokens，在相同 S64/B8192 下测试 C64/C96，同时保留 G128 原生对照。`FULL_AND_PIECEWISE` 模式保持不变；GDN 的 `UNIFORM_BATCH` 支持不能解释为任意混合 prefill/decode 都能完整捕获。候选可能降低主机启动开销，也可能增加填充计算、显存和启动成本；六项筛选尚未完成，质量门槛、模型、预算和工具均未改变。决策和原生源码摘要见 `configs/native-graph-experiment-decision-v59.json`、`configs/native-graph-source-v57.json`。
+已完成的 v59 对照保留 19 个原生 decode/小批捕获尺寸，并分别补充至 1024 或 4096 tokens，在相同 S64/B8192 下测试 C64/C96，同时保留 G128 原生对照。`FULL_AND_PIECEWISE` 模式保持不变；GDN 的 `UNIFORM_BATCH` 支持不能解释为任意混合 prefill/decode 都能完整捕获。六项筛选均已完成并保留质量失败，数值见阶段四；后续仍需最终选定配置的 trace 才能验证具体关键路径变化。质量门槛、模型、预算和工具均未改变。决策和原生源码摘要见 `configs/native-graph-experiment-decision-v59.json`、`configs/native-graph-source-v57.json`。
 
 本阶段实际执行的完整采集/导出参数保存在 `configs/command-quality-boundary-*-v55.json`，原始文件为 `profiles/quality-boundary-c{64,96}-nsys-v55.nsys-rep` 及同名 SQLite。另通过以下实际命令分别导出了四种 CSV（C96 使用对应文件名）：
 
