@@ -1,0 +1,3042 @@
+{
+  "stage": 4,
+  "final_acceptance": false,
+  "inference_source_commit": "97ada3bae907b381ab88d20f1b0506c836ad48fb",
+  "protocol": {
+    "reason": "Compare the observed launch path using only native CUDA Graph size selection. With S64 the native default captures up to 128 tokens; an append-only tool observation can exceed this even when a large history prefix is reused. Mixed batches then cannot use those captured graphs. Wider piecewise graphs may reduce host launches but can pad more compute and require more memory/startup time.",
+    "decision": {
+      "proceed": true,
+      "recorded_at": "2026-09-04T10:40:14.180537+00:00",
+      "trace_evidence": {
+        "profiles/quality-boundary-c64-native-window-v57.json": "f8857d15ca8a5aa02c37bfadc93ab96ff3dedde94a99ff5675023738c11ce058",
+        "profiles/quality-boundary-c96-native-window-v57.json": "31e73e23e0fb7cedf1ed67258854cf59883886808831f46c20681d2f64186b27",
+        "results/profile-quality-boundary-v55.json": "ede22719c30c4ab0f9e5af9089ab905f4eeeb5535932b6ac5f2293e71c545bd9",
+        "configs/native-graph-source-v57.json": "53f6c875d3b74d42ef1bfaf5aa6fad15337e5460638a2fc1e7a6a20bfd040c6e"
+      },
+      "scope": "A targeted native-graph coverage screen, not final configuration adoption. Raw stage material must be retrieved and verified before its GPU work starts.",
+      "finding": "In matched 15-second native windows, C64 has 1053 complete forward spans, with 27.3504% no-Graph paths; C96 has 615 spans, with 57.5610% no-Graph paths. Mean host duration of those paths is 28.5510 versus 28.3295 ms. GPU activity interval union is 7.21385 versus 4.96461 seconds. Prefix behavior and model requests remain real.",
+      "source_evidence": "Active S64 service captures through 128 tokens. Native dispatcher returns NONE above its maximum captured size. FULL_AND_PIECEWISE is active, and the GDN backend supports UNIFORM_BATCH, not arbitrary full mixed batches.",
+      "inference_limit": "These traces identify launch paths but do not record each scheduler batch token count. The graph-size guard is a plausible cause to test, not an already proven explanation of every no-Graph span. Runtime/driver API records can nest; API counts are not unique kernel executions.",
+      "experiment": "Compare native default G128 with G1024 and G4096, keeping the existing decode sizes, S64/B8192/API1/P32, APC align, model, budgets and real tools. Measure C64 and C96 with paired controls. No Nsight, NVTX or trajectory export in these six runs.",
+      "quality": "The original strict per-task gates are unchanged. The C64 plain profiling control had an extra safety error round; do not label it qualified or count any profiling case as an independent formal repeat.",
+      "not_selected_yet": [
+        "Final default configuration",
+        "Final quality-qualified capacity",
+        "Three-repeat confirmation",
+        "Independent seven-task model validation",
+        "15-minute steady acceptance"
+      ]
+    },
+    "cases": [
+      {
+        "graph_limit": 128,
+        "concurrency": 64,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      {
+        "graph_limit": 1024,
+        "concurrency": 64,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      {
+        "graph_limit": 4096,
+        "concurrency": 64,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      {
+        "graph_limit": 4096,
+        "concurrency": 96,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      {
+        "graph_limit": 1024,
+        "concurrency": 96,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      {
+        "graph_limit": 128,
+        "concurrency": 96,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      }
+    ],
+    "capture_sizes": {
+      "128": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128
+      ],
+      "1024": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        256,
+        512,
+        1024
+      ],
+      "4096": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        256,
+        512,
+        1024,
+        2048,
+        4096
+      ]
+    },
+    "control": "G128 exactly reproduces the S64 native default capture-size list. Same production source and no Nsight, NVTX or full trace export in all six cases. Each case has a fresh engine; all five actual tasks and real tools are retained.",
+    "source_commit": "97ada3bae907b381ab88d20f1b0506c836ad48fb",
+    "fixed": {
+      "clients": 32,
+      "api_count": 1,
+      "batch_tokens": 8192,
+      "seqs": 64,
+      "gpu_memory_utilization": 0.7,
+      "prefix": "align",
+      "result_cache": false,
+      "split": "validation"
+    },
+    "warmup_seconds": 30,
+    "formal_diagnostic_seconds": 180,
+    "steady_window_seconds": [
+      60,
+      180
+    ],
+    "graph_mode": "FULL_AND_PIECEWISE remains unchanged. Do not request unsupported full mixed GDN capture or override native support checks.",
+    "budgets": "Same seed 20260904, engine seed 0, temperature 0, top_p 1, top_k 20; eight rounds, 2048 generated-token limit, 12000 chars/160 bounded-context lines.",
+    "gate": "Original frozen task-level minimum effective rate, quality and F1, maximum tool/output/cost metrics; all failures retained, actual requests equal actual turns. One diagnostic is not repeatability or final acceptance.",
+    "further_candidates": "A lower batch-token budget coordinated with the captured range is considered only after inspecting these results; do not launch an unbounded parameter sweep."
+  },
+  "cases": [
+    {
+      "case": {
+        "graph_limit": 128,
+        "concurrency": 64,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      "label": "native-graph-v59-g128-s64-p32-c64",
+      "outcomes": 2770,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128]}"
+      ],
+      "capture_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128
+      ],
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1821,
+        "steady_submitted_count": 1821,
+        "steady_effective_tasks_per_minute": 363.0,
+        "steady_terminal_tasks_per_minute": 910.5,
+        "steady_admitted_terminal_tasks_per_minute": 910.5,
+        "steady_successful_tasks_per_minute": 545.0,
+        "steady_latency_seconds.p95": 7.7749108779244125,
+        "steady_latency_seconds.p50": 3.0194935720646754,
+        "steady_admitted_latency_seconds.p95": 7.7749108779244125,
+        "steady_effective_rate": 0.39813289401427787,
+        "steady_resources.cpu_quota_utilization_percent": 27.77219824666809,
+        "steady_resources.gpu_power_watts": 232.313593220339,
+        "steady_resources.mcp_threads": 2323.5338983050847,
+        "steady_resources.vllm_waiting_requests": 0.0,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.memory_anon_bytes": 16461249761.62712,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.mcp_rss_bytes": 14783607165.83051,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.gpu_memory_used_bytes": 64465521091.254234,
+        "steady_resources.api_cpu_seconds_per_second": 0.8070028113841112,
+        "steady_resources.engine_rss_bytes": 2707102737.355932,
+        "steady_resources.api_rss_bytes": 1952587776.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.11575325757948804,
+        "steady_resources.vllm_kv_cache_usage": 0.029057611745263074,
+        "steady_resources.gpu_sm_clock_mhz": 2416.14406779661,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0222714804062882,
+        "steady_resources.gpu_memory_utilization_percent": 37.016949152542374,
+        "steady_resources.memory_current_bytes": 33016530423.322033,
+        "steady_resources.network_receive_bytes_per_second": 2461054.577858471,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.memory_file_bytes": 15969071138.711864,
+        "steady_resources.mcp_cpu_seconds_per_second": 4.134559190738708,
+        "steady_resources.cpu_seconds_per_second": 6.1098836142669795,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.vllm_running_requests": 51.19491525423729,
+        "steady_resources.network_send_bytes_per_second": 2461057.2371238414,
+        "steady_resources.client_rss_bytes": 104233654.23728813,
+        "steady_resources.gpu_utilization_percent": 57.16101694915254,
+        "steady_resources.gpu_temperature_c": 55.483050847457626,
+        "steady_resources.io_write_bytes_per_second": 23784.452274109026
+      },
+      "effective_rate": 0.39855595667870036,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 12212.0,
+      "model_turns": 12212.0,
+      "native_metrics": {
+        "vllm:prompt_tokens_total": 50313708.0,
+        "vllm:generation_tokens_total": 726862.0,
+        "vllm:prefix_cache_queries_total": 50359466.0,
+        "vllm:prefix_cache_hits_total": 46526144.0,
+        "vllm:num_preemptions_total": 0.0,
+        "vllm:request_success_total": 12212.0,
+        "vllm:time_to_first_token_seconds": {
+          "count": 12212.0,
+          "mean": 0.13710385965121757,
+          "p50_bucket_upper_bound": 0.25,
+          "p95_bucket_upper_bound": 0.5
+        },
+        "vllm:request_time_per_output_token_seconds": {
+          "count": 12212.0,
+          "mean": 0.012530060145613415,
+          "p50_bucket_upper_bound": 0.025,
+          "p95_bucket_upper_bound": 0.025
+        },
+        "vllm:request_queue_time_seconds": {
+          "count": 12212.0,
+          "mean": 0.00018941555906807386,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_prefill_time_seconds": {
+          "count": 12212.0,
+          "mean": 0.05872151136255208,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_decode_time_seconds": {
+          "count": 12212.0,
+          "mean": 0.7340679221383871,
+          "p50_bucket_upper_bound": 0.8,
+          "p95_bucket_upper_bound": 1.5
+        },
+        "vllm:e2e_request_latency_seconds": {
+          "count": 12212.0,
+          "mean": 0.8713971585123179,
+          "p50_bucket_upper_bound": 1.0,
+          "p95_bucket_upper_bound": 1.5
+        },
+        "prefix_cache_hit_rate": 0.9238808052492058,
+        "prompt_tokens_by_source": {
+          "local_compute": 3831628.0,
+          "local_cache_hit": 46482080.0,
+          "external_kv_transfer": 0.0
+        },
+        "request_finished_reason": {
+          "stop": 12212.0,
+          "length": 0.0,
+          "abort": 0.0,
+          "error": 0.0,
+          "repetition": 0.0
+        },
+        "final_kv_cache_usage": 0.0
+      },
+      "behavior": {
+        "accepted": false,
+        "regressions": [
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "tool_errors",
+            "expected_maximum": 4.0,
+            "actual": 6.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "num_tool_calls",
+            "expected_maximum": 6.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "num_turns",
+            "expected_maximum": 6.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.26172000000000006,
+            "actual": 0.28172
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "effective_rate",
+            "expected_minimum": 1.0,
+            "actual": 0.9927797833935018
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "quality",
+            "expected_minimum": 3.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "file_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "class_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "function_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_errors",
+            "expected_maximum": 0.0,
+            "actual": 6.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_tool_calls",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_turns",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.14934,
+            "actual": 0.19934000000000002
+          }
+        ],
+        "per_task": {
+          "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+            "records": 554,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 1.6666666666666665,
+              "file_f1": 1.0,
+              "class_f1": 0.6666666666666666,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 8840.0,
+              "excess_output_chars": 818.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.17476000000000003
+            }
+          },
+          "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+            "records": 554,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 11082.0,
+              "excess_output_chars": 45.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 2.0,
+              "tool_efficiency_cost": 0.28172
+            }
+          },
+          "pyupio__safety.7654596b.pr_508": {
+            "records": 554,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 5.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10257.0,
+              "excess_output_chars": 227.0,
+              "num_tool_calls": 7.0,
+              "num_turns": 7.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.21710999999999997
+            }
+          },
+          "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+            "records": 554,
+            "effective_rate": 0.9927797833935018,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 7934.0,
+              "excess_output_chars": 0.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.19934000000000002
+            }
+          },
+          "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+            "records": 554,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10955.0,
+              "excess_output_chars": 124.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.18203000000000003
+            }
+          }
+        }
+      },
+      "accepted": false,
+      "per_task_outcome_audit": {
+        "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+          "executions": 554,
+          "effective": 554,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 1.6666666666666665,
+              "count": 554
+            }
+          ]
+        },
+        "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+          "executions": 554,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 6.0,
+              "tool_errors": 4.0,
+              "quality": 0.0,
+              "count": 552
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 2
+            }
+          ]
+        },
+        "pyupio__safety.7654596b.pr_508": {
+          "executions": 554,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 7.0,
+              "tool_errors": 5.0,
+              "quality": 0.0,
+              "count": 554
+            }
+          ]
+        },
+        "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+          "executions": 554,
+          "effective": 550,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 3.0,
+              "count": 550
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 4
+            }
+          ]
+        },
+        "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+          "executions": 554,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 0.0,
+              "count": 554
+            }
+          ]
+        }
+      },
+      "records_sha256": "141ba67070b97be9b7ad4cea7fa066365a603084b9dbee50bc5acb026f1e5d4f",
+      "mean_quality": {
+        "quality": 0.9290012033694344,
+        "file_f1": 0.39855595667870036,
+        "class_f1": 0.3318892900120337,
+        "function_f1": 0.19855595667870035
+      },
+      "mean_tool_metrics": {
+        "num_tool_calls": 4.408664259927797,
+        "num_turns": 4.408664259927797,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "overlap_ratio": 0.0,
+        "output_chars": 9813.6,
+        "excess_output_chars": 242.8,
+        "truncated_outputs": 1.2,
+        "tool_errors": 1.8101083032490974,
+        "tool_efficiency_cost": 0.197078642599278,
+        "completion_tokens": 262.40505415162454,
+        "prompt_tokens": 18163.793501805056,
+        "max_prompt_tokens": 5634.125631768953,
+        "wall_clock_duration": 4.041984891143396
+      },
+      "mean_stage_seconds": {
+        "agent_setup_seconds": 0.006527294177647734,
+        "conversation_run_seconds": 4.029021728223581,
+        "conversation_serialize_seconds": 0.005196548008027113,
+        "conversation_close_seconds": 0.0011696818680166257,
+        "repository_digest_before_seconds": 0.06670124489055032,
+        "cache_key_before_seconds": 0.0024130461672371394,
+        "rollout_seconds": 4.041999343506839,
+        "bounded_context_seconds": 0.0025756165791228952,
+        "repository_digest_after_seconds": 0.05945334333564165,
+        "cache_key_after_seconds": 0.0020876366500524194,
+        "service_queue_seconds": 3.592293744819366e-05,
+        "service_total_seconds": 4.1764614469384345
+      },
+      "mcp_startup_seconds": 117.39580673794262,
+      "full_effective_tasks_per_minute": 360.98210518754405,
+      "full_latency_seconds": {
+        "count": 2770,
+        "min": 1.7577422190224752,
+        "max": 9.021070061950013,
+        "mean": 4.197585350086926,
+        "stdev": 1.9474940970767851,
+        "ci95_half_width": 0.07252576806981981,
+        "p50": 3.029907865449786,
+        "p95": 7.835746124252909
+      }
+    },
+    {
+      "case": {
+        "graph_limit": 1024,
+        "concurrency": 64,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      "label": "native-graph-v59-g1024-s64-p32-c64",
+      "outcomes": 3075,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 256, 512, 1024]}"
+      ],
+      "capture_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        256,
+        512,
+        1024
+      ],
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 2029,
+        "steady_submitted_count": 2029,
+        "steady_effective_tasks_per_minute": 405.0,
+        "steady_terminal_tasks_per_minute": 1014.5000000000001,
+        "steady_admitted_terminal_tasks_per_minute": 1014.5000000000001,
+        "steady_successful_tasks_per_minute": 608.0,
+        "steady_latency_seconds.p95": 6.949614871595986,
+        "steady_latency_seconds.p50": 2.678526532021351,
+        "steady_admitted_latency_seconds.p95": 6.949614871595986,
+        "steady_effective_rate": 0.3992114342040414,
+        "steady_resources.cpu_quota_utilization_percent": 30.410653256745874,
+        "steady_resources.gpu_power_watts": 263.5294406779661,
+        "steady_resources.mcp_threads": 2326.9322033898306,
+        "steady_resources.vllm_waiting_requests": 0.0,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.memory_anon_bytes": 16932231896.949152,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.mcp_rss_bytes": 14933645034.305084,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.gpu_memory_used_bytes": 63729434624.0,
+        "steady_resources.api_cpu_seconds_per_second": 0.8795262396061949,
+        "steady_resources.engine_rss_bytes": 3050132358.5084743,
+        "steady_resources.api_rss_bytes": 1955303076.881356,
+        "steady_resources.client_cpu_seconds_per_second": 0.1317091873708165,
+        "steady_resources.vllm_kv_cache_usage": 0.02895746174690581,
+        "steady_resources.gpu_sm_clock_mhz": 2414.593220338983,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0226042452973965,
+        "steady_resources.gpu_memory_utilization_percent": 38.94915254237288,
+        "steady_resources.memory_current_bytes": 33706937847.322033,
+        "steady_resources.network_receive_bytes_per_second": 2740544.0780005334,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.memory_file_bytes": 16181845981.288136,
+        "steady_resources.mcp_cpu_seconds_per_second": 4.626250217462696,
+        "steady_resources.cpu_seconds_per_second": 6.690343716484092,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.vllm_running_requests": 50.601694915254235,
+        "steady_resources.network_send_bytes_per_second": 2740542.4821887235,
+        "steady_resources.client_rss_bytes": 105272129.08474576,
+        "steady_resources.gpu_utilization_percent": 65.2457627118644,
+        "steady_resources.gpu_temperature_c": 58.6271186440678,
+        "steady_resources.io_write_bytes_per_second": 25080.71656668115
+      },
+      "effective_rate": 0.39934959349593496,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 13548.0,
+      "model_turns": 13548.0,
+      "native_metrics": {
+        "vllm:prompt_tokens_total": 55811767.0,
+        "vllm:generation_tokens_total": 806906.0,
+        "vllm:prefix_cache_queries_total": 55878011.0,
+        "vllm:prefix_cache_hits_total": 51626144.0,
+        "vllm:num_preemptions_total": 0.0,
+        "vllm:request_success_total": 13548.0,
+        "vllm:time_to_first_token_seconds": {
+          "count": 13548.0,
+          "mean": 0.13919094309611132,
+          "p50_bucket_upper_bound": 0.25,
+          "p95_bucket_upper_bound": 0.5
+        },
+        "vllm:request_time_per_output_token_seconds": {
+          "count": 13548.0,
+          "mean": 0.01085780955536689,
+          "p50_bucket_upper_bound": 0.025,
+          "p95_bucket_upper_bound": 0.025
+        },
+        "vllm:request_queue_time_seconds": {
+          "count": 13548.0,
+          "mean": 0.00021839524132722304,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_prefill_time_seconds": {
+          "count": 13548.0,
+          "mean": 0.05339556106441903,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_decode_time_seconds": {
+          "count": 13548.0,
+          "mean": 0.6362542674163908,
+          "p50_bucket_upper_bound": 0.8,
+          "p95_bucket_upper_bound": 1.0
+        },
+        "vllm:e2e_request_latency_seconds": {
+          "count": 13548.0,
+          "mean": 0.7756185973503613,
+          "p50_bucket_upper_bound": 0.8,
+          "p95_bucket_upper_bound": 1.5
+        },
+        "prefix_cache_hit_rate": 0.9239080467627955,
+        "prompt_tokens_by_source": {
+          "local_compute": 4249271.0,
+          "local_cache_hit": 51562496.0,
+          "external_kv_transfer": 0.0
+        },
+        "request_finished_reason": {
+          "stop": 13548.0,
+          "length": 0.0,
+          "abort": 0.0,
+          "error": 0.0,
+          "repetition": 0.0
+        },
+        "final_kv_cache_usage": 0.0
+      },
+      "behavior": {
+        "accepted": false,
+        "regressions": [
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "tool_errors",
+            "expected_maximum": 5.0,
+            "actual": 6.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "num_tool_calls",
+            "expected_maximum": 7.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "num_turns",
+            "expected_maximum": 7.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.21710999999999997,
+            "actual": 0.22710999999999998
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "effective_rate",
+            "expected_minimum": 1.0,
+            "actual": 0.9967479674796748
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "quality",
+            "expected_minimum": 3.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "file_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "class_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "function_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_errors",
+            "expected_maximum": 0.0,
+            "actual": 6.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_tool_calls",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_turns",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.14934,
+            "actual": 0.19934000000000002
+          }
+        ],
+        "per_task": {
+          "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+            "records": 615,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 1.6666666666666665,
+              "file_f1": 1.0,
+              "class_f1": 0.6666666666666666,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 8840.0,
+              "excess_output_chars": 818.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.17476000000000003
+            }
+          },
+          "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+            "records": 615,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 4.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 11082.0,
+              "excess_output_chars": 45.0,
+              "num_tool_calls": 6.0,
+              "num_turns": 6.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 2.0,
+              "tool_efficiency_cost": 0.26172000000000006
+            }
+          },
+          "pyupio__safety.7654596b.pr_508": {
+            "records": 615,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10257.0,
+              "excess_output_chars": 227.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.22710999999999998
+            }
+          },
+          "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+            "records": 615,
+            "effective_rate": 0.9967479674796748,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 7934.0,
+              "excess_output_chars": 0.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.19934000000000002
+            }
+          },
+          "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+            "records": 615,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10955.0,
+              "excess_output_chars": 124.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.18203000000000003
+            }
+          }
+        }
+      },
+      "accepted": false,
+      "per_task_outcome_audit": {
+        "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+          "executions": 615,
+          "effective": 615,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 1.6666666666666665,
+              "count": 615
+            }
+          ]
+        },
+        "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+          "executions": 615,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 6.0,
+              "tool_errors": 4.0,
+              "quality": 0.0,
+              "count": 615
+            }
+          ]
+        },
+        "pyupio__safety.7654596b.pr_508": {
+          "executions": 615,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 7.0,
+              "tool_errors": 5.0,
+              "quality": 0.0,
+              "count": 607
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 8
+            }
+          ]
+        },
+        "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+          "executions": 615,
+          "effective": 613,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 3.0,
+              "count": 613
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 2
+            }
+          ]
+        },
+        "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+          "executions": 615,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 0.0,
+              "count": 615
+            }
+          ]
+        }
+      },
+      "records_sha256": "cf0ea656914f8adf4a9d89494e8b78e19008a2e5eeb4ea8bb92f0dced64b7b99",
+      "mean_quality": {
+        "quality": 0.9313821138211382,
+        "file_f1": 0.39934959349593496,
+        "class_f1": 0.3326829268292683,
+        "function_f1": 0.19934959349593495
+      },
+      "mean_tool_metrics": {
+        "num_tool_calls": 4.405853658536586,
+        "num_turns": 4.405853658536586,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "overlap_ratio": 0.0,
+        "output_chars": 9813.6,
+        "excess_output_chars": 242.8,
+        "truncated_outputs": 1.2,
+        "tool_errors": 1.8065040650406503,
+        "tool_efficiency_cost": 0.19705053658536587,
+        "completion_tokens": 262.4084552845529,
+        "prompt_tokens": 18150.1681300813,
+        "max_prompt_tokens": 5633.986991869919,
+        "wall_clock_duration": 3.617963770334609
+      },
+      "mean_stage_seconds": {
+        "agent_setup_seconds": 0.006365384383058947,
+        "conversation_run_seconds": 3.6050852577015,
+        "conversation_serialize_seconds": 0.005103608723881284,
+        "conversation_close_seconds": 0.0013388117880946617,
+        "repository_digest_before_seconds": 0.0669549192472293,
+        "cache_key_before_seconds": 0.002541269883286299,
+        "rollout_seconds": 3.6179782901834923,
+        "bounded_context_seconds": 0.0027151599296603383,
+        "repository_digest_after_seconds": 0.05966618330781991,
+        "cache_key_after_seconds": 0.002059069701765732,
+        "service_queue_seconds": 3.443318877248018e-05,
+        "service_total_seconds": 3.753136367995739
+      },
+      "mcp_startup_seconds": 116.86691228195559,
+      "full_effective_tasks_per_minute": 402.48722991093945,
+      "full_latency_seconds": {
+        "count": 3075,
+        "min": 1.5993336889659986,
+        "max": 7.71543272503186,
+        "mean": 3.7747388267062787,
+        "stdev": 1.7352425112257424,
+        "ci95_half_width": 0.061332926861327464,
+        "p50": 2.72219624905847,
+        "p95": 7.0465717729064625
+      }
+    },
+    {
+      "case": {
+        "graph_limit": 4096,
+        "concurrency": 64,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      "label": "native-graph-v59-g4096-s64-p32-c64",
+      "outcomes": 3090,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 256, 512, 1024, 2048, 4096]}"
+      ],
+      "capture_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        256,
+        512,
+        1024,
+        2048,
+        4096
+      ],
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 2037,
+        "steady_submitted_count": 2037,
+        "steady_effective_tasks_per_minute": 405.0,
+        "steady_terminal_tasks_per_minute": 1018.5000000000001,
+        "steady_admitted_terminal_tasks_per_minute": 1018.5000000000001,
+        "steady_successful_tasks_per_minute": 609.0,
+        "steady_latency_seconds.p95": 6.970721136173233,
+        "steady_latency_seconds.p50": 2.7156853820197284,
+        "steady_admitted_latency_seconds.p95": 6.970721136173233,
+        "steady_effective_rate": 0.39813451153657337,
+        "steady_resources.cpu_quota_utilization_percent": 30.66770159561216,
+        "steady_resources.gpu_power_watts": 275.36380508474576,
+        "steady_resources.mcp_threads": 2322.1101694915255,
+        "steady_resources.vllm_waiting_requests": 0.0,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.memory_anon_bytes": 17051455800.40678,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.mcp_rss_bytes": 15042754212.881355,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.gpu_memory_used_bytes": 64132022272.0,
+        "steady_resources.api_cpu_seconds_per_second": 0.8747118671801254,
+        "steady_resources.engine_rss_bytes": 3067516442.0338984,
+        "steady_resources.api_rss_bytes": 1958907904.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.13191123465537327,
+        "steady_resources.vllm_kv_cache_usage": 0.028630768666554715,
+        "steady_resources.gpu_sm_clock_mhz": 2414.813559322034,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0255568125931969,
+        "steady_resources.gpu_memory_utilization_percent": 44.0,
+        "steady_resources.memory_current_bytes": 34044291106.711864,
+        "steady_resources.network_receive_bytes_per_second": 2749548.116169899,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.memory_file_bytes": 16394784039.050848,
+        "steady_resources.mcp_cpu_seconds_per_second": 4.681520204923059,
+        "steady_resources.cpu_seconds_per_second": 6.746894351034675,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.vllm_running_requests": 49.99152542372882,
+        "steady_resources.network_send_bytes_per_second": 2749547.8862080267,
+        "steady_resources.client_rss_bytes": 105366510.6440678,
+        "steady_resources.gpu_utilization_percent": 70.16949152542372,
+        "steady_resources.gpu_temperature_c": 60.144067796610166,
+        "steady_resources.io_write_bytes_per_second": 25733.69465767187
+      },
+      "effective_rate": 0.39870550161812296,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 13619.0,
+      "model_turns": 13619.0,
+      "native_metrics": {
+        "vllm:prompt_tokens_total": 56105755.0,
+        "vllm:generation_tokens_total": 811004.0,
+        "vllm:prefix_cache_queries_total": 56162648.0,
+        "vllm:prefix_cache_hits_total": 51880192.0,
+        "vllm:num_preemptions_total": 0.0,
+        "vllm:request_success_total": 13619.0,
+        "vllm:time_to_first_token_seconds": {
+          "count": 13619.0,
+          "mean": 0.12800459965392788,
+          "p50_bucket_upper_bound": 0.25,
+          "p95_bucket_upper_bound": 0.5
+        },
+        "vllm:request_time_per_output_token_seconds": {
+          "count": 13619.0,
+          "mean": 0.010977982168530576,
+          "p50_bucket_upper_bound": 0.025,
+          "p95_bucket_upper_bound": 0.025
+        },
+        "vllm:request_queue_time_seconds": {
+          "count": 13619.0,
+          "mean": 0.00010784500976152539,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_prefill_time_seconds": {
+          "count": 13619.0,
+          "mean": 0.048838891964261485,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_decode_time_seconds": {
+          "count": 13619.0,
+          "mean": 0.6431345650550804,
+          "p50_bucket_upper_bound": 0.8,
+          "p95_bucket_upper_bound": 1.0
+        },
+        "vllm:e2e_request_latency_seconds": {
+          "count": 13619.0,
+          "mean": 0.771507083393682,
+          "p50_bucket_upper_bound": 0.8,
+          "p95_bucket_upper_bound": 1.5
+        },
+        "prefix_cache_hit_rate": 0.9237490369043853,
+        "prompt_tokens_by_source": {
+          "local_compute": 4279963.0,
+          "local_cache_hit": 51825792.0,
+          "external_kv_transfer": 0.0
+        },
+        "request_finished_reason": {
+          "stop": 13619.0,
+          "length": 0.0,
+          "abort": 0.0,
+          "error": 0.0,
+          "repetition": 0.0
+        },
+        "final_kv_cache_usage": 0.0
+      },
+      "behavior": {
+        "accepted": false,
+        "regressions": [
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "tool_errors",
+            "expected_maximum": 4.0,
+            "actual": 6.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "num_tool_calls",
+            "expected_maximum": 6.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "num_turns",
+            "expected_maximum": 6.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.26172000000000006,
+            "actual": 0.28172
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "tool_errors",
+            "expected_maximum": 5.0,
+            "actual": 6.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "num_tool_calls",
+            "expected_maximum": 7.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "num_turns",
+            "expected_maximum": 7.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.21710999999999997,
+            "actual": 0.22710999999999998
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "effective_rate",
+            "expected_minimum": 1.0,
+            "actual": 0.9935275080906149
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "quality",
+            "expected_minimum": 3.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "file_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "class_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "function_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_errors",
+            "expected_maximum": 0.0,
+            "actual": 6.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_tool_calls",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_turns",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.14934,
+            "actual": 0.19934000000000002
+          }
+        ],
+        "per_task": {
+          "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+            "records": 618,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 1.6666666666666665,
+              "file_f1": 1.0,
+              "class_f1": 0.6666666666666666,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 8840.0,
+              "excess_output_chars": 818.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.17476000000000003
+            }
+          },
+          "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+            "records": 618,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 11082.0,
+              "excess_output_chars": 45.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 2.0,
+              "tool_efficiency_cost": 0.28172
+            }
+          },
+          "pyupio__safety.7654596b.pr_508": {
+            "records": 618,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10257.0,
+              "excess_output_chars": 227.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.22710999999999998
+            }
+          },
+          "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+            "records": 618,
+            "effective_rate": 0.9935275080906149,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 7934.0,
+              "excess_output_chars": 0.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.19934000000000002
+            }
+          },
+          "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+            "records": 618,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10955.0,
+              "excess_output_chars": 124.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.18203000000000003
+            }
+          }
+        }
+      },
+      "accepted": false,
+      "per_task_outcome_audit": {
+        "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+          "executions": 618,
+          "effective": 618,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 1.6666666666666665,
+              "count": 618
+            }
+          ]
+        },
+        "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+          "executions": 618,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 6.0,
+              "tool_errors": 4.0,
+              "quality": 0.0,
+              "count": 617
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 1
+            }
+          ]
+        },
+        "pyupio__safety.7654596b.pr_508": {
+          "executions": 618,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 7.0,
+              "tool_errors": 5.0,
+              "quality": 0.0,
+              "count": 617
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 1
+            }
+          ]
+        },
+        "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+          "executions": 618,
+          "effective": 614,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 3.0,
+              "count": 614
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 4
+            }
+          ]
+        },
+        "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+          "executions": 618,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 0.0,
+              "count": 618
+            }
+          ]
+        }
+      },
+      "records_sha256": "67e3528af5fe32a1e9fb30dd4c70809abd9f82b8d89e8a8226e0c6868412ce5d",
+      "mean_quality": {
+        "quality": 0.9294498381877022,
+        "file_f1": 0.39870550161812296,
+        "class_f1": 0.3320388349514563,
+        "function_f1": 0.19870550161812298
+      },
+      "mean_tool_metrics": {
+        "num_tool_calls": 4.4074433656957925,
+        "num_turns": 4.4074433656957925,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "overlap_ratio": 0.0,
+        "output_chars": 9813.6,
+        "excess_output_chars": 242.8,
+        "truncated_outputs": 1.2,
+        "tool_errors": 1.80873786407767,
+        "tool_efficiency_cost": 0.19706643365695795,
+        "completion_tokens": 262.46084142394824,
+        "prompt_tokens": 18157.20226537217,
+        "max_prompt_tokens": 5634.124595469256,
+        "wall_clock_duration": 3.5995999700658423
+      },
+      "mean_stage_seconds": {
+        "agent_setup_seconds": 0.006229198282821146,
+        "conversation_run_seconds": 3.587304587704642,
+        "conversation_serialize_seconds": 0.004911677669176175,
+        "conversation_close_seconds": 0.0010849707846945712,
+        "repository_digest_before_seconds": 0.06738166848056676,
+        "cache_key_before_seconds": 0.0024083436254644015,
+        "rollout_seconds": 3.5996145376330544,
+        "bounded_context_seconds": 0.0024407699408799314,
+        "repository_digest_after_seconds": 0.06123324203324537,
+        "cache_key_after_seconds": 0.002346039092368642,
+        "service_queue_seconds": 3.438034727054265e-05,
+        "service_total_seconds": 3.7366030843994764
+      },
+      "mcp_startup_seconds": 114.24515779095236,
+      "full_effective_tasks_per_minute": 403.56367179246456,
+      "full_latency_seconds": {
+        "count": 3090,
+        "min": 1.5619735099608079,
+        "max": 8.16023749904707,
+        "mean": 3.757859078977441,
+        "stdev": 1.7327291970138445,
+        "ci95_half_width": 0.06109526108948355,
+        "p50": 2.72771415556781,
+        "p95": 7.017158377636224
+      }
+    },
+    {
+      "case": {
+        "graph_limit": 4096,
+        "concurrency": 96,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      "label": "native-graph-v59-g4096-s64-p32-c96",
+      "outcomes": 2420,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 256, 512, 1024, 2048, 4096]}"
+      ],
+      "capture_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        256,
+        512,
+        1024,
+        2048,
+        4096
+      ],
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1580,
+        "steady_submitted_count": 1580,
+        "steady_effective_tasks_per_minute": 316.0,
+        "steady_terminal_tasks_per_minute": 790.0,
+        "steady_admitted_terminal_tasks_per_minute": 790.0,
+        "steady_successful_tasks_per_minute": 474.0,
+        "steady_latency_seconds.p95": 12.894839796813903,
+        "steady_latency_seconds.p50": 4.987094791489653,
+        "steady_admitted_latency_seconds.p95": 12.894839796813903,
+        "steady_effective_rate": 0.3987341772151899,
+        "steady_resources.cpu_quota_utilization_percent": 24.695644964758777,
+        "steady_resources.gpu_power_watts": 228.34242372881357,
+        "steady_resources.mcp_threads": 2346.2881355932204,
+        "steady_resources.vllm_waiting_requests": 26.52542372881356,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.memory_anon_bytes": 17241716354.16949,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.mcp_rss_bytes": 15467305133.559322,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.gpu_memory_used_bytes": 64528389553.89831,
+        "steady_resources.api_cpu_seconds_per_second": 0.720087542607214,
+        "steady_resources.engine_rss_bytes": 2805917938.983051,
+        "steady_resources.api_rss_bytes": 1948053504.0,
+        "steady_resources.client_cpu_seconds_per_second": 0.12138372205996215,
+        "steady_resources.vllm_kv_cache_usage": 0.03457896305411616,
+        "steady_resources.gpu_sm_clock_mhz": 2415.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0201843492835858,
+        "steady_resources.gpu_memory_utilization_percent": 29.796610169491526,
+        "steady_resources.memory_current_bytes": 34247826970.033897,
+        "steady_resources.network_receive_bytes_per_second": 2132010.255895077,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.memory_file_bytes": 16406931456.0,
+        "steady_resources.mcp_cpu_seconds_per_second": 3.5414702159164713,
+        "steady_resources.cpu_seconds_per_second": 5.433041892246931,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.vllm_running_requests": 62.33050847457627,
+        "steady_resources.network_send_bytes_per_second": 2132464.90473767,
+        "steady_resources.client_rss_bytes": 102934944.54237288,
+        "steady_resources.gpu_utilization_percent": 49.347457627118644,
+        "steady_resources.gpu_temperature_c": 55.0,
+        "steady_resources.io_write_bytes_per_second": 22276.574867223168
+      },
+      "effective_rate": 0.39917355371900826,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 10666.0,
+      "model_turns": 10666.0,
+      "native_metrics": {
+        "vllm:prompt_tokens_total": 43943956.0,
+        "vllm:generation_tokens_total": 634947.0,
+        "vllm:prefix_cache_queries_total": 43960978.0,
+        "vllm:prefix_cache_hits_total": 40610688.0,
+        "vllm:num_preemptions_total": 0.0,
+        "vllm:request_success_total": 10666.0,
+        "vllm:time_to_first_token_seconds": {
+          "count": 10666.0,
+          "mean": 0.5137865647084043,
+          "p50_bucket_upper_bound": 0.75,
+          "p95_bucket_upper_bound": 0.75
+        },
+        "vllm:request_time_per_output_token_seconds": {
+          "count": 10666.0,
+          "mean": 0.01792184631152795,
+          "p50_bucket_upper_bound": 0.025,
+          "p95_bucket_upper_bound": 0.025
+        },
+        "vllm:request_queue_time_seconds": {
+          "count": 10666.0,
+          "mean": 0.4339993174289389,
+          "p50_bucket_upper_bound": 0.5,
+          "p95_bucket_upper_bound": 0.8
+        },
+        "vllm:request_prefill_time_seconds": {
+          "count": 10666.0,
+          "mean": 0.04362212141714726,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_decode_time_seconds": {
+          "count": 10666.0,
+          "mean": 1.048722304040696,
+          "p50_bucket_upper_bound": 1.5,
+          "p95_bucket_upper_bound": 1.5
+        },
+        "vllm:e2e_request_latency_seconds": {
+          "count": 10666.0,
+          "mean": 1.5625329743222047,
+          "p50_bucket_upper_bound": 2.0,
+          "p95_bucket_upper_bound": 2.0
+        },
+        "prefix_cache_hit_rate": 0.9237894570953358,
+        "prompt_tokens_by_source": {
+          "local_compute": 3349588.0,
+          "local_cache_hit": 40594368.0,
+          "external_kv_transfer": 0.0
+        },
+        "request_finished_reason": {
+          "stop": 10666.0,
+          "length": 0.0,
+          "abort": 0.0,
+          "error": 0.0,
+          "repetition": 0.0
+        },
+        "final_kv_cache_usage": 0.0
+      },
+      "behavior": {
+        "accepted": false,
+        "regressions": [
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "tool_errors",
+            "expected_maximum": 5.0,
+            "actual": 6.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "num_tool_calls",
+            "expected_maximum": 7.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "num_turns",
+            "expected_maximum": 7.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pyupio__safety.7654596b.pr_508",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.21710999999999997,
+            "actual": 0.22710999999999998
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "effective_rate",
+            "expected_minimum": 1.0,
+            "actual": 0.9958677685950413
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "quality",
+            "expected_minimum": 3.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "file_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "class_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "function_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_errors",
+            "expected_maximum": 0.0,
+            "actual": 6.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_tool_calls",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_turns",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.14934,
+            "actual": 0.19934000000000002
+          }
+        ],
+        "per_task": {
+          "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+            "records": 484,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 1.6666666666666665,
+              "file_f1": 1.0,
+              "class_f1": 0.6666666666666666,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 8840.0,
+              "excess_output_chars": 818.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.17476000000000003
+            }
+          },
+          "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+            "records": 484,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 4.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 11082.0,
+              "excess_output_chars": 45.0,
+              "num_tool_calls": 6.0,
+              "num_turns": 6.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 2.0,
+              "tool_efficiency_cost": 0.26172000000000006
+            }
+          },
+          "pyupio__safety.7654596b.pr_508": {
+            "records": 484,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10257.0,
+              "excess_output_chars": 227.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.22710999999999998
+            }
+          },
+          "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+            "records": 484,
+            "effective_rate": 0.9958677685950413,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 7934.0,
+              "excess_output_chars": 0.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.19934000000000002
+            }
+          },
+          "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+            "records": 484,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10955.0,
+              "excess_output_chars": 124.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.18203000000000003
+            }
+          }
+        }
+      },
+      "accepted": false,
+      "per_task_outcome_audit": {
+        "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+          "executions": 484,
+          "effective": 484,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 1.6666666666666665,
+              "count": 484
+            }
+          ]
+        },
+        "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+          "executions": 484,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 6.0,
+              "tool_errors": 4.0,
+              "quality": 0.0,
+              "count": 484
+            }
+          ]
+        },
+        "pyupio__safety.7654596b.pr_508": {
+          "executions": 484,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 7.0,
+              "tool_errors": 5.0,
+              "quality": 0.0,
+              "count": 476
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 8
+            }
+          ]
+        },
+        "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+          "executions": 484,
+          "effective": 482,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 3.0,
+              "count": 482
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 2
+            }
+          ]
+        },
+        "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+          "executions": 484,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 0.0,
+              "count": 484
+            }
+          ]
+        }
+      },
+      "records_sha256": "ac1623c59dd48a624269648b9ef79451748b3175dc07e6739a22515495d1bf4a",
+      "mean_quality": {
+        "quality": 0.9308539944903581,
+        "file_f1": 0.39917355371900826,
+        "class_f1": 0.3325068870523416,
+        "function_f1": 0.19917355371900827
+      },
+      "mean_tool_metrics": {
+        "num_tool_calls": 4.407438016528926,
+        "num_turns": 4.407438016528926,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "overlap_ratio": 0.0,
+        "output_chars": 9813.6,
+        "excess_output_chars": 242.8,
+        "truncated_outputs": 1.2,
+        "tool_errors": 1.8082644628099174,
+        "tool_efficiency_cost": 0.19706638016528927,
+        "completion_tokens": 262.37479338842974,
+        "prompt_tokens": 18158.659504132233,
+        "max_prompt_tokens": 5634.027685950413,
+        "wall_clock_duration": 7.081029091273581
+      },
+      "mean_stage_seconds": {
+        "agent_setup_seconds": 0.007738502120381714,
+        "conversation_run_seconds": 7.067516758029584,
+        "conversation_serialize_seconds": 0.0050723373581085755,
+        "conversation_close_seconds": 0.0006337726307351696,
+        "repository_digest_before_seconds": 0.08535413631836476,
+        "cache_key_before_seconds": 0.004017462506351516,
+        "rollout_seconds": 7.081043758991555,
+        "bounded_context_seconds": 0.002254773564453906,
+        "repository_digest_after_seconds": 0.05666893853465372,
+        "cache_key_after_seconds": 0.0019313019157237226,
+        "service_queue_seconds": 3.818727549634997e-05,
+        "service_total_seconds": 7.232577160097926
+      },
+      "mcp_startup_seconds": 119.92400270700455,
+      "full_effective_tasks_per_minute": 313.05905726663013,
+      "full_latency_seconds": {
+        "count": 2420,
+        "min": 3.294332667021081,
+        "max": 13.850815422949381,
+        "mean": 7.254704849875517,
+        "stdev": 3.222178549818295,
+        "ci95_half_width": 0.12838018304681256,
+        "p50": 5.0131580349989235,
+        "p95": 12.941606094915187
+      }
+    },
+    {
+      "case": {
+        "graph_limit": 1024,
+        "concurrency": 96,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      "label": "native-graph-v59-g1024-s64-p32-c96",
+      "outcomes": 2450,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 256, 512, 1024]}"
+      ],
+      "capture_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        256,
+        512,
+        1024
+      ],
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1598,
+        "steady_submitted_count": 1598,
+        "steady_effective_tasks_per_minute": 319.5,
+        "steady_terminal_tasks_per_minute": 799.0,
+        "steady_admitted_terminal_tasks_per_minute": 799.0,
+        "steady_successful_tasks_per_minute": 479.5,
+        "steady_latency_seconds.p95": 12.742459991021313,
+        "steady_latency_seconds.p50": 4.927649718942121,
+        "steady_admitted_latency_seconds.p95": 12.742459991021313,
+        "steady_effective_rate": 0.399874843554443,
+        "steady_resources.cpu_quota_utilization_percent": 24.88007014509826,
+        "steady_resources.gpu_power_watts": 227.73809322033898,
+        "steady_resources.mcp_threads": 2350.2457627118642,
+        "steady_resources.vllm_waiting_requests": 26.39830508474576,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.memory_anon_bytes": 17090963698.983051,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.mcp_rss_bytes": 15323269605.966103,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.gpu_memory_used_bytes": 64157253632.0,
+        "steady_resources.api_cpu_seconds_per_second": 0.729951363599669,
+        "steady_resources.engine_rss_bytes": 2787950696.1355934,
+        "steady_resources.api_rss_bytes": 1942194557.8305085,
+        "steady_resources.client_cpu_seconds_per_second": 0.1108680727923446,
+        "steady_resources.vllm_kv_cache_usage": 0.034743257721152145,
+        "steady_resources.gpu_sm_clock_mhz": 2414.9322033898306,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0205762287980311,
+        "steady_resources.gpu_memory_utilization_percent": 29.076271186440678,
+        "steady_resources.memory_current_bytes": 34108504029.288136,
+        "steady_resources.network_receive_bytes_per_second": 2158597.392743866,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.memory_file_bytes": 16417577237.694916,
+        "steady_resources.mcp_cpu_seconds_per_second": 3.583577407887318,
+        "steady_resources.cpu_seconds_per_second": 5.473615431921617,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.vllm_running_requests": 62.23728813559322,
+        "steady_resources.network_send_bytes_per_second": 2158602.0377146364,
+        "steady_resources.client_rss_bytes": 103131656.6779661,
+        "steady_resources.gpu_utilization_percent": 47.855932203389834,
+        "steady_resources.gpu_temperature_c": 54.440677966101696,
+        "steady_resources.io_write_bytes_per_second": 21717.995200986355
+      },
+      "effective_rate": 0.39877551020408164,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 10795.0,
+      "model_turns": 10795.0,
+      "native_metrics": {
+        "vllm:prompt_tokens_total": 44466542.0,
+        "vllm:generation_tokens_total": 643052.0,
+        "vllm:prefix_cache_queries_total": 44491870.0,
+        "vllm:prefix_cache_hits_total": 41103552.0,
+        "vllm:num_preemptions_total": 0.0,
+        "vllm:request_success_total": 10795.0,
+        "vllm:time_to_first_token_seconds": {
+          "count": 10795.0,
+          "mean": 0.5087267911450738,
+          "p50_bucket_upper_bound": 0.75,
+          "p95_bucket_upper_bound": 0.75
+        },
+        "vllm:request_time_per_output_token_seconds": {
+          "count": 10795.0,
+          "mean": 0.017663960372014967,
+          "p50_bucket_upper_bound": 0.025,
+          "p95_bucket_upper_bound": 0.025
+        },
+        "vllm:request_queue_time_seconds": {
+          "count": 10795.0,
+          "mean": 0.4275049598360108,
+          "p50_bucket_upper_bound": 0.5,
+          "p95_bucket_upper_bound": 0.8
+        },
+        "vllm:request_prefill_time_seconds": {
+          "count": 10795.0,
+          "mean": 0.04441775340654194,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_decode_time_seconds": {
+          "count": 10795.0,
+          "mean": 1.034260733579529,
+          "p50_bucket_upper_bound": 1.5,
+          "p95_bucket_upper_bound": 1.5
+        },
+        "vllm:e2e_request_latency_seconds": {
+          "count": 10795.0,
+          "mean": 1.5429997541552178,
+          "p50_bucket_upper_bound": 2.0,
+          "p95_bucket_upper_bound": 2.0
+        },
+        "prefix_cache_hit_rate": 0.9238441090473383,
+        "prompt_tokens_by_source": {
+          "local_compute": 3386926.0,
+          "local_cache_hit": 41079616.0,
+          "external_kv_transfer": 0.0
+        },
+        "request_finished_reason": {
+          "stop": 10795.0,
+          "length": 0.0,
+          "abort": 0.0,
+          "error": 0.0,
+          "repetition": 0.0
+        },
+        "final_kv_cache_usage": 0.0
+      },
+      "behavior": {
+        "accepted": false,
+        "regressions": [
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "effective_rate",
+            "expected_minimum": 1.0,
+            "actual": 0.9938775510204082
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "quality",
+            "expected_minimum": 3.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "file_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "class_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "function_f1",
+            "expected_minimum": 1.0,
+            "actual": 0.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_errors",
+            "expected_maximum": 0.0,
+            "actual": 6.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_tool_calls",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "num_turns",
+            "expected_maximum": 3.0,
+            "actual": 8.0
+          },
+          {
+            "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.14934,
+            "actual": 0.19934000000000002
+          }
+        ],
+        "per_task": {
+          "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+            "records": 490,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 1.6666666666666665,
+              "file_f1": 1.0,
+              "class_f1": 0.6666666666666666,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 8840.0,
+              "excess_output_chars": 818.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.17476000000000003
+            }
+          },
+          "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+            "records": 490,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 4.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 11082.0,
+              "excess_output_chars": 45.0,
+              "num_tool_calls": 6.0,
+              "num_turns": 6.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 2.0,
+              "tool_efficiency_cost": 0.26172000000000006
+            }
+          },
+          "pyupio__safety.7654596b.pr_508": {
+            "records": 490,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 5.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10257.0,
+              "excess_output_chars": 227.0,
+              "num_tool_calls": 7.0,
+              "num_turns": 7.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.21710999999999997
+            }
+          },
+          "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+            "records": 490,
+            "effective_rate": 0.9938775510204082,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 7934.0,
+              "excess_output_chars": 0.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.19934000000000002
+            }
+          },
+          "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+            "records": 490,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10955.0,
+              "excess_output_chars": 124.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.18203000000000003
+            }
+          }
+        }
+      },
+      "accepted": false,
+      "per_task_outcome_audit": {
+        "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+          "executions": 490,
+          "effective": 490,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 1.6666666666666665,
+              "count": 490
+            }
+          ]
+        },
+        "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+          "executions": 490,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 6.0,
+              "tool_errors": 4.0,
+              "quality": 0.0,
+              "count": 490
+            }
+          ]
+        },
+        "pyupio__safety.7654596b.pr_508": {
+          "executions": 490,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 7.0,
+              "tool_errors": 5.0,
+              "quality": 0.0,
+              "count": 490
+            }
+          ]
+        },
+        "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+          "executions": 490,
+          "effective": 487,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 3.0,
+              "count": 487
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 3
+            }
+          ]
+        },
+        "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+          "executions": 490,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 0.0,
+              "count": 490
+            }
+          ]
+        }
+      },
+      "records_sha256": "ef0c79cda10db5d2d2f02a4f643d6b116ca50eaa40fd04902a56f1d0b45b9189",
+      "mean_quality": {
+        "quality": 0.9296598639455782,
+        "file_f1": 0.39877551020408164,
+        "class_f1": 0.33210884353741493,
+        "function_f1": 0.19877551020408163
+      },
+      "mean_tool_metrics": {
+        "num_tool_calls": 4.406122448979592,
+        "num_turns": 4.406122448979592,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "overlap_ratio": 0.0,
+        "output_chars": 9813.6,
+        "excess_output_chars": 242.8,
+        "truncated_outputs": 1.2,
+        "tool_errors": 1.8073469387755101,
+        "tool_efficiency_cost": 0.19705322448979593,
+        "completion_tokens": 262.47020408163263,
+        "prompt_tokens": 18149.608979591838,
+        "max_prompt_tokens": 5634.069795918367,
+        "wall_clock_duration": 6.990961478936287
+      },
+      "mean_stage_seconds": {
+        "agent_setup_seconds": 0.007161277389267877,
+        "conversation_run_seconds": 6.977694539645525,
+        "conversation_serialize_seconds": 0.005468568092126551,
+        "conversation_close_seconds": 0.0005691091328555224,
+        "repository_digest_before_seconds": 0.08368825915397848,
+        "cache_key_before_seconds": 0.0036011105854235285,
+        "rollout_seconds": 6.990976434926483,
+        "bounded_context_seconds": 0.0025007552478690537,
+        "repository_digest_after_seconds": 0.05782573679452572,
+        "cache_key_after_seconds": 0.0019897537565866145,
+        "service_queue_seconds": 3.5688353331797585e-05,
+        "service_total_seconds": 7.141755976563947
+      },
+      "mcp_startup_seconds": 118.20186206500512,
+      "full_effective_tasks_per_minute": 316.85372860740006,
+      "full_latency_seconds": {
+        "count": 2450,
+        "min": 3.199287676019594,
+        "max": 13.19352213095408,
+        "mean": 7.162400764261838,
+        "stdev": 3.1717430871912358,
+        "ci95_half_width": 0.12559461852753076,
+        "p50": 4.951796998444479,
+        "p95": 12.769192878896135
+      }
+    },
+    {
+      "case": {
+        "graph_limit": 128,
+        "concurrency": 96,
+        "seqs": 64,
+        "batch_tokens": 8192,
+        "backend": "FLASHINFER"
+      },
+      "label": "native-graph-v59-g128-s64-p32-c96",
+      "outcomes": 2000,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128]}"
+      ],
+      "capture_sizes": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128
+      ],
+      "window": {
+        "steady_window_seconds": 120.0,
+        "steady_resource_sample_count": 118,
+        "steady_metrics_scrape_failure_count": 0,
+        "steady_terminal_count": 1303,
+        "steady_submitted_count": 1303,
+        "steady_effective_tasks_per_minute": 260.0,
+        "steady_terminal_tasks_per_minute": 651.5,
+        "steady_admitted_terminal_tasks_per_minute": 651.5,
+        "steady_successful_tasks_per_minute": 390.5,
+        "steady_latency_seconds.p95": 15.730901763192378,
+        "steady_latency_seconds.p50": 6.015538977924734,
+        "steady_admitted_latency_seconds.p95": 15.730901763192378,
+        "steady_effective_rate": 0.39984650805832694,
+        "steady_resources.cpu_quota_utilization_percent": 21.148024819468144,
+        "steady_resources.gpu_power_watts": 184.7958220338983,
+        "steady_resources.mcp_threads": 2347.8898305084745,
+        "steady_resources.vllm_waiting_requests": 27.23728813559322,
+        "steady_resources.engine_threads": 341.0,
+        "steady_resources.gpu_power_limited": 0.0,
+        "steady_resources.memory_anon_bytes": 16776600037.966103,
+        "steady_resources.client_threads": 2.0,
+        "steady_resources.memory_shmem_bytes": 146096128.0,
+        "steady_resources.api_threads": 221.0,
+        "steady_resources.cpu_throttled_seconds_per_second": 0.0,
+        "steady_resources.mcp_rss_bytes": 15048132642.711864,
+        "steady_resources.metrics_scrape_failed": 0.0,
+        "steady_resources.gpu_memory_used_bytes": 64383746048.0,
+        "steady_resources.api_cpu_seconds_per_second": 0.6364638778866857,
+        "steady_resources.engine_rss_bytes": 2733768183.322034,
+        "steady_resources.api_rss_bytes": 1943621840.2711864,
+        "steady_resources.client_cpu_seconds_per_second": 0.09141495527292871,
+        "steady_resources.vllm_kv_cache_usage": 0.03468907336946078,
+        "steady_resources.gpu_sm_clock_mhz": 2415.0,
+        "steady_resources.engine_cpu_seconds_per_second": 1.0227943052721242,
+        "steady_resources.gpu_memory_utilization_percent": 23.423728813559322,
+        "steady_resources.memory_current_bytes": 33801175178.847458,
+        "steady_resources.network_receive_bytes_per_second": 1766913.5713967572,
+        "steady_resources.gpu_thermal_limited": 0.0,
+        "steady_resources.memory_file_bytes": 16426497909.152542,
+        "steady_resources.mcp_cpu_seconds_per_second": 2.872430460513386,
+        "steady_resources.cpu_seconds_per_second": 4.652565460282992,
+        "steady_resources.gpu_memory_clock_mhz": 12481.0,
+        "steady_resources.io_read_bytes_per_second": 0.0,
+        "steady_resources.vllm_running_requests": 62.44915254237288,
+        "steady_resources.network_send_bytes_per_second": 1766910.4742563074,
+        "steady_resources.client_rss_bytes": 101275648.0,
+        "steady_resources.gpu_utilization_percent": 37.355932203389834,
+        "steady_resources.gpu_temperature_c": 50.02542372881356,
+        "steady_resources.io_write_bytes_per_second": 20891.597583935818
+      },
+      "effective_rate": 0.4,
+      "infrastructure_error_rate": 0.0,
+      "timeout_rate": 0.0,
+      "model_requests": 8802.0,
+      "model_turns": 8802.0,
+      "native_metrics": {
+        "vllm:prompt_tokens_total": 36246735.0,
+        "vllm:generation_tokens_total": 523814.0,
+        "vllm:prefix_cache_queries_total": 36284261.0,
+        "vllm:prefix_cache_hits_total": 33516384.0,
+        "vllm:num_preemptions_total": 0.0,
+        "vllm:request_success_total": 8802.0,
+        "vllm:time_to_first_token_seconds": {
+          "count": 8802.0,
+          "mean": 0.6430654547426328,
+          "p50_bucket_upper_bound": 0.75,
+          "p95_bucket_upper_bound": 1.0
+        },
+        "vllm:request_time_per_output_token_seconds": {
+          "count": 8802.0,
+          "mean": 0.021791603025403637,
+          "p50_bucket_upper_bound": 0.025,
+          "p95_bucket_upper_bound": 0.025
+        },
+        "vllm:request_queue_time_seconds": {
+          "count": 8802.0,
+          "mean": 0.5508536902690043,
+          "p50_bucket_upper_bound": 0.8,
+          "p95_bucket_upper_bound": 0.8
+        },
+        "vllm:request_prefill_time_seconds": {
+          "count": 8802.0,
+          "mean": 0.05411473381409976,
+          "p50_bucket_upper_bound": 0.3,
+          "p95_bucket_upper_bound": 0.3
+        },
+        "vllm:request_decode_time_seconds": {
+          "count": 8802.0,
+          "mean": 1.274897637145515,
+          "p50_bucket_upper_bound": 1.5,
+          "p95_bucket_upper_bound": 2.0
+        },
+        "vllm:e2e_request_latency_seconds": {
+          "count": 8802.0,
+          "mean": 1.9180226959008786,
+          "p50_bucket_upper_bound": 2.0,
+          "p95_bucket_upper_bound": 2.5
+        },
+        "prefix_cache_hit_rate": 0.9237168699673944,
+        "prompt_tokens_by_source": {
+          "local_compute": 2762447.0,
+          "local_cache_hit": 33484288.0,
+          "external_kv_transfer": 0.0
+        },
+        "request_finished_reason": {
+          "stop": 8802.0,
+          "length": 0.0,
+          "abort": 0.0,
+          "error": 0.0,
+          "repetition": 0.0
+        },
+        "final_kv_cache_usage": 0.0
+      },
+      "behavior": {
+        "accepted": false,
+        "regressions": [
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "tool_errors",
+            "expected_maximum": 4.0,
+            "actual": 6.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "num_tool_calls",
+            "expected_maximum": 6.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "num_turns",
+            "expected_maximum": 6.0,
+            "actual": 8.0
+          },
+          {
+            "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+            "field": "tool_efficiency_cost",
+            "expected_maximum": 0.26172000000000006,
+            "actual": 0.28172
+          }
+        ],
+        "per_task": {
+          "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+            "records": 400,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 1.6666666666666665,
+              "file_f1": 1.0,
+              "class_f1": 0.6666666666666666,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 8840.0,
+              "excess_output_chars": 818.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.17476000000000003
+            }
+          },
+          "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+            "records": 400,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 6.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 11082.0,
+              "excess_output_chars": 45.0,
+              "num_tool_calls": 8.0,
+              "num_turns": 8.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 2.0,
+              "tool_efficiency_cost": 0.28172
+            }
+          },
+          "pyupio__safety.7654596b.pr_508": {
+            "records": 400,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 5.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10257.0,
+              "excess_output_chars": 227.0,
+              "num_tool_calls": 7.0,
+              "num_turns": 7.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.21710999999999997
+            }
+          },
+          "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+            "records": 400,
+            "effective_rate": 1.0,
+            "minimum_quality": {
+              "quality": 3.0,
+              "file_f1": 1.0,
+              "class_f1": 1.0,
+              "function_f1": 1.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 7934.0,
+              "excess_output_chars": 0.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.14934
+            }
+          },
+          "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+            "records": 400,
+            "effective_rate": 0.0,
+            "minimum_quality": {
+              "quality": 0.0,
+              "file_f1": 0.0,
+              "class_f1": 0.0,
+              "function_f1": 0.0
+            },
+            "maximum_tool_cost": {
+              "tool_errors": 0.0,
+              "repeated_searches": 0.0,
+              "overlap_lines": 0.0,
+              "output_chars": 10955.0,
+              "excess_output_chars": 124.0,
+              "num_tool_calls": 3.0,
+              "num_turns": 3.0,
+              "read_lines": 200.0,
+              "truncated_outputs": 1.0,
+              "tool_efficiency_cost": 0.18203000000000003
+            }
+          }
+        }
+      },
+      "accepted": false,
+      "per_task_outcome_audit": {
+        "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+          "executions": 400,
+          "effective": 400,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 1.6666666666666665,
+              "count": 400
+            }
+          ]
+        },
+        "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+          "executions": 400,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 6.0,
+              "tool_errors": 4.0,
+              "quality": 0.0,
+              "count": 399
+            },
+            {
+              "rounds": 8.0,
+              "tool_errors": 6.0,
+              "quality": 0.0,
+              "count": 1
+            }
+          ]
+        },
+        "pyupio__safety.7654596b.pr_508": {
+          "executions": 400,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 7.0,
+              "tool_errors": 5.0,
+              "quality": 0.0,
+              "count": 400
+            }
+          ]
+        },
+        "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+          "executions": 400,
+          "effective": 400,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 3.0,
+              "count": 400
+            }
+          ]
+        },
+        "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+          "executions": 400,
+          "effective": 0,
+          "variants": [
+            {
+              "rounds": 3.0,
+              "tool_errors": 0.0,
+              "quality": 0.0,
+              "count": 400
+            }
+          ]
+        }
+      },
+      "records_sha256": "43d1eef39b5ab0fd47fd22a634cf9ee65b5864e83c7e49fc21874ba165e5a2c2",
+      "mean_quality": {
+        "quality": 0.9333333333333333,
+        "file_f1": 0.4,
+        "class_f1": 0.3333333333333333,
+        "function_f1": 0.2
+      },
+      "mean_tool_metrics": {
+        "num_tool_calls": 4.401,
+        "num_turns": 4.401,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "overlap_ratio": 0.0,
+        "output_chars": 9813.6,
+        "excess_output_chars": 242.8,
+        "truncated_outputs": 1.2,
+        "tool_errors": 1.801,
+        "tool_efficiency_cost": 0.197002,
+        "completion_tokens": 261.907,
+        "prompt_tokens": 18123.3675,
+        "max_prompt_tokens": 5633.181,
+        "wall_clock_duration": 8.635749716539344
+      },
+      "mean_stage_seconds": {
+        "agent_setup_seconds": 0.00802120190206915,
+        "conversation_run_seconds": 8.62229478553182,
+        "conversation_serialize_seconds": 0.004880143406568095,
+        "conversation_close_seconds": 0.000486802143685054,
+        "repository_digest_before_seconds": 0.08772227687080159,
+        "cache_key_before_seconds": 0.003856998320610728,
+        "rollout_seconds": 8.635764179197082,
+        "bounded_context_seconds": 0.002018598381022457,
+        "repository_digest_after_seconds": 0.05586256782681449,
+        "cache_key_after_seconds": 0.0018938813076238147,
+        "service_queue_seconds": 3.4014748176559806e-05,
+        "service_total_seconds": 8.788261162605835
+      },
+      "mcp_startup_seconds": 119.13258669502102,
+      "full_effective_tasks_per_minute": 258.0454975043772,
+      "full_latency_seconds": {
+        "count": 2000,
+        "min": 3.8482232129899785,
+        "max": 16.770109832985327,
+        "mean": 8.808383512780944,
+        "stdev": 3.9574931253956045,
+        "ci95_half_width": 0.17344478351790432,
+        "p50": 6.127814827486873,
+        "p95": 15.981713492842392
+      }
+    }
+  ],
+  "same_load_screen_comparisons": [
+    {
+      "concurrency": 64,
+      "graph_limit": 1024,
+      "effective_tasks_per_minute_change_percent": 11.570247933884303,
+      "p95_change_percent": -10.614861305635282,
+      "candidate_accepted": false,
+      "interpretation": "One independent engine per case, single screen only. No repeat variance or confidence interval. Failed quality gates prevent adoption."
+    },
+    {
+      "concurrency": 64,
+      "graph_limit": 4096,
+      "effective_tasks_per_minute_change_percent": 11.570247933884303,
+      "p95_change_percent": -10.343394983916088,
+      "candidate_accepted": false,
+      "interpretation": "One independent engine per case, single screen only. No repeat variance or confidence interval. Failed quality gates prevent adoption."
+    },
+    {
+      "concurrency": 96,
+      "graph_limit": 1024,
+      "effective_tasks_per_minute_change_percent": 22.884615384615394,
+      "p95_change_percent": -18.997269305714614,
+      "candidate_accepted": false,
+      "interpretation": "One independent engine per case, single screen only. No repeat variance or confidence interval. Failed quality gates prevent adoption."
+    },
+    {
+      "concurrency": 96,
+      "graph_limit": 4096,
+      "effective_tasks_per_minute_change_percent": 21.53846153846153,
+      "p95_change_percent": -18.028603884707838,
+      "candidate_accepted": false,
+      "interpretation": "One independent engine per case, single screen only. No repeat variance or confidence interval. Failed quality gates prevent adoption."
+    }
+  ],
+  "readiness_seconds_in_execution_order": [
+    {
+      "label": "native-graph-v59-g128-s64-p32-c64",
+      "seconds": 30.07
+    },
+    {
+      "label": "native-graph-v59-g1024-s64-p32-c64",
+      "seconds": 108.13
+    },
+    {
+      "label": "native-graph-v59-g4096-s64-p32-c64",
+      "seconds": 105.2
+    },
+    {
+      "label": "native-graph-v59-g4096-s64-p32-c96",
+      "seconds": 31.05
+    },
+    {
+      "label": "native-graph-v59-g1024-s64-p32-c96",
+      "seconds": 31.05
+    },
+    {
+      "label": "native-graph-v59-g128-s64-p32-c96",
+      "seconds": 30.07
+    }
+  ],
+  "startup_boundary": "Fresh service per case, naturally retained compilation caches. First G1024/G4096 startups include any first compilation; do not infer steady cold-start cost from the single 108/105-second observations.",
+  "verified_archive": {
+    "archive_sha256": "d4d926aea4bb8601df59745ceecaf9abd80589c4079398da868c168b68957c36",
+    "archive_bytes": 6706774,
+    "verified_entries": 155,
+    "regular_bytes": 58695148,
+    "failures": []
+  },
+  "archive_filename": "stage4-material-v63.tar.gz",
+  "remaining": "Quality-qualified candidate, three independent formal comparisons, paced load, 15-minute steady test, seven frozen independent tasks, final real-model MCP/SkyRL/cache acceptance and retrieval before shutdown."
+}
