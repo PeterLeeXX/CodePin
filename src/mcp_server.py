@@ -22,6 +22,7 @@ class LocalizationResult(BaseModel):
     errors: list[str] = Field(default_factory=list)
     snapshot: str = ""
     cache_hit: bool = False
+    execution_id: str | None = None
 
 
 class BatchResult(BaseModel):

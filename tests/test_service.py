@@ -76,6 +76,27 @@ def test_cache_lru_ttl_copy_and_failed_results():
     assert cache.get("b") is None
 
 
+def test_digest_includes_empty_and_ignored_paths_without_following_links(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    empty = tree_digest(repo)
+    (repo / ".git").mkdir()
+    assert tree_digest(repo) != empty
+    (repo / ".git" / "ignored").write_text("one")
+    original = tree_digest(repo)
+    (repo / ".git" / "ignored").write_text("two")
+    assert tree_digest(repo) != original
+    external = tmp_path / "external"
+    external.write_text("outside")
+    (repo / "link").symlink_to(external)
+    original = tree_digest(repo)
+    external.write_text("changed outside")
+    assert tree_digest(repo) == original
+    (repo / "link").unlink()
+    (repo / "link").symlink_to(repo / ".git" / "ignored")
+    assert tree_digest(repo) != original
+
+
 def test_cache_key_separates_deployments_issues_and_budgets(tmp_path):
     deployment = tmp_path / "deployment.json"
     deployment.write_text('{"id": "one"}')
@@ -106,3 +127,34 @@ def test_cache_requires_deployment_identity(tmp_path):
     with pytest.raises(ValueError, match="deployment"):
         ServiceConfig(tmp_path)
     assert ServiceConfig(tmp_path, cache_size=0)
+
+
+def test_uncached_service_reports_stage_timings(tmp_path, monkeypatch):
+    (tmp_path / "app.py").write_text("def target():\n    return 1\n")
+
+    def localize(*_args, **_kwargs):
+        return {
+            "status": "ok",
+            "structured_locations": [{"file": "app.py", "function_name": "target"}],
+            "metrics": {},
+            "errors": [],
+        }
+
+    monkeypatch.setattr("src.service.run_localization", localize)
+    service = LocalizationService(ServiceConfig(tmp_path, cache_size=0))
+    result = asyncio.run(
+        service.localize(LocalizationRequest(repository=".", issue="find target"))
+    )
+
+    assert result["status"] == "ok"
+    for key in (
+        "service_queue_seconds",
+        "service_total_seconds",
+        "repository_digest_before_seconds",
+        "cache_key_before_seconds",
+        "rollout_seconds",
+        "bounded_context_seconds",
+        "repository_digest_after_seconds",
+        "cache_key_after_seconds",
+    ):
+        assert result["metrics"][key] >= 0

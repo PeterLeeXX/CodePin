@@ -21,6 +21,8 @@ from openhands.sdk.tool import (
 )
 from pydantic import Field
 
+from src.profiling import nvtx_range
+
 if TYPE_CHECKING:
     from openhands.sdk.conversation import LocalConversation
     from openhands.sdk.conversation.state import ConversationState
@@ -105,6 +107,7 @@ class GrepExecutor(ToolExecutor[GrepAction, GrepObservation]):
         self.workspace_root = Path(workspace_root).resolve()
         self.rg_executable = _require_ripgrep()
 
+    @nvtx_range("codepin.tool.grep")
     def __call__(
         self,
         action: GrepAction,

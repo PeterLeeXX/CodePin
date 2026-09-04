@@ -22,6 +22,7 @@ dependencies = [
     "pyarrow==25.0.1",
     "unidiff==1.0.0",
     "mcp>=1.28,<2",
+    "httpx==0.28.1",
 ]
 
 [build-system]
@@ -31,11 +32,13 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["src", "src.*"]
+exclude = ["runs*", "outputs*", "tmp*"]
 
 [tool.setuptools.package-data]
 "src.prompts" = ["templates/*.j2"]
 
 [dependency-groups]
+profiling = ["nvtx==0.2.15", "matplotlib==3.10.1", "psutil==7.2.2"]
 dev = [
     "pytest==9.1.1",
     "ruff==0.16.5",

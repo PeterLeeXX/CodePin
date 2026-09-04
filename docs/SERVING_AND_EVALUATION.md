@@ -7,7 +7,7 @@ OpenHands 提交，在 Linux x86_64 / Python 3.12 / bf16 NVIDIA GPU 上运行。
 ## 环境与现有模型
 
 ```bash
-uv sync
+uv sync --locked
 export HF_HOME=/root/autodl-tmp/cache/huggingface
 uv run hf download LeeXugar/CodePin-SFT-Qwen3.5-0.8B \
   config.json model.safetensors tokenizer.json tokenizer_config.json \
@@ -90,8 +90,9 @@ HTTP 模式增加 `--transport streamable-http --port 8001`，地址为
 ```
 
 `repository` 必须位于服务配置的目录内；工具解析真实路径并拒绝越界符号链接。
-返回 `status`、`locations`、`context`、`metrics`、`errors`、`snapshot` 和
-`cache_hit`。`locations` 包含 `file`、`class_name`、`function_name`；符号会通过
+返回 `status`、`locations`、`context`、`metrics`、`errors`、`snapshot`、
+`execution_id` 和 `cache_hit`。执行 ID 关联真实 Conversation；缓存命中保留原执行 ID。
+`locations` 包含 `file`、`class_name`、`function_name`；符号会通过
 现有 Python AST 分析器校验，找不到定义时不会提交成功结果。
 `context` 中每段带实际行号，所有段的 `text` 总字符数和行数遵守请求预算，
 重复行不会重复返回。预算不包含 JSON 元数据；截断通过 `truncated` 表示。
@@ -227,3 +228,10 @@ SFT 读回沿用现有训练入口的默认 tokenizer 参数；固定 SkyRL 版�
 参数直接传入该接口。
 还会通过原生 `RemoteInferenceClient` 和 Ray 执行正常与过短生成预算的 SkyRL
 rollout，检查正常监督、异常零奖励和零 Loss Mask；不会创建训练器或更新模型权重。
+
+真实多轮定位的性能基准、固定任务集、缓存归因及 Nsight 复现方法见
+[PERFORMANCE_TUNING_20260904.md](PERFORMANCE_TUNING_20260904.md)。性能主对照关闭
+完整结果缓存；原生 Prefix Cache 与结果缓存分别统计。使用 `uv sync --group profiling`
+安装声明的分析依赖。可选 `CODEPIN_PERF_NVTX=1` 开启 Agent/工具范围，
+`CODEPIN_PERF_TRACE_DIR` 导出真实轨迹；正式吞吐测量关闭这两项。
+`LITELLM_LOCAL_MODEL_COST_MAP=True` 显式使用已安装的价格表，避免离线部署启动时等待网络。

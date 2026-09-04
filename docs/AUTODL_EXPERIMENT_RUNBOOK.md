@@ -43,3 +43,46 @@
   skips, 3 real task trajectories evaluated, 1 SFT / 3 RL rows read by SkyRL,
   normal/truncated rollouts checked, and 3 judge responses parsed. See
   `ACCEPTANCE_20260903.md` for the evidence and quality limits.
+
+## 2026-09-04: real Agent serving performance
+
+- Scope: the existing SFT model and pinned SkyRL/vLLM environment; no training.
+  The previous three-task acceptance is not used as a performance baseline.
+- Observed resource limits: RTX 6000D, 85,651 MiB, compute capability 12.0;
+  Xeon Platinum 8470Q, 208 visible logical CPUs but a 22-core cgroup quota;
+  110 GiB host-memory limit and no swap.
+- Nsight Systems 2025.1.1.0 is already installed in the image. CUDA, NVTX and
+  OS Runtime collection works. CPU perf sampling/context-switch access is
+  unavailable. The targeted Nsight Compute attempt returns
+  `ERR_NVGPUCTRPERM`; its hardware-counter results must not be claimed.
+- Artifacts: `runs/20260904-vllm-agent-performance/`. Each timing run captures
+  its source archive, parameters, per-task outcomes, Prometheus deltas and
+  resource samples. Failed attempts remain separate from accepted runs.
+- Workload identity uses pinned commits, patches and source-content manifests.
+  Git metadata changes across fresh clones; that provenance comparison does
+  not weaken the serving result-cache invalidation key.
+- Protocol, performance comparisons, limits and reproduction commands:
+  [PERFORMANCE_TUNING_20260904.md](PERFORMANCE_TUNING_20260904.md).
+- Adding the locked profiling dependencies exposed a packaging problem after
+  acceptance: setuptools namespace discovery followed a retained test symlink
+  back to its parent under `runs/`. The `include = ["src", "src.*"]` filter
+  alone does not prune unrelated trees. Excluding `runs*`, `outputs*`, and
+  `tmp*` from native package discovery made the editable build finish in
+  555 ms without deleting test evidence or modifying setuptools.
+- Slow package downloads were replaced with the exact Linux wheels from
+  `uv.lock`, downloaded locally and SHA-256 checked on both hosts. Install
+  them by package name/version using `uv pip install --no-deps --no-index
+  --find-links <wheel-directory> ...`, then run `uv sync --locked --offline
+  --group profiling`. Installing direct wheel paths records a different
+  source identity and makes the locked sync request the original URL again;
+  that failed attempt and its logs are retained. Existing dependency
+  versions were audited after the successful locked sync.
+- A Windows `git archive` export inherited `core.autocrlf` and changed the
+  original launcher to CRLF; Bash rejected it before model startup. Export
+  the baseline with `git -c core.autocrlf=false -c core.eol=lf archive`, then
+  compare every extracted file with its Git blob, not only the archive hash.
+  The replacement `baseline-native-v34.tar` passed all 58 blob checks in a
+  fresh directory; the failed export and interrupted measurements remain in
+  the run materials and are excluded from confirmation. Python-generated
+  POSIX launchers on Windows also need explicit LF output (`write_bytes` or
+  `newline="\n"`); the current confirmation wrapper was verified on both hosts.

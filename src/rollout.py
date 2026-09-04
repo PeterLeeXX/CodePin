@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import time
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from openhands.sdk import LLM, Conversation, LLMConvertibleEvent
 from openhands.sdk.conversation.response_utils import get_agent_final_response
 
 from src.agent.agent import CustomAgent
+from src.profiling import issue_trace_id, measure_stage
 from src.tools import build_agent_tool_specs
 from src.trajectory import tool_metrics, validate_events
 
@@ -65,6 +67,7 @@ def run_localization(
     """Run an uncached trajectory. Exceptions remain explicit and untrainable."""
     started = time.monotonic()
     conversation = None
+    stages = {}
     result = {
         "messages": [],
         "sft_messages": [],
@@ -74,6 +77,7 @@ def run_localization(
         "errors": [],
     }
     try:
+        stage_started = time.monotonic()
         agent = CustomAgent(
             llm=LLM(
                 usage_id="agent",
@@ -104,17 +108,48 @@ def run_localization(
             workspace=str(working_dir),
         )
         conversation.send_message(build_instruction(instance, working_dir))
-        conversation.run()
-        result = serialize_conversation(conversation, agent)
+        stages["agent_setup_seconds"] = time.monotonic() - stage_started
+        with measure_stage(stages, "conversation_run_seconds"):
+            conversation.run()
+        with measure_stage(stages, "conversation_serialize_seconds"):
+            result = serialize_conversation(conversation, agent)
     except Exception as exc:  # noqa: BLE001 - return explicit failures to every caller.
         if conversation is not None:
-            result = serialize_conversation(conversation, agent)
+            with measure_stage(stages, "conversation_serialize_seconds"):
+                result = serialize_conversation(conversation, agent)
         result["errors"].append(f"{type(exc).__name__}: {exc}")
         result["structured_locations"] = None
     finally:
         if conversation is not None:
-            conversation.close()
+            with measure_stage(stages, "conversation_close_seconds"):
+                conversation.close()
     result["metrics"] = tool_metrics(result["messages"])
+    prompt_lengths = [
+        len(event.get("prompt_token_ids") or [])
+        for event in result["messages"]
+        if event.get("kind") == "TokenEvent"
+    ]
+    result["metrics"]["prompt_tokens"] = sum(prompt_lengths)
+    result["metrics"]["max_prompt_tokens"] = max(prompt_lengths, default=0)
+    result["metrics"].update(stages)
     result["metrics"]["wall_clock_duration"] = time.monotonic() - started
     result["status"] = "ok" if not result["errors"] else "error"
+    result["execution_id"] = str(conversation.state.id) if conversation else None
+    if (trace_directory := os.environ.get("CODEPIN_PERF_TRACE_DIR")) and conversation:
+        trace_path = Path(trace_directory)
+        trace_path.mkdir(parents=True, exist_ok=True)
+        (trace_path / f"{conversation.state.id}.json").write_text(
+            json.dumps(
+                {
+                    "conversation_id": str(conversation.state.id),
+                    "instance_id": instance.get("instance_id")
+                    or str(conversation.state.id),
+                    "issue_id": issue_trace_id(instance["problem_statement"]),
+                    "instance": instance,
+                    "repository": str(working_dir),
+                    **result,
+                }
+            ),
+            encoding="utf-8",
+        )
     return result

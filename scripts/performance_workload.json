@@ -1,0 +1,43 @@
+{
+  "name": "codepin-sft-agent-localization-v1",
+  "dataset": "data/sample/validation.parquet",
+  "seed": 20260904,
+  "effective_task": {
+    "status": "ok",
+    "minimum_multilevel_localization_f1": 0.5,
+    "maximum_tool_errors": 0,
+    "require_bounded_context": true
+  },
+  "tuning_indices": [
+    3,
+    4,
+    9,
+    13,
+    32,
+    56,
+    63,
+    67
+  ],
+  "validation_indices": [
+    7,
+    58,
+    85,
+    86,
+    97
+  ],
+  "dataset_sha256": "e760f58ab69bd8ecf59c2b5010729f98b8e2b25b635a170ac969f58f359a217e",
+  "revisions": {
+    "swesmith/tweepy__tweepy.91a41c6e": "ec4173316bc3b461cbb9712ac737a59584cbef58",
+    "swesmith/python-openxml__python-docx.0cf6d71f": "682fd3095bf6c405e5acf65ff0e3bbeb52b82eab",
+    "swesmith/mahmoud__glom.fb3c4e76": "cefbc05bb4890356f3782b5ae0b33aef27a47536",
+    "swesmith/kurtmckee__feedparser.cad965a3": "490d8fd92c2b1d7476a34813f74c4539fef95e36",
+    "swesmith/sunpy__sunpy.f8edfd5c": "0cd78e256ccd5c37ae18b900d628b137eb447a71",
+    "swesmith/sqlfluff__sqlfluff.50a1c4b6": "aeeb06ca3b23578861bd744ff600b2c8eb3c1159",
+    "swesmith/iterative__dvc.1d6ea681": "6cade21fda479f5e1b616ad19b0d25d2ecb19b7d",
+    "swesmith/scanny__python-pptx.278b47b1": "55cbb3d03e2776f565b3ff26032c75b3f4872ffc",
+    "swesmith/pygments__pygments.27649ebb": "d53d06ab2c467be43d32f68881422698ee33adf6",
+    "swesmith/tobymao__sqlglot.036601ba": "11710cc8e44a685969087a8b1f24a5a06fde0161",
+    "swesmith/pyupio__safety.7654596b": "92bb094d46b7b7a2aa3c7aa59f182a159ae953a7",
+    "swesmith/pylint-dev__astroid.b114f6b5": "2f7df1fb62fa849c6a5407c69dab6b903d4b4ca8"
+  }
+}

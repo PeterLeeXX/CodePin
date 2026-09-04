@@ -1,11 +1,15 @@
 """The fixed, read-only CodePin action space."""
 
 from openhands.sdk.tool import Tool
+from openhands.sdk.tool.tool import create_action_type_with_risk
 
-from src.tools.glob import GlobTool
-from src.tools.grep import GrepTool
-from src.tools.localization_finish import LocalizationFinishTool
-from src.tools.read_file import ReadFileTool
+from src.tools.glob import GlobAction, GlobTool
+from src.tools.grep import GrepAction, GrepTool
+from src.tools.localization_finish import (
+    LocalizationFinishAction,
+    LocalizationFinishTool,
+)
+from src.tools.read_file import ReadFileAction, ReadFileTool
 
 TOOL_NAMES = (
     GlobTool.name,
@@ -13,6 +17,12 @@ TOOL_NAMES = (
     ReadFileTool.name,
     LocalizationFinishTool.name,
 )
+
+
+def initialize_tool_schemas() -> None:
+    """Register native SDK variants before concurrent conversations start."""
+    for action in (GlobAction, GrepAction, ReadFileAction, LocalizationFinishAction):
+        create_action_type_with_risk(action)
 
 
 def build_agent_tool_specs() -> list[Tool]:
@@ -26,4 +36,5 @@ __all__ = [
     "LocalizationFinishTool",
     "ReadFileTool",
     "build_agent_tool_specs",
+    "initialize_tool_schemas",
 ]
