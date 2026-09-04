@@ -19,6 +19,14 @@ from src.performance import (
     summarize_task_behavior,
 )
 
+CONTEXT_COST_FIELDS = {
+    "output_chars",
+    "read_lines",
+    "excess_output_chars",
+    "truncated_outputs",
+    "tool_efficiency_cost",
+}
+
 
 def task_means(records: list[dict]) -> dict:
     """Validate every measurement before computing equal-task comparisons."""
@@ -72,7 +80,9 @@ def outcome_counts(records: list[dict]) -> dict:
     }
 
 
-def freeze_reference(record_runs: list[list[dict]]) -> dict:
+def freeze_reference(
+    record_runs: list[list[dict]], *, allow_quality_improving_context: bool = False
+) -> dict:
     if len(record_runs) < 3:
         raise ValueError("at least three independent baseline runs are required")
     measured_runs = [measured_records(records) for records in record_runs]
@@ -83,7 +93,7 @@ def freeze_reference(record_runs: list[list[dict]]) -> dict:
             raise ValueError("every baseline task requires measured trajectories")
     strict = build_task_behavior_reference(measured_runs)
     means = [task_means(records) for records in measured_runs]
-    return {
+    reference = {
         "strict_reference": strict,
         "all_baseline_outcome_counts": [
             outcome_counts(records) for records in record_runs
@@ -114,6 +124,100 @@ def freeze_reference(record_runs: list[list[dict]]) -> dict:
             "Effective-task definitions and historical screen results are unchanged."
         ),
     }
+    if allow_quality_improving_context:
+        reference["context_cost_policy"] = "quality_improvement"
+        reference["best_baseline_quality"] = {
+            task: {
+                field: max(
+                    row["quality"]
+                    if field == "quality"
+                    else row["quality_metrics"][field]
+                    for records in measured_runs
+                    for row in records
+                    if str(row["instance_id"]) == task
+                )
+                for field in QUALITY_FIELDS
+            }
+            for task in strict["per_task"]
+        }
+        reference["interpretation"] += (
+            " Opt-in context-cost policy: higher read/output costs may be reported as "
+            "a quality/cost tradeoff only for valid, tool-error-free outcomes whose "
+            "localization vector dominates every observed baseline quality maximum "
+            "and strictly improves at least one F1 level. Ordinary-outcome cost means "
+            "must still satisfy baseline bounds. All raw costs, scores and effective "
+            "outcomes remain unchanged. Quality, misuse, turn/call and infrastructure "
+            "gates remain strict. This does not prove every observed line is useful."
+        )
+    return reference
+
+
+def context_cost_tradeoffs(
+    records: list[dict], reference: dict, regressions: list[dict]
+):
+    """Distinguish improved localization with more context from unchanged-quality waste."""
+    grouped = defaultdict(list)
+    for row in records:
+        grouped[str(row["instance_id"])].append(row)
+    improved, ordinary = {}, {}
+    for task, rows in grouped.items():
+        best = reference["best_baseline_quality"].get(task)
+        if best is None:
+            continue
+        improved[task], ordinary[task] = [], []
+        for row in rows:
+            quality = {
+                field: row["quality"]
+                if field == "quality"
+                else row["quality_metrics"][field]
+                for field in QUALITY_FIELDS
+            }
+            useful = (
+                row.get("status") == "ok"
+                and not row.get("errors")
+                and row["metrics"]["tool_errors"] == 0
+                and all(
+                    quality[field] >= best[field] - 1e-8 for field in QUALITY_FIELDS
+                )
+                and any(
+                    quality[field] > best[field] + 1e-8
+                    for field in QUALITY_FIELDS
+                    if field != "quality"
+                )
+            )
+            (improved[task] if useful else ordinary[task]).append(row)
+    remaining, tradeoffs = [], []
+    for regression in regressions:
+        task = regression["task"]
+        field = regression["field"].removeprefix("mean_")
+        eligible = field in CONTEXT_COST_FIELDS and bool(improved.get(task))
+        ordinary_mean = None
+        if eligible and regression["field"].startswith("mean_"):
+            values = [row["metrics"][field] for row in ordinary[task]]
+            ordinary_mean = sum(values) / len(values) if values else None
+            eligible = (
+                ordinary_mean is None
+                or ordinary_mean <= regression["expected_max"] + 1e-8
+            )
+        elif eligible:
+            limit = regression["expected_maximum"]
+            eligible = all(
+                row["metrics"][field] <= limit + 1e-8 for row in ordinary[task]
+            )
+        if eligible:
+            tradeoffs.append(
+                {
+                    **regression,
+                    "improved_quality_outcomes": len(improved[task]),
+                    "ordinary_outcomes": len(ordinary[task]),
+                    "ordinary_cost_mean": ordinary_mean,
+                    "best_baseline_quality": reference["best_baseline_quality"][task],
+                    "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged.",
+                }
+            )
+        else:
+            remaining.append(regression)
+    return remaining, tradeoffs
 
 
 def compare_records(records: list[dict], reference: dict) -> dict:
@@ -150,6 +254,10 @@ def compare_records(records: list[dict], reference: dict) -> dict:
                     )
     result["run_means"] = means
     result["all_outcome_counts"] = counts
+    if reference.get("context_cost_policy") == "quality_improvement":
+        result["regressions"], result["context_cost_tradeoffs"] = (
+            context_cost_tradeoffs(measured, reference, result["regressions"])
+        )
     result["accepted"] = not result["regressions"]
     return result
 
@@ -223,6 +331,7 @@ def main() -> None:
     freeze = subparsers.add_parser("freeze")
     freeze.add_argument("--baseline-runs", type=Path, nargs="+", required=True)
     freeze.add_argument("--output", type=Path, required=True)
+    freeze.add_argument("--allow-quality-improving-context", action="store_true")
     compare = subparsers.add_parser("compare")
     compare.add_argument("--reference", type=Path, required=True)
     compare.add_argument("--run", type=Path, required=True)
@@ -243,7 +352,10 @@ def main() -> None:
             raise ValueError(
                 "baseline repetitions must use the same task definition and load"
             )
-        result = freeze_reference([records for records, _ in loaded])
+        result = freeze_reference(
+            [records for records, _ in loaded],
+            allow_quality_improving_context=args.allow_quality_improving_context,
+        )
         result["sources"] = sources
     else:
         reference = json.loads(args.reference.read_text())

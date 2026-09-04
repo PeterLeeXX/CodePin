@@ -1,0 +1,834 @@
+{
+  "stage": 7,
+  "status": "Analysis policy correction; final performance acceptance pending",
+  "runtime_source_commit": "4a1c27a43762d2b8f8f6d16095c30c6ee54658f0",
+  "runtime_inference_commit": "97ada3bae907b381ab88d20f1b0506c836ad48fb",
+  "runtime_modified_for_this_stage": false,
+  "source_sha256": {
+    "scripts/compare_performance_quality.py": "e56e32ed76be1042bdc989da888efffbedf44ddba983858f75ac3c1484fb9739",
+    "tests/test_performance_quality.py": "0478ca040c7c54f3c015f89adb16b56051e6d5c498031aa8cfe1ab8b3955ab2c"
+  },
+  "analysis_tests": {
+    "tests": 34,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "raw_material_verification": {
+    "archive": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/context-policy-material-v103.tar.gz",
+    "bytes": 1343371,
+    "sha256": "f59372a741f19132fe0e1637cffc8c8260e1dabb4e502a4ec9f9482b29fb06ad",
+    "entries": 34,
+    "manifest_sha256": "eefa41feb49fba8a4342dde4b443af6166a70e8a702028c9f81f11f41db6c51f",
+    "interpretation": "Completed r1 data is diagnostic only; three post-freeze engines are required.",
+    "verified_at": "2026-09-04T14:45:53.796544+00:00",
+    "local_archive": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\context-policy-material-v103.tar.gz",
+    "local_directory": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\context-policy-material-v103",
+    "verified_entries": 34,
+    "regular_bytes": 11042282,
+    "failures": [],
+    "tested_source_matches_workspace": true
+  },
+  "reference_freeze": {
+    "frozen_at": "2026-09-04T14:42:10.072600+00:00",
+    "protocol": {
+      "created_at": "2026-09-04T14:42:09.433508+00:00",
+      "previous_policy": "baseline-quality-reference-freeze-v86.json; historical verdicts remain unchanged",
+      "reason": "A real feedparser outcome improved measured localization from zero to 0.20324074074074072, eliminated four tool errors and reduced six turns to three. Raw context cost rose. Blanket context-cost dominance incorrectly conflated this tradeoff with a correctness regression.",
+      "unchanged": "Every effective-task condition and threshold (including quality >=0.5), source/model/budget, all quality minima/means, error/repeated-search/overlap/turn/call constraints, zero candidate infrastructure failures and timeouts. No failed record is removed or promoted to effective.",
+      "context_policy": "Only explicit opt-in references distinguish higher context cost for status-ok, error-free outcomes whose quality vector is at least every observed baseline per-level maximum and strictly improves an F1 level. Higher context costs for ordinary outcomes still fail extrema and mean bounds; improved outcomes cannot hide ordinary cost growth. Raw means and all individual costs remain in reports and rewards. This is not proof that every read line is useful.",
+      "scope_of_exception": [
+        "output_chars",
+        "read_lines",
+        "excess_output_chars",
+        "truncated_outputs",
+        "tool_efficiency_cost"
+      ],
+      "validation": "Only candidate engines started after this freeze can qualify under this policy, at least three independent repeats. Earlier runs are diagnostic counterexamples; do not relabel their original verdicts as passes. Inference code stays frozen while running jobs finish.",
+      "engine_start_guard": {
+        "fresh-candidate-v95-r2": true,
+        "fresh-candidate-v95-r3": true
+      },
+      "analysis_tests": {
+        "tests": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "references": {
+      "p1-c4": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v102/p1-c4.json",
+        "sha256": "e3414d61ecdf53a622c27f4c5026383ff8e9ff9efac395a46a941a6533a6d6be",
+        "previous_sha256": "fd478e21726454a321a9a3da45732a9826957861119d2c55d68a21cdb35269a2",
+        "source_bounds_unchanged": true
+      },
+      "p4-c16": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v102/p4-c16.json",
+        "sha256": "b4f52a74ec861953dcacd49d8b7fdec8c08b4dc0ae230f50dfb9cf7ef2099b63",
+        "previous_sha256": "4d491366b3e37a5b97663cd766ccb821569dc6f50bd8528cde9a3b7ff53ec534",
+        "source_bounds_unchanged": true
+      },
+      "p4-c8": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v102/p4-c8.json",
+        "sha256": "bb23b54dbac34673019d51254edcce513ebe261571ed792fa3a24827b187507f",
+        "previous_sha256": "f586a037612a176429109fb93bce07a53aab7b764b048a9fb2b99013ed5b3b02",
+        "source_bounds_unchanged": true
+      },
+      "validation-capacity-p4-c16": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v102/validation-capacity-p4-c16.json",
+        "sha256": "87f9ee8367215094c9c867c03ec7abc9fc310311d6139ecab16d62c0ef9c0008",
+        "previous_sha256": "8e953d87bb88e1f8444be7d912e629c07cab94d61c5fa64937c4e8c580255abc",
+        "source_bounds_unchanged": true
+      },
+      "validation-capacity-p4-c8": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v102/validation-capacity-p4-c8.json",
+        "sha256": "019ac2ed4cdc77a38de02279a8ef67942b22b2d05ee7a67e8f4e09967e5b6164",
+        "previous_sha256": "6fc3b50e696ef8a90dc25a1267f2058682b74c637e7783b1eb9d599f5b4f6b84",
+        "source_bounds_unchanged": true
+      },
+      "validation-p1-c4": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v102/validation-p1-c4.json",
+        "sha256": "b4fbfd56def6ea3b35d6e36f55627c98b81d3ab93afc088b0097bf4b14d624b3",
+        "previous_sha256": "c38af217fd29ac2b183f63a1c67fb5046ed088062b01d3a410d1190153c74d69",
+        "source_bounds_unchanged": true
+      }
+    },
+    "new_candidate_results_evaluated": 0,
+    "analysis_files": {
+      "scripts/compare_performance_quality.py": "e56e32ed76be1042bdc989da888efffbedf44ddba983858f75ac3c1484fb9739",
+      "tests/test_performance_quality.py": "0478ca040c7c54f3c015f89adb16b56051e6d5c498031aa8cfe1ab8b3955ab2c"
+    },
+    "interpretation": "An explicitly versioned semantic correction, not a change to effective throughput or localization thresholds. Three qualifying candidate engines must start after frozen_at; r1 cannot count toward these repeats."
+  },
+  "exact_task": "kurtmckee__feedparser.cad965a3.pr_417",
+  "baseline_variants": [
+    {
+      "count": 350,
+      "behavior": {
+        "effective": false,
+        "errors": [
+          "missing_or_multiple_finish",
+          "tool_error"
+        ],
+        "locations": [],
+        "metrics": {
+          "excess_output_chars": 0.0,
+          "num_tool_calls": 6.0,
+          "num_turns": 6.0,
+          "output_chars": 69.0,
+          "overlap_lines": 0.0,
+          "read_lines": 0.0,
+          "repeated_searches": 0.0,
+          "tool_efficiency_cost": 0.050690000000000006,
+          "tool_errors": 4.0,
+          "truncated_outputs": 0.0
+        },
+        "quality": 0.0,
+        "quality_metrics": {
+          "class_f1": 0.0,
+          "entity_reward": 0.0,
+          "file_f1": 0.0,
+          "file_reward": 0.0,
+          "function_f1": 0.0,
+          "module_reward": 0.0,
+          "multilevel_localization_f1_reward": 0.0
+        },
+        "status": "error"
+      }
+    }
+  ],
+  "diagnostic_groups": [
+    {
+      "label": "fresh-candidate-v95-r1-p4-c16",
+      "records_sha256": "c2a80b9c4d9ad402c4ca0d9a50c6573434b852949b7100323dc4d08c3fda8de0",
+      "submitted_tasks": 1304,
+      "model_requests": 6188,
+      "task_outcomes": 163,
+      "task_improved_but_ineffective": 2,
+      "improved_examples": [
+        {
+          "execution_id": "74d46060-2aa3-4333-aea1-86a3ae312994",
+          "status": "ok",
+          "effective": false,
+          "quality": 0.20324074074074072,
+          "quality_metrics": {
+            "multilevel_localization_f1_reward": 0.20324074074074072,
+            "file_reward": 0.0625,
+            "module_reward": 0.06666666666666667,
+            "entity_reward": 0.07407407407407407,
+            "file_f1": 0.0625,
+            "class_f1": 0.0,
+            "function_f1": 0.07407407407407407
+          },
+          "errors": [],
+          "locations": [
+            {
+              "file": "feedparser/encodings.py",
+              "class_name": null,
+              "function_name": "convert_to_utf8"
+            }
+          ],
+          "metrics": {
+            "num_turns": 3.0,
+            "num_tool_calls": 3.0,
+            "tool_errors": 0.0,
+            "repeated_searches": 0.0,
+            "overlap_lines": 0.0,
+            "output_chars": 9621.0,
+            "read_lines": 200.0,
+            "excess_output_chars": 1598.0,
+            "truncated_outputs": 1.0,
+            "tool_efficiency_cost": 0.19817
+          }
+        },
+        {
+          "execution_id": "dfb01c93-b2a5-47c4-90ad-6c1ae1a3847c",
+          "status": "ok",
+          "effective": false,
+          "quality": 0.20324074074074072,
+          "quality_metrics": {
+            "multilevel_localization_f1_reward": 0.20324074074074072,
+            "file_reward": 0.0625,
+            "module_reward": 0.06666666666666667,
+            "entity_reward": 0.07407407407407407,
+            "file_f1": 0.0625,
+            "class_f1": 0.0,
+            "function_f1": 0.07407407407407407
+          },
+          "errors": [],
+          "locations": [
+            {
+              "file": "feedparser/encodings.py",
+              "class_name": null,
+              "function_name": "convert_to_utf8"
+            }
+          ],
+          "metrics": {
+            "num_turns": 3.0,
+            "num_tool_calls": 3.0,
+            "tool_errors": 0.0,
+            "repeated_searches": 0.0,
+            "overlap_lines": 0.0,
+            "output_chars": 9621.0,
+            "read_lines": 200.0,
+            "excess_output_chars": 1598.0,
+            "truncated_outputs": 1.0,
+            "tool_efficiency_cost": 0.19817
+          }
+        }
+      ],
+      "previous_accepted": false,
+      "previous_regressions": [
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "output_chars",
+          "expected_maximum": 69.0,
+          "actual": 9621.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "excess_output_chars",
+          "expected_maximum": 0.0,
+          "actual": 1598.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "read_lines",
+          "expected_maximum": 0.0,
+          "actual": 200.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "truncated_outputs",
+          "expected_maximum": 0.0,
+          "actual": 1.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "tool_efficiency_cost",
+          "expected_maximum": 0.050690000000000006,
+          "actual": 0.19817
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_output_chars",
+          "expected_max": 69.0,
+          "actual": 186.20245398773005
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_excess_output_chars",
+          "expected_max": 0.0,
+          "actual": 19.607361963190183
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_read_lines",
+          "expected_max": 0.0,
+          "actual": 2.4539877300613497
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_truncated_outputs",
+          "expected_max": 0.0,
+          "actual": 0.012269938650306749
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_tool_efficiency_cost",
+          "expected_max": 0.050690000000000006,
+          "actual": 0.05249957055214724
+        }
+      ],
+      "new_diagnostic_accepted": true,
+      "context_cost_tradeoffs": [
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "output_chars",
+          "expected_maximum": 69.0,
+          "actual": 9621.0,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "excess_output_chars",
+          "expected_maximum": 0.0,
+          "actual": 1598.0,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "read_lines",
+          "expected_maximum": 0.0,
+          "actual": 200.0,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "truncated_outputs",
+          "expected_maximum": 0.0,
+          "actual": 1.0,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "tool_efficiency_cost",
+          "expected_maximum": 0.050690000000000006,
+          "actual": 0.19817,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_output_chars",
+          "expected_max": 69.0,
+          "actual": 186.20245398773005,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": 69.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_excess_output_chars",
+          "expected_max": 0.0,
+          "actual": 19.607361963190183,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": 0.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_read_lines",
+          "expected_max": 0.0,
+          "actual": 2.4539877300613497,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": 0.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_truncated_outputs",
+          "expected_max": 0.0,
+          "actual": 0.012269938650306749,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": 0.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_tool_efficiency_cost",
+          "expected_max": 0.050690000000000006,
+          "actual": 0.05249957055214724,
+          "improved_quality_outcomes": 2,
+          "ordinary_outcomes": 161,
+          "ordinary_cost_mean": 0.05069000000000001,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        }
+      ],
+      "qualifying_repeat": false,
+      "all_outcome_counts_unchanged": true,
+      "all_run_means_unchanged": true,
+      "full_run_performance": {
+        "effective_rate": 0.5,
+        "effective_tasks_per_minute": 213.52464566825955,
+        "latency_seconds": {
+          "count": 1304,
+          "min": 0.9766066939337179,
+          "max": 4.94311326299794,
+          "mean": 2.2307967287441857,
+          "stdev": 0.9993381229990681,
+          "ci95_half_width": 0.05424125519380303,
+          "p50": 2.1777789145126007,
+          "p95": 4.3599808843166095
+        },
+        "file_f1": {
+          "count": 1304,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.3834291922290389,
+          "stdev": 0.4227063121166931,
+          "ci95_half_width": 0.02294330659451314,
+          "p50": 0.23125,
+          "p95": 1.0
+        },
+        "class_f1": {
+          "count": 1304,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.25,
+          "stdev": 0.43317882992514595,
+          "ci95_half_width": 0.023511725328770185,
+          "p50": 0.0,
+          "p95": 1.0
+        },
+        "function_f1": {
+          "count": 1304,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.3834469438763917,
+          "stdev": 0.4226930669130194,
+          "ci95_half_width": 0.022942587682209064,
+          "p50": 0.23703703703703705,
+          "p95": 1.0
+        },
+        "infrastructure_error_rate": 0.0,
+        "timeout_rate": 0.0
+      }
+    },
+    {
+      "label": "fresh-candidate-v95-r1-p32-c64",
+      "records_sha256": "b579798f0621c56a9441f4656900767e024b6b73906fa50b41c127691b5aec03",
+      "submitted_tasks": 2744,
+      "model_requests": 13031,
+      "task_outcomes": 343,
+      "task_improved_but_ineffective": 1,
+      "improved_examples": [
+        {
+          "execution_id": "ef80983d-8dd1-4285-958b-b126285c4772",
+          "status": "ok",
+          "effective": false,
+          "quality": 0.20324074074074072,
+          "quality_metrics": {
+            "multilevel_localization_f1_reward": 0.20324074074074072,
+            "file_reward": 0.0625,
+            "module_reward": 0.06666666666666667,
+            "entity_reward": 0.07407407407407407,
+            "file_f1": 0.0625,
+            "class_f1": 0.0,
+            "function_f1": 0.07407407407407407
+          },
+          "errors": [],
+          "locations": [
+            {
+              "file": "feedparser/encodings.py",
+              "class_name": null,
+              "function_name": "convert_to_utf8"
+            }
+          ],
+          "metrics": {
+            "num_turns": 3.0,
+            "num_tool_calls": 3.0,
+            "tool_errors": 0.0,
+            "repeated_searches": 0.0,
+            "overlap_lines": 0.0,
+            "output_chars": 9621.0,
+            "read_lines": 200.0,
+            "excess_output_chars": 1598.0,
+            "truncated_outputs": 1.0,
+            "tool_efficiency_cost": 0.19817
+          }
+        }
+      ],
+      "previous_accepted": false,
+      "previous_regressions": [
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "output_chars",
+          "expected_maximum": 69.0,
+          "actual": 9621.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "excess_output_chars",
+          "expected_maximum": 0.0,
+          "actual": 1598.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "read_lines",
+          "expected_maximum": 0.0,
+          "actual": 200.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "truncated_outputs",
+          "expected_maximum": 0.0,
+          "actual": 1.0
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "tool_efficiency_cost",
+          "expected_maximum": 0.050690000000000006,
+          "actual": 0.19817
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_output_chars",
+          "expected_max": 69.0,
+          "actual": 96.84839650145773
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_excess_output_chars",
+          "expected_max": 0.0,
+          "actual": 4.658892128279883
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_read_lines",
+          "expected_max": 0.0,
+          "actual": 0.5830903790087464
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_truncated_outputs",
+          "expected_max": 0.0,
+          "actual": 0.0029154518950437317
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_tool_efficiency_cost",
+          "expected_max": 0.050690000000000006,
+          "actual": 0.051119970845481054
+        }
+      ],
+      "new_diagnostic_accepted": true,
+      "context_cost_tradeoffs": [
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "output_chars",
+          "expected_maximum": 69.0,
+          "actual": 9621.0,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "excess_output_chars",
+          "expected_maximum": 0.0,
+          "actual": 1598.0,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "read_lines",
+          "expected_maximum": 0.0,
+          "actual": 200.0,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "truncated_outputs",
+          "expected_maximum": 0.0,
+          "actual": 1.0,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "tool_efficiency_cost",
+          "expected_maximum": 0.050690000000000006,
+          "actual": 0.19817,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": null,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_output_chars",
+          "expected_max": 69.0,
+          "actual": 96.84839650145773,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": 69.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_excess_output_chars",
+          "expected_max": 0.0,
+          "actual": 4.658892128279883,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": 0.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_read_lines",
+          "expected_max": 0.0,
+          "actual": 0.5830903790087464,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": 0.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_truncated_outputs",
+          "expected_max": 0.0,
+          "actual": 0.0029154518950437317,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": 0.0,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        },
+        {
+          "task": "kurtmckee__feedparser.cad965a3.pr_417",
+          "field": "mean_tool_efficiency_cost",
+          "expected_max": 0.050690000000000006,
+          "actual": 0.051119970845481054,
+          "improved_quality_outcomes": 1,
+          "ordinary_outcomes": 342,
+          "ordinary_cost_mean": 0.050690000000000006,
+          "best_baseline_quality": {
+            "quality": 0.0,
+            "file_f1": 0.0,
+            "class_f1": 0.0,
+            "function_f1": 0.0
+          },
+          "interpretation": "Higher context cost with improved measured localization; raw cost and effective-task definition unchanged."
+        }
+      ],
+      "qualifying_repeat": false,
+      "all_outcome_counts_unchanged": true,
+      "all_run_means_unchanged": true,
+      "full_run_performance": {
+        "effective_rate": 0.5,
+        "effective_tasks_per_minute": 446.9935281473844,
+        "latency_seconds": {
+          "count": 2744,
+          "min": 1.6196325240889564,
+          "max": 9.456429956946522,
+          "mean": 4.245669226432937,
+          "stdev": 2.010429699167442,
+          "ci95_half_width": 0.07522339134479572,
+          "p50": 3.446426684502512,
+          "p95": 8.715535836102209
+        },
+        "file_f1": {
+          "count": 2744,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.3833561103012634,
+          "stdev": 0.42268212785285836,
+          "ci95_half_width": 0.01581531705937975,
+          "p50": 0.23125,
+          "p95": 1.0
+        },
+        "class_f1": {
+          "count": 2744,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.25,
+          "stdev": 0.4330916251958716,
+          "ci95_half_width": 0.01620480478564064,
+          "p50": 0.0,
+          "p95": 1.0
+        },
+        "function_f1": {
+          "count": 2744,
+          "min": 0.0,
+          "max": 1.0,
+          "mean": 0.3833603282582874,
+          "stdev": 0.4226789825906029,
+          "ci95_half_width": 0.015815199374442236,
+          "p50": 0.23703703703703705,
+          "p95": 1.0
+        },
+        "infrastructure_error_rate": 0.0,
+        "timeout_rate": 0.0
+      }
+    }
+  ],
+  "limits": [
+    "This policy was motivated by already observed r1 data and is not a preregistered r1 acceptance rule.",
+    "Historical V86 verdicts stay failed. V102 qualification requires three engines started after its freeze.",
+    "Higher measured localization does not prove every read line was useful. All context costs and truncation remain visible and penalized by the original reward.",
+    "The partial outcome still fails the unchanged quality >=0.5 effective-task threshold; no throughput count is increased.",
+    "The raw performance numbers are diagnostic single runs, not repeated improvement or saturation claims."
+  ],
+  "reproduction": {
+    "freeze_script": "configs/freeze-context-tradeoff-references-v102.py",
+    "archive_script": "configs/archive-context-policy-v103.py",
+    "local_verification_script": "configs/verify-context-policy-v103.py",
+    "document_builder": "configs/build-stage7-evidence-v105.py",
+    "cli_flag": "--allow-quality-improving-context",
+    "test_example": "python -m pytest tests/test_performance.py tests/test_performance_quality.py -q",
+    "note": "Reproduce into fresh output paths. Files are exclusive-created; preserve all original data and references."
+  }
+}

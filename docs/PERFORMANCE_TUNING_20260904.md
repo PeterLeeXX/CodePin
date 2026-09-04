@@ -16,6 +16,8 @@
 
 第五阶段完成八组原生批量、缓存和同步调度对照，保留 11,650 次真实任务与 51,321 次模型请求，见 [stage5-evidence.json](assets/performance/20260904-stage5-evidence.json)。所有请求数与实际轮次相符，基础设施异常和超时均为零；三组低负载配置通过单次严格筛选，其他五组失败。234 个原始条目已拉回并核验，另以五条真实轨迹核对了 22 轮原生贪心采样与 token 追加。完整三次原部署基线已在阶段六补齐；最终配置、饱和及最终验收仍待完成。
 
+第七阶段修正工具成本判定中的一项语义问题：定位分数有所改善、工具错误减少但读取增加的结果，不应直接称为无关输出或行为退化。新增显式可选的质量/上下文成本分类，默认严格规则及历史失败记录保留；有效任务阈值、原始成本和奖励均不变。34 项匹配环境回归通过，4,048 个真实诊断任务及 19,219 次模型请求已拉回核验，见 [stage7-evidence.json](assets/performance/20260904-stage7-evidence.json)。该修正规则在新的候选引擎启动前冻结，既有诊断不计为新的三次验收。
+
 ## 硬件、软件与模型身份
 
 | 项目 | 本次实测 |
@@ -268,6 +270,43 @@ python -m scripts.compare_performance_quality compare \
 ```
 
 以上路径是新实验的调用示例；本次实际运行命令逐件保存在材料 `configs/command-baseline-quality-reference-v86-*.json`。尚未选择最终配置；新的三次候选对照、独立保留任务、到达率边界、15 分钟稳态与完整真实模型验收仍待完成。
+
+## 定位改善与上下文成本的区分（阶段七）
+
+阶段六的严格比较要求每种成本均不超过原部署。新一轮真实运行暴露了它的局限：任务 `kurtmckee__feedparser.cad965a3.pr_417` 在原 C16 三次基线的 350 次执行中，均定位分数为 0、工具错误 4 次、无有效定位；候选部分执行正确返回 `feedparser/encodings.py::convert_to_utf8`，提高了定位分数，却因读取成本增加被列为十项退化。这十项是五种成本各自的单次与均值上界，不是十个不同的错误任务。
+
+| 同一任务的实际结果 | 原 C16 基线 | 新出现的部分定位结果 |
+|---|---:|---:|
+| 原 Localization 奖励 | 0 | 0.2032407407 |
+| 文件 / 类 / 函数 F1 | 0 / 0 / 0 | 0.0625 / 0 / 0.0740741 |
+| 工具错误 | 4 | 0 |
+| 工具调用 / 推理轮数 | 6 / 6 | 3 / 3 |
+| 读取行数 | 0 | 200 |
+| 工具观察输出字符数 | 69 | 9621 |
+| 过量输出字符 / 截断次数 | 0 / 0 | 1598 / 1 |
+| 原 Tool Efficiency 成本 | 0.05069 | 0.19817 |
+| 是否达到有效任务门槛 | 否 | 否 |
+
+这类结果在首轮 C16 为 2/163 次，在 C64 为 1/343 次；两个完整运行仍分别保留 1,304 和 2,744 个提交任务，全部模型请求与实际轮数一致。定位有所改善不能证明每一行读取都必要，过量输出和截断也仍是实际成本。因此纠正的是“全部成本增加等于行为退化”的解释，没有删除这些成本、提高奖励或把低于 0.5 的任务计入有效吞吐。
+
+`scripts.compare_performance_quality` 现在提供显式 `--allow-quality-improving-context`：只对正常结束、无轨迹错误、无工具错误，且各级定位分数不低于该任务所有已观测基线最高值、至少一个 F1 严格改善的结果，将读取、输出、过量输出、截断和效率成本的超界单列为 `context_cost_tradeoffs`。其他结果的成本极值和均值仍须满足原参考，改善结果不能掩盖普通结果的成本增长。质量、有效率、重复搜索、重叠读取、调用/轮数和基础设施错误检查保持原约束；所有原始成本、分项日志和奖励保持原值。未显式开启时继续使用原来的严格规则。
+
+六个 V102 参考于 **2026-09-04T14:42:10.072600+00:00** 冻结。逐件确认其原始来源、严格上下界、运行均值参考及全部结果计数与 V86 完全相同，仅增加明确的成本分类策略与基线最高分。冻结时第二、三轮候选引擎尚未启动，另安排一次新引擎补足三次前瞻重复。第一轮引发修正的数据仅用于诊断，原 V86 失败不改写；最终配置和验收仍待后续证据。
+
+34 项测试在匹配的 Python 3.12.14 / pytest 9.1.1 环境通过（0.11 秒，零失败、错误或跳过）。新增测试覆盖旧规则保持失败、未改善或低于基线最好结果的成本增长、finish/工具错误、逐级 F1 退化、普通结果成本被改善结果掩盖，以及重复搜索和额外轮次等情况。本阶段只改变离线分析工具与测试，云端推理代码维持阶段六的 54 文件清单。
+
+原始诊断、六个参考、测试报告和确切已测试源码均已拉回 `tmp/verification/20260904-vllm-performance/context-policy-material-v103/`。34 个条目逐件核验通过；压缩包 1,343,371 bytes，SHA-256 `f59372a741f19132fe0e1637cffc8c8260e1dabb4e502a4ec9f9482b29fb06ad`。完整新旧判定和不变的计数见 [stage7-evidence.json](assets/performance/20260904-stage7-evidence.json)。新实验使用方式如下；输出路径需保持独立，参考冻结应早于候选测量：
+
+```bash
+python -m scripts.compare_performance_quality freeze \
+  --baseline-runs results/baseline-r1 results/baseline-r2 results/baseline-r3 \
+  --allow-quality-improving-context --output reports/context-reference.json
+python -m scripts.compare_performance_quality compare \
+  --reference reports/context-reference.json --run results/new-candidate-r1 \
+  --output reports/new-candidate-r1-quality.json
+```
+
+本次实际冻结、旧结果诊断和摘要核验分别由材料中的 `configs/freeze-context-tradeoff-references-v102.py`、`configs/verify-context-policy-v103.py` 与 `configs/build-stage7-evidence-v105.py` 执行；后两份派生复现脚本保存在原始压缩包之外。
 
 ## Append-only 与混合缓存
 

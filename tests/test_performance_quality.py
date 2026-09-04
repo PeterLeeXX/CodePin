@@ -118,3 +118,91 @@ def test_task_f1_report_keeps_startup_failure_in_denominator():
     for score in report["quality_metrics"].values():
         assert score["mean"] == 0.5
         assert score["count"] == 2
+
+
+def context_outcome(quality=0.0, output_chars=69, tool_errors=0):
+    row = outcome(quality=quality, tool_errors=tool_errors)
+    row.update(status="ok" if tool_errors == 0 else "error", errors=[])
+    row["metrics"]["output_chars"] = output_chars
+    return row
+
+
+def test_improved_localization_context_is_an_explicit_cost_tradeoff():
+    baseline = [context_outcome(tool_errors=4)] * 100
+    reference = freeze_reference([baseline] * 3, allow_quality_improving_context=True)
+    original = copy.deepcopy(reference)
+    candidate = baseline[:99] + [context_outcome(quality=0.2, output_chars=9621)]
+    result = compare_records(candidate, reference)
+    assert result["accepted"]
+    assert {row["field"] for row in result["context_cost_tradeoffs"]} == {
+        "output_chars",
+        "mean_output_chars",
+    }
+    assert result["run_means"]["task"]["tool_cost"]["output_chars"] > 69
+    assert result["run_means"]["task"]["tool_cost"]["tool_errors"] < 4
+    assert result["all_outcome_counts"]["task"]["effective"] == 0
+    assert reference == original
+
+
+def test_historical_strict_references_keep_their_original_verdict():
+    baseline = [[context_outcome()]] * 3
+    reference = freeze_reference(baseline)
+    assert "context_cost_policy" not in reference
+    assert not compare_records(
+        [context_outcome(quality=0.2, output_chars=9621)], reference
+    )["accepted"]
+
+
+@pytest.mark.parametrize(
+    "kind", ["unchanged", "below_best", "broken_finish", "tool_error"]
+)
+def test_context_growth_requires_valid_localization_better_than_baseline_best(kind):
+    baseline = [context_outcome()]
+    if kind == "below_best":
+        baseline.append(context_outcome(quality=1.0))
+    reference = freeze_reference([baseline] * 3, allow_quality_improving_context=True)
+    candidate = context_outcome(quality=0.2, output_chars=9621)
+    if kind == "unchanged":
+        candidate = context_outcome(output_chars=9621)
+    elif kind == "broken_finish":
+        candidate.update(status="error", errors=["missing_or_multiple_finish"])
+    elif kind == "tool_error":
+        candidate["metrics"]["tool_errors"] = 1
+    result = compare_records(baseline + [candidate], reference)
+    assert not result["accepted"]
+    assert not result["context_cost_tradeoffs"]
+
+
+def test_better_quality_cannot_hide_other_ordinary_outcome_cost_growth():
+    baseline = [context_outcome()]
+    reference = freeze_reference([baseline] * 3, allow_quality_improving_context=True)
+    result = compare_records(
+        [
+            context_outcome(quality=0.2, output_chars=9621),
+            context_outcome(output_chars=300),
+        ],
+        reference,
+    )
+    assert not result["accepted"]
+    assert not result["context_cost_tradeoffs"]
+
+
+def test_context_tradeoff_does_not_bypass_a_localization_level_regression():
+    baseline = [context_outcome(quality=0.5)]
+    reference = freeze_reference([baseline] * 3, allow_quality_improving_context=True)
+    candidate = context_outcome(quality=0.7, output_chars=9621)
+    candidate["quality_metrics"]["function_f1"] = 0.4
+    result = compare_records([candidate], reference)
+    assert not result["accepted"]
+    assert not result["context_cost_tradeoffs"]
+
+
+def test_context_tradeoff_never_excuses_repeated_search_or_extra_rounds():
+    baseline = [context_outcome()]
+    reference = freeze_reference([baseline] * 3, allow_quality_improving_context=True)
+    candidate = context_outcome(quality=0.2, output_chars=9621)
+    candidate["metrics"].update(repeated_searches=1, num_turns=1)
+    result = compare_records([candidate], reference)
+    assert not result["accepted"]
+    assert result["context_cost_tradeoffs"]
+    assert "repeated_searches" in {row["field"] for row in result["regressions"]}
