@@ -104,3 +104,21 @@
   configuration inspection or standalone MCP tests alone do not satisfy it.
 - Current results and remaining evidence:
   [PERFORMANCE_ACCEPTANCE_20260905.md](PERFORMANCE_ACCEPTANCE_20260905.md).
+
+## 2026-09-05: service attribution and shutdown condition
+
+- The three-run P4/C16 comparison separates end-to-end throughput from
+  per-request engine timing: queue and TTFT fell while prefill/decode means
+  rose. APC was already enabled in both variants. Preserve these distinctions
+  until the queued source-only comparison isolates the remaining contribution.
+- Local Codex 0.144.4 supports stdio MCP registration through native OpenSSH.
+  Its login, CLI options, a dedicated local key and a real python-docx task
+  are prepared. Registration and the actual model-backed tool invocation are
+  still pending; no prepared artifact is counted as an integration pass.
+- The user explicitly requested shutdown after successful integration.
+  Retrieve and verify the material and push the stage results before shutdown;
+  the remote-backed MCP becomes unavailable when the host stops.
+- Two derived V55 SQLite exports were verified against their existing local
+  copies and removed remotely between formal measurements at 16:54:05–06 UTC.
+  This recovered 741,879,808 bytes; original `.nsys-rep` files and analysis
+  remain. The exact receipt is `configs/derived-sqlite-offload-v130.json`.

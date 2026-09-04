@@ -76,6 +76,40 @@ uv run python -m src.mcp_server \
 HTTP 模式增加 `--transport streamable-http --port 8001`，地址为
 `http://127.0.0.1:8001/mcp`。远程访问使用 SSH 转发本地监听端口。
 
+### 注册到本机 Codex
+
+本机 Codex 可以通过 OpenSSH 的 stdio 直接启动远程 MCP 进程。模型、项目依赖和
+工具执行仍使用远程已验证的 Linux 环境；本机只需 Codex 和 OpenSSH。先准备
+可非交互登录的 SSH 密钥、核验主机公钥，并启动上述 vLLM 服务。不要把密码放入
+Codex 配置或命令行。以下 PowerShell 命令中的主机、端口、密钥和远程路径需替换：
+
+```powershell
+codex mcp add codepin -- ssh -T `
+  -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes `
+  -o ServerAliveInterval=30 -o ServerAliveCountMax=3 `
+  -i C:/Users/USER/.ssh/codepin_mcp_ed25519 -p PORT root@HOST `
+  "cd /root/autodl-tmp/codepin && exec env LITELLM_LOCAL_MODEL_COST_MAP=True .venv/bin/python -m src.mcp_server --repository-root /root/autodl-tmp/workspaces --base-url http://127.0.0.1:8000/v1 --cache-size 0"
+codex mcp get codepin
+```
+
+服务只使用 stdio 传输，SSH 不分配终端；启动脚本不得向 stdout 输出欢迎语或调试
+信息。需要更长初始化或调用时间时，在本机 `~/.codex/config.toml` 的
+`[mcp_servers.codepin]` 表中设置 `startup_timeout_sec = 60` 和
+`tool_timeout_sec = 180`，保留 Codex 生成的 command/args。
+配置字段见 [Codex MCP 文档](https://developers.openai.com/codex/mcp/)。
+
+重新加载 MCP 配置后，让 Codex 调用 `codepin.localize_code`，例如：
+“请通过已注册的 CodePin MCP 工具，定位 my-repo 中处理这个问题的代码：……。
+返回实际文件、类或函数、行号和有界上下文。” `repository` 指远程
+`--repository-root` 内的目录，不能填写本机 Windows 路径。需要定位本机项目时，
+先把待分析的准确版本放入远程仓库目录，并记录版本或内容摘要。
+
+验收必须保留 Codex 实际 MCP 调用的参数和结构化返回，核对 `status=ok`、非空
+`locations`/`context`、`cache_hit=false`、`execution_id`，再与真实源文件核验。
+工具枚举成功或单独运行 MCP 客户端不是 Codex 调用验收。可使用本机
+`codex exec --json` 保存调用事件；桌面当前会话是否已加载新工具需另行检查。
+远程 vLLM 或云主机关闭后，这条链路停止服务；本机注册配置不会让模型继续运行。
+
 `localize_code` 参数：
 
 ```json
