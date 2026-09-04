@@ -86,3 +86,21 @@
   the run materials and are excluded from confirmation. Python-generated
   POSIX launchers on Windows also need explicit LF output (`write_bytes` or
   `newline="\n"`); the current confirmation wrapper was verified on both hosts.
+
+## 2026-09-05: repeated comparison and final integration scope
+
+- V95 completed all 24 E2E groups and three fixed-trajectory replays. The
+  preserved records contain 37,565 tasks and 173,784 actual model requests.
+  All 492 archived entries were retrieved and SHA-256 verified locally.
+- Reanalysis reproduces all original V86 verdicts, including four failures.
+  V102 retains raw costs and task thresholds; only two FI engines started
+  after its freeze, so the scheduled V104 engine is still required.
+- Complete missing FA2 validation conditions before choosing its backend.
+  The V118 queue waits for V104 and uses unchanged V95 server/measurement
+  functions, avoiding concurrent GPU experiments or runtime source edits.
+- The user added a final integration requirement: register a real CodePin
+  MCP server in local Codex and make Codex perform one actual localization
+  tool call. Run this after performance acceptance and before cloud shutdown;
+  configuration inspection or standalone MCP tests alone do not satisfy it.
+- Current results and remaining evidence:
+  [PERFORMANCE_ACCEPTANCE_20260905.md](PERFORMANCE_ACCEPTANCE_20260905.md).

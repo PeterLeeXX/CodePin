@@ -4,6 +4,8 @@
 
 ## 阶段交付状态
 
+2026-09-05 更新：三次候选/后端对照已收齐，新增证据、质量判定边界和剩余验收见 [PERFORMANCE_ACCEPTANCE_20260905.md](PERFORMANCE_ACCEPTANCE_20260905.md)。完整性能验收仍未完成；下文保留各阶段当时的状态和失败记录。
+
 这是阶段报告，尚未完成最终性能验收。当前提交包含真实 MCP 端到端基准、固定轨迹回放、资源与前缀统计、Nsight 分析、可关闭埋点，以及仓库摘要和并发工具初始化改动。Linux 环境的 74 项非集成测试全部通过（39.911 秒，零失败、错误或跳过）；提交前核验 52 个 Python/环境声明文件与远端已测量文件一致，按 LF 规范化后逐件比较 SHA-256。测试报告及来源摘要见实验材料的 `results/pre-confirmation-unit-v31/tests.xml`、`configs/phase-source-manifest-v48.json`。
 
 已获得可重复执行的基准与实际 Nsight 证据，但三次独立正式对照、最终配置的 15 分钟稳态、新冻结任务集和完整真实模型回归尚待完成。下列单次筛选不得视作最终提升或饱和结论；高吞吐但行为退化的配置仍记为失败。阶段指标及原始文件摘要随仓库提供在 [stage1-evidence.json](assets/performance/20260904-stage1-evidence.json)。
