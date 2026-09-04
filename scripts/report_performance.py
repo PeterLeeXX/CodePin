@@ -27,9 +27,7 @@ def per_task(records: list[dict]) -> dict:
             "quality": summarize(row.get("quality", 0) for row in rows),
             "quality_metrics": {
                 level: summarize(
-                    row["quality_metrics"][level]
-                    for row in rows
-                    if level in row.get("quality_metrics", {})
+                    row.get("quality_metrics", {}).get(level, 0) for row in rows
                 )
                 for level in ("file_f1", "class_f1", "function_f1")
             },

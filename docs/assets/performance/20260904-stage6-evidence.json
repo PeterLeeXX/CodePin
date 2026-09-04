@@ -1,0 +1,3765 @@
+{
+  "stage": 6,
+  "status": "Complete repeated original-deployment baseline; final optimization acceptance pending",
+  "baseline_commit": "9e56b610e9e366a22744751dc5ff70052e826c8d",
+  "runtime_inference_commit": "97ada3bae907b381ab88d20f1b0506c836ad48fb",
+  "outcomes": 12086,
+  "model_requests": 54051.0,
+  "infrastructure_failures": 321,
+  "raw_material_verification": {
+    "verified_at": "2026-09-04T13:50:19.234242+00:00",
+    "archive": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\baseline-material-v87.tar.gz",
+    "archive_sha256": "0e9d61d8cb59138a80c44cea52ba43280f68cf8cf1ab1167185993108b15e955",
+    "archive_bytes": 7196229,
+    "extracted_root": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\baseline-material-v87",
+    "verified_entries": 448,
+    "regular_bytes": 48000907,
+    "failures": [],
+    "symlinks_preserved_in_archive": {},
+    "extraction_policy": "Regular files extracted using tar data filter; symbolic links retained in archive and manifest without creating external links on Windows."
+  },
+  "analysis_tests": {
+    "tests": 25,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tested_source_sha256": {
+    "src/performance.py": "3609ddf75fe0547435c242ec3dda6ec17f5b310c9a6c9c6bcc6246e3b4f1f1fe",
+    "scripts/report_performance.py": "4bd7d0b28706913eebeedb4e31db918789fd6e0da62c259d62412346df03c573",
+    "scripts/compare_performance_quality.py": "6284891ae5a7b7f1033a167c3dec8258b98112145641fe90039619b0e1590b91",
+    "tests/test_performance.py": "15159b13749dbe7360278b7304e9d2a7a0139763bc74395a44eaf76890f4868e",
+    "tests/test_performance_quality.py": "443b536d57d98e282710c0ed8b37e844f21ad7c667b1f90da8e0403bd1b9e963"
+  },
+  "test_report_sha256": "268889905b12001c5f3d2acecc447e8ec5905bdafbb51b2e33d7836de009eea6",
+  "groups": {
+    "baseline-p1-c4": {
+      "runs": [
+        "confirm-baseline-v34-r1-p1-c4",
+        "baseline-repeat-v74-r2-p1-c4",
+        "baseline-repeat-v74-r3-p1-c4"
+      ],
+      "metrics": {
+        "steady_effective_tasks_per_minute": {
+          "count": 3,
+          "min": 54.5,
+          "max": 59.0,
+          "mean": 56.333333333333336,
+          "stdev": 2.3629078131263044,
+          "ci95_half_width": 5.86978877665922,
+          "p50": 55.5,
+          "p95": 58.65
+        },
+        "steady_latency_seconds.p50": {
+          "count": 3,
+          "min": 1.751857060007751,
+          "max": 1.8277264130301774,
+          "mean": 1.7943982623207073,
+          "stdev": 0.038764673633306435,
+          "ci95_half_width": 0.09629679370461204,
+          "p50": 1.8036113139241934,
+          "p95": 1.8253149031195788
+        },
+        "steady_latency_seconds.p95": {
+          "count": 3,
+          "min": 3.35436623068526,
+          "max": 4.042660377977881,
+          "mean": 3.765711726461691,
+          "stdev": 0.3632961493185037,
+          "ci95_half_width": 0.9024777217405893,
+          "p50": 3.9001085707219314,
+          "p95": 4.028405197252286
+        },
+        "effective_tasks_per_minute": {
+          "count": 3,
+          "min": 55.94378740234453,
+          "max": 60.69597373825812,
+          "mean": 57.78295801163903,
+          "stdev": 2.551602681612548,
+          "ci95_half_width": 6.3385328449215805,
+          "p50": 56.70911289431444,
+          "p95": 60.297287653863755
+        },
+        "latency_seconds.p50": {
+          "count": 3,
+          "min": 1.8029530334169976,
+          "max": 1.8688268715050071,
+          "mean": 1.8267313724500127,
+          "stdev": 0.03655789107107277,
+          "ci95_half_width": 0.09081484157581181,
+          "p50": 1.8084142124280334,
+          "p95": 1.8627856055973098
+        },
+        "latency_seconds.p95": {
+          "count": 3,
+          "min": 3.256239189824555,
+          "max": 3.859971733595009,
+          "mean": 3.6151936487333525,
+          "stdev": 0.3176482793827163,
+          "ci95_half_width": 0.7890821194496239,
+          "p50": 3.729370022780493,
+          "p95": 3.8469115625135575
+        },
+        "effective_rate": {
+          "count": 3,
+          "min": 0.5,
+          "max": 0.5,
+          "mean": 0.5,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.5,
+          "p95": 0.5
+        },
+        "success_rate": {
+          "count": 3,
+          "min": 0.5,
+          "max": 0.5,
+          "mean": 0.5,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.5,
+          "p95": 0.5
+        },
+        "timeout_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "infrastructure_error_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "file_f1": {
+          "count": 3,
+          "min": 0.3833333333333333,
+          "max": 0.3833333333333333,
+          "mean": 0.3833333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3833333333333333,
+          "p95": 0.3833333333333333
+        },
+        "class_f1": {
+          "count": 3,
+          "min": 0.25,
+          "max": 0.25,
+          "mean": 0.25,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.25,
+          "p95": 0.25
+        },
+        "function_f1": {
+          "count": 3,
+          "min": 0.3833333333333333,
+          "max": 0.3833333333333333,
+          "mean": 0.3833333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3833333333333333,
+          "p95": 0.3833333333333333
+        }
+      },
+      "historical_small_reference_all_passed": true
+    },
+    "baseline-p4-c16": {
+      "runs": [
+        "confirm-baseline-v34-r1-p4-c16",
+        "baseline-repeat-v74-r2-p4-c16",
+        "baseline-repeat-v74-r3-p4-c16"
+      ],
+      "metrics": {
+        "steady_effective_tasks_per_minute": {
+          "count": 3,
+          "min": 152.0,
+          "max": 157.5,
+          "mean": 154.16666666666666,
+          "stdev": 2.9297326385411577,
+          "ci95_half_width": 7.27785978986979,
+          "p50": 153.0,
+          "p95": 157.05
+        },
+        "steady_latency_seconds.p50": {
+          "count": 3,
+          "min": 3.1355340880108997,
+          "max": 3.2831328259781003,
+          "mean": 3.2317885368247516,
+          "stdev": 0.08342085286621388,
+          "ci95_half_width": 0.2072288995674282,
+          "p50": 3.276698696485255,
+          "p95": 3.282489413028816
+        },
+        "steady_latency_seconds.p95": {
+          "count": 3,
+          "min": 5.298185876978096,
+          "max": 5.500733316474361,
+          "mean": 5.401104782492621,
+          "stdev": 0.10131380073929279,
+          "ci95_half_width": 0.2516774489451491,
+          "p50": 5.404395154025406,
+          "p95": 5.491099500229465
+        },
+        "effective_tasks_per_minute": {
+          "count": 3,
+          "min": 150.3742436422024,
+          "max": 156.19361794159218,
+          "mean": 152.71146695897366,
+          "stdev": 3.073991514158161,
+          "ci95_half_width": 7.636218725553287,
+          "p50": 151.56653929312643,
+          "p95": 155.7309100767456
+        },
+        "latency_seconds.p50": {
+          "count": 3,
+          "min": 3.1176904074964114,
+          "max": 3.2777074794867076,
+          "mean": 3.219604668498505,
+          "stdev": 0.08854912871579627,
+          "ci95_half_width": 0.2199682438017952,
+          "p50": 3.2634161185123958,
+          "p95": 3.2762783433892766
+        },
+        "latency_seconds.p95": {
+          "count": 3,
+          "min": 5.316957598162116,
+          "max": 5.5049726439872755,
+          "mean": 5.408455719408812,
+          "stdev": 0.09410794681811653,
+          "ci95_half_width": 0.2337771143498674,
+          "p50": 5.403436916077044,
+          "p95": 5.494819071196252
+        },
+        "effective_rate": {
+          "count": 3,
+          "min": 0.5,
+          "max": 0.5,
+          "mean": 0.5,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.5,
+          "p95": 0.5
+        },
+        "success_rate": {
+          "count": 3,
+          "min": 0.5,
+          "max": 0.5,
+          "mean": 0.5,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.5,
+          "p95": 0.5
+        },
+        "timeout_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "infrastructure_error_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "file_f1": {
+          "count": 3,
+          "min": 0.3833333333333333,
+          "max": 0.3833333333333333,
+          "mean": 0.3833333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3833333333333333,
+          "p95": 0.3833333333333333
+        },
+        "class_f1": {
+          "count": 3,
+          "min": 0.25,
+          "max": 0.25,
+          "mean": 0.25,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.25,
+          "p95": 0.25
+        },
+        "function_f1": {
+          "count": 3,
+          "min": 0.3833333333333333,
+          "max": 0.3833333333333333,
+          "mean": 0.3833333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3833333333333333,
+          "p95": 0.3833333333333333
+        }
+      },
+      "historical_small_reference_all_passed": true
+    },
+    "baseline-p4-c8": {
+      "runs": [
+        "baseline-repeat-v74-r1-p4-c8",
+        "baseline-recovery-v84-r2-p4-c8",
+        "baseline-repeat-v74-r3-p4-c8"
+      ],
+      "metrics": {
+        "steady_effective_tasks_per_minute": {
+          "count": 3,
+          "min": 129.5,
+          "max": 130.5,
+          "mean": 130.0,
+          "stdev": 0.5,
+          "ci95_half_width": 1.2420689338897757,
+          "p50": 130.0,
+          "p95": 130.45
+        },
+        "steady_latency_seconds.p50": {
+          "count": 3,
+          "min": 1.8839026190107688,
+          "max": 1.8891313869971782,
+          "mean": 1.8872332425089553,
+          "stdev": 0.002893786576341546,
+          "ci95_half_width": 0.007188564815562176,
+          "p50": 1.8886657215189189,
+          "p95": 1.8890848204493522
+        },
+        "steady_latency_seconds.p95": {
+          "count": 3,
+          "min": 3.2442185977823104,
+          "max": 3.2618059478292705,
+          "mean": 3.2547909596857303,
+          "stdev": 0.009317719756957128,
+          "ci95_half_width": 0.023146500489614877,
+          "p50": 3.2583483334456105,
+          "p95": 3.2614601863909045
+        },
+        "effective_tasks_per_minute": {
+          "count": 3,
+          "min": 128.3542141590444,
+          "max": 129.17031075245825,
+          "mean": 128.87857525554261,
+          "stdev": 0.45507077980385185,
+          "ci95_half_width": 1.1304585566307181,
+          "p50": 129.1112008551252,
+          "p95": 129.16439976272494
+        },
+        "latency_seconds.p50": {
+          "count": 3,
+          "min": 1.8897815799573436,
+          "max": 1.9016322520328686,
+          "mean": 1.8944868289981969,
+          "stdev": 0.006290901684217257,
+          "ci95_half_width": 0.015627467096242246,
+          "p50": 1.8920466550043784,
+          "p95": 1.9006736923300196
+        },
+        "latency_seconds.p95": {
+          "count": 3,
+          "min": 3.259471031295834,
+          "max": 3.298549935535993,
+          "mean": 3.273607103998074,
+          "stdev": 0.02166517289458536,
+          "ci95_half_width": 0.0538192763994306,
+          "p50": 3.262800345162395,
+          "p95": 3.2949749764986334
+        },
+        "effective_rate": {
+          "count": 3,
+          "min": 0.5,
+          "max": 0.5,
+          "mean": 0.5,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.5,
+          "p95": 0.5
+        },
+        "success_rate": {
+          "count": 3,
+          "min": 0.5,
+          "max": 0.5,
+          "mean": 0.5,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.5,
+          "p95": 0.5
+        },
+        "timeout_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "infrastructure_error_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "file_f1": {
+          "count": 3,
+          "min": 0.3833333333333333,
+          "max": 0.3833333333333333,
+          "mean": 0.3833333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3833333333333333,
+          "p95": 0.3833333333333333
+        },
+        "class_f1": {
+          "count": 3,
+          "min": 0.25,
+          "max": 0.25,
+          "mean": 0.25,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.25,
+          "p95": 0.25
+        },
+        "function_f1": {
+          "count": 3,
+          "min": 0.3833333333333333,
+          "max": 0.3833333333333333,
+          "mean": 0.3833333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3833333333333333,
+          "p95": 0.3833333333333333
+        }
+      },
+      "historical_small_reference_all_passed": true
+    },
+    "baseline-validation-capacity-p4-c16": {
+      "runs": [
+        "confirm-baseline-v34-r1-validation-capacity-p4-c16",
+        "baseline-repeat-v74-r2-validation-capacity-p4-c16",
+        "baseline-repeat-v74-r3-validation-capacity-p4-c16"
+      ],
+      "metrics": {
+        "steady_effective_tasks_per_minute": {
+          "count": 3,
+          "min": 123.49999999999999,
+          "max": 130.5,
+          "mean": 127.83333333333333,
+          "stdev": 3.7859388972001904,
+          "ci95_half_width": 9.404794179634546,
+          "p50": 129.5,
+          "p95": 130.4
+        },
+        "steady_latency_seconds.p50": {
+          "count": 3,
+          "min": 2.154507618979551,
+          "max": 2.3540307069197297,
+          "mean": 2.242226781808616,
+          "stdev": 0.10191870527991011,
+          "ci95_half_width": 0.25318011522088835,
+          "p50": 2.2181420195265673,
+          "p95": 2.3404418381804137
+        },
+        "steady_latency_seconds.p95": {
+          "count": 3,
+          "min": 4.6596699273912225,
+          "max": 5.011239106650463,
+          "mean": 4.8357731229334595,
+          "stdev": 0.17578545582737132,
+          "ci95_half_width": 0.4366753074256627,
+          "p50": 4.836410334758693,
+          "p95": 4.993756229461286
+        },
+        "effective_tasks_per_minute": {
+          "count": 3,
+          "min": 122.73361651753503,
+          "max": 129.73540261478377,
+          "mean": 126.31524781897856,
+          "stdev": 3.5036849365077494,
+          "ci95_half_width": 8.703636427547693,
+          "p50": 126.47672432461691,
+          "p95": 129.40953478576708
+        },
+        "latency_seconds.p50": {
+          "count": 3,
+          "min": 2.162435019039549,
+          "max": 2.366561849077698,
+          "mean": 2.2543726740210936,
+          "stdev": 0.10355932470989142,
+          "ci95_half_width": 0.25725564007351986,
+          "p50": 2.2341211539460346,
+          "p95": 2.3533177795645317
+        },
+        "latency_seconds.p95": {
+          "count": 3,
+          "min": 4.67335467399098,
+          "max": 5.039760648552328,
+          "mean": 4.85002041098196,
+          "stdev": 0.18355255779370933,
+          "ci95_half_width": 0.4559698595431479,
+          "p50": 4.836945910402573,
+          "p95": 5.019479174737352
+        },
+        "effective_rate": {
+          "count": 3,
+          "min": 0.2988326848249027,
+          "max": 0.3969849246231156,
+          "mean": 0.3635181505177605,
+          "stdev": 0.056030532503967674,
+          "ci95_half_width": 0.1391875675449591,
+          "p50": 0.39473684210526316,
+          "p95": 0.3967601163713303
+        },
+        "success_rate": {
+          "count": 3,
+          "min": 0.445136186770428,
+          "max": 0.5969849246231156,
+          "mean": 0.5456193178329356,
+          "stdev": 0.08702820341616604,
+          "ci95_half_width": 0.21619005567091976,
+          "p50": 0.5947368421052631,
+          "p95": 0.5967601163713303
+        },
+        "timeout_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "infrastructure_error_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.24980544747081712,
+          "mean": 0.08326848249027237,
+          "stdev": 0.14422524234231118,
+          "ci95_half_width": 0.3582753859922179,
+          "p50": 0.0,
+          "p95": 0.2248249027237354
+        },
+        "file_f1": {
+          "count": 3,
+          "min": 0.2988326848249027,
+          "max": 0.3969849246231156,
+          "mean": 0.3635181505177605,
+          "stdev": 0.056030532503967674,
+          "ci95_half_width": 0.1391875675449591,
+          "p50": 0.39473684210526316,
+          "p95": 0.3967601163713303
+        },
+        "class_f1": {
+          "count": 3,
+          "min": 0.2472114137483787,
+          "max": 0.3303182579564489,
+          "mean": 0.3018666157144747,
+          "stdev": 0.0473461381235875,
+          "ci95_half_width": 0.11761433460592477,
+          "p50": 0.32807017543859646,
+          "p95": 0.3300934497046637
+        },
+        "function_f1": {
+          "count": 3,
+          "min": 0.14396887159533073,
+          "max": 0.19698492462311556,
+          "mean": 0.17856354610790315,
+          "stdev": 0.029980945569225953,
+          "ci95_half_width": 0.07447680220035174,
+          "p50": 0.19473684210526315,
+          "p95": 0.19676011637133034
+        }
+      },
+      "historical_small_reference_all_passed": false
+    },
+    "baseline-validation-capacity-p4-c8": {
+      "runs": [
+        "baseline-repeat-v74-r1-validation-capacity-p4-c8",
+        "baseline-recovery-v84-r2-validation-capacity-p4-c8",
+        "baseline-repeat-v74-r3-validation-capacity-p4-c8"
+      ],
+      "metrics": {
+        "steady_effective_tasks_per_minute": {
+          "count": 3,
+          "min": 109.5,
+          "max": 111.0,
+          "mean": 110.33333333333333,
+          "stdev": 0.7637626158259734,
+          "ci95_half_width": 1.897291635967666,
+          "p50": 110.5,
+          "p95": 110.95
+        },
+        "steady_latency_seconds.p50": {
+          "count": 3,
+          "min": 1.4306149805197492,
+          "max": 1.4534044079482555,
+          "mean": 1.4419337974783655,
+          "stdev": 0.011395471977164335,
+          "ci95_half_width": 0.02830792345969464,
+          "p50": 1.4417820039670914,
+          "p95": 1.4522421675501391
+        },
+        "steady_latency_seconds.p95": {
+          "count": 3,
+          "min": 2.799137760710437,
+          "max": 2.8443245188100263,
+          "mean": 2.8246486079588067,
+          "stdev": 0.023151579621200687,
+          "ci95_half_width": 0.05751171563593798,
+          "p50": 2.830483544355957,
+          "p95": 2.842940421364619
+        },
+        "effective_tasks_per_minute": {
+          "count": 3,
+          "min": 108.36407476599733,
+          "max": 110.21068215688736,
+          "mean": 109.33724489357218,
+          "stdev": 0.9273347276914083,
+          "ci95_half_width": 2.303627313165266,
+          "p50": 109.43697775783185,
+          "p95": 110.13331171698181
+        },
+        "latency_seconds.p50": {
+          "count": 3,
+          "min": 1.4306149805197492,
+          "max": 1.456411296967417,
+          "mean": 1.4417110561626032,
+          "stdev": 0.013270455548061168,
+          "ci95_half_width": 0.032965641149623984,
+          "p50": 1.4381068910006434,
+          "p95": 1.4545808563707396
+        },
+        "latency_seconds.p95": {
+          "count": 3,
+          "min": 2.8336432398296894,
+          "max": 2.8698056838242336,
+          "mean": 2.84630187471436,
+          "stdev": 0.020375081396055508,
+          "ci95_half_width": 0.05061451125503213,
+          "p50": 2.8354567004891575,
+          "p95": 2.866370785490726
+        },
+        "effective_rate": {
+          "count": 3,
+          "min": 0.3987878787878788,
+          "max": 0.4,
+          "mean": 0.3995959595959596,
+          "stdev": 0.0006998185081086418,
+          "ci95_half_width": 0.001738445656565668,
+          "p50": 0.4,
+          "p95": 0.4
+        },
+        "success_rate": {
+          "count": 3,
+          "min": 0.5987878787878788,
+          "max": 0.6,
+          "mean": 0.5995959595959596,
+          "stdev": 0.0006998185081086418,
+          "ci95_half_width": 0.001738445656565668,
+          "p50": 0.6,
+          "p95": 0.6
+        },
+        "timeout_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "infrastructure_error_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "file_f1": {
+          "count": 3,
+          "min": 0.3987878787878788,
+          "max": 0.4,
+          "mean": 0.3995959595959596,
+          "stdev": 0.0006998185081086418,
+          "ci95_half_width": 0.001738445656565668,
+          "p50": 0.4,
+          "p95": 0.4
+        },
+        "class_f1": {
+          "count": 3,
+          "min": 0.3321212121212121,
+          "max": 0.3333333333333333,
+          "mean": 0.3329292929292929,
+          "stdev": 0.0006998185081086418,
+          "ci95_half_width": 0.001738445656565668,
+          "p50": 0.3333333333333333,
+          "p95": 0.3333333333333333
+        },
+        "function_f1": {
+          "count": 3,
+          "min": 0.1987878787878788,
+          "max": 0.2,
+          "mean": 0.1995959595959596,
+          "stdev": 0.0006998185081086418,
+          "ci95_half_width": 0.001738445656565668,
+          "p50": 0.2,
+          "p95": 0.2
+        }
+      },
+      "historical_small_reference_all_passed": false
+    },
+    "baseline-validation-p1-c4": {
+      "runs": [
+        "confirm-baseline-v34-r1-validation-p1-c4",
+        "baseline-repeat-v74-r2-validation-p1-c4",
+        "baseline-repeat-v74-r3-validation-p1-c4"
+      ],
+      "metrics": {
+        "effective_tasks_per_minute": {
+          "count": 3,
+          "min": 44.60363695076404,
+          "max": 46.39792891361492,
+          "mean": 45.48519945501705,
+          "stdev": 0.8975519184259841,
+          "ci95_half_width": 2.22964270886017,
+          "p50": 45.4540325006722,
+          "p95": 46.30353927232065
+        },
+        "latency_seconds.p50": {
+          "count": 3,
+          "min": 1.8266880215378478,
+          "max": 1.9462831420241855,
+          "mean": 1.8804646458205145,
+          "stdev": 0.06070010890069974,
+          "ci95_half_width": 0.15078743909857079,
+          "p50": 1.8684227738995105,
+          "p95": 1.938497105211718
+        },
+        "latency_seconds.p95": {
+          "count": 3,
+          "min": 2.8510489056003276,
+          "max": 2.878901269380003,
+          "mean": 2.864119816028202,
+          "stdev": 0.014004749546128662,
+          "ci95_half_width": 0.03478972867630669,
+          "p50": 2.8624092731042756,
+          "p95": 2.8772520697524304
+        },
+        "effective_rate": {
+          "count": 3,
+          "min": 0.4,
+          "max": 0.4,
+          "mean": 0.4,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.4,
+          "p95": 0.4
+        },
+        "success_rate": {
+          "count": 3,
+          "min": 0.6,
+          "max": 0.6,
+          "mean": 0.6,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.6,
+          "p95": 0.6
+        },
+        "timeout_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "infrastructure_error_rate": {
+          "count": 3,
+          "min": 0.0,
+          "max": 0.0,
+          "mean": 0.0,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "file_f1": {
+          "count": 3,
+          "min": 0.4,
+          "max": 0.4,
+          "mean": 0.4,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.4,
+          "p95": 0.4
+        },
+        "class_f1": {
+          "count": 3,
+          "min": 0.3333333333333333,
+          "max": 0.3333333333333333,
+          "mean": 0.3333333333333333,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.3333333333333333,
+          "p95": 0.3333333333333333
+        },
+        "function_f1": {
+          "count": 3,
+          "min": 0.2,
+          "max": 0.2,
+          "mean": 0.2,
+          "stdev": 0.0,
+          "ci95_half_width": 0.0,
+          "p50": 0.2,
+          "p95": 0.2
+        }
+      },
+      "historical_small_reference_all_passed": true
+    }
+  },
+  "baseline_replay": {
+    "runs": [
+      "confirm-baseline-v34-r1-replay-c4",
+      "baseline-recovery-v84-r2-replay-c4",
+      "baseline-repeat-v74-r3-replay-c4"
+    ],
+    "tasks_per_minute": {
+      "count": 3,
+      "min": 157.4595918938615,
+      "max": 163.3155521461149,
+      "mean": 159.60780337235227,
+      "stdev": 3.2244666303903466,
+      "ci95_half_width": 8.01001965994419,
+      "p50": 158.04826607708037,
+      "p95": 162.78882353921142
+    },
+    "p50_seconds": {
+      "count": 3,
+      "min": 1.6507072784588672,
+      "max": 1.7133965060347691,
+      "mean": 1.6838132626532267,
+      "stdev": 0.031492730758724614,
+      "ci95_half_width": 0.07823228503753366,
+      "p50": 1.6873360034660436,
+      "p95": 1.7107904557778966
+    },
+    "p95_seconds": {
+      "count": 3,
+      "min": 2.9848973111133095,
+      "max": 3.09820858866442,
+      "mean": 3.0547729570243973,
+      "stdev": 0.06110783232169842,
+      "ci95_half_width": 0.15180028028825426,
+      "p50": 3.081212971295463,
+      "p95": 3.0965090269275244
+    },
+    "errors": [
+      0,
+      0,
+      0
+    ],
+    "interpretation": "Frozen real trajectories; diagnostic server performance, not E2E quality."
+  },
+  "reference_freeze": {
+    "frozen_at": "2026-09-04T13:47:37.250893+00:00",
+    "baseline_results_sha256": "73188799670f730fce075822e3de7b3cbe472186f6c9e1bbfdf879ba773f59ae",
+    "protocol_sha256": "f7388ec7e4d1f452af05d41079b1e045faac89ca39dd182c85cf34f870754d89",
+    "analysis_files": {
+      "src/performance.py": "3609ddf75fe0547435c242ec3dda6ec17f5b310c9a6c9c6bcc6246e3b4f1f1fe",
+      "scripts/report_performance.py": "4bd7d0b28706913eebeedb4e31db918789fd6e0da62c259d62412346df03c573",
+      "scripts/compare_performance_quality.py": "6284891ae5a7b7f1033a167c3dec8258b98112145641fe90039619b0e1590b91",
+      "tests/test_performance_quality.py": "443b536d57d98e282710c0ed8b37e844f21ad7c667b1f90da8e0403bd1b9e963",
+      "tests/test_performance.py": "15159b13749dbe7360278b7304e9d2a7a0139763bc74395a44eaf76890f4868e"
+    },
+    "references": {
+      "p1-c4": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v86/p1-c4.json",
+        "sha256": "fd478e21726454a321a9a3da45732a9826957861119d2c55d68a21cdb35269a2",
+        "sources": [
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/confirm-baseline-v34-r1-p1-c4",
+            "records_sha256": "fd6227dae58f25ee377351f36067775a7ae18a5f706cb5ad52c8f2a055ea5179",
+            "summary_sha256": "8b7efef860d517c6518de6e663f129d9875f5f3f1f5752005fa0a42d334e5cff",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 344,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 344,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2697190984313353,
+                "ci95_half_width": 0.13417898494175606,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 344,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42323969947711176,
+                "ci95_half_width": 0.044726328313918685,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 344,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.43364345634440365,
+                "ci95_half_width": 0.0458257569495584,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 344,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42323969947711176,
+                "ci95_half_width": 0.044726328313918685,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 1,
+              "client_concurrency": 4,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r2-p1-c4",
+            "records_sha256": "929b2ff4b9f0e234996e1d9728fbef882a84bd7322c34d5cf71fcef0b6fbb52d",
+            "summary_sha256": "5e7e03d27d9279d36bbedc4968f56e253a937d94a38d203e676b9e659be431de",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 344,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 344,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2697190984313353,
+                "ci95_half_width": 0.13417898494175606,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 344,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42323969947711176,
+                "ci95_half_width": 0.044726328313918685,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 344,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.43364345634440365,
+                "ci95_half_width": 0.0458257569495584,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 344,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42323969947711176,
+                "ci95_half_width": 0.044726328313918685,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 1,
+              "client_concurrency": 4,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r3-p1-c4",
+            "records_sha256": "d574031e517431eb35a8914eee994735295e3f86a76df64b82bf8505e1e9fe81",
+            "summary_sha256": "66ea017520758a0054a85f7ee6b3e05dd08b3e032d8953301d7a98ca0e1356bc",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 376,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 376,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2695616041243003,
+                "ci95_half_width": 0.12832637556896345,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 376,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.4231872013747668,
+                "ci95_half_width": 0.04277545852298782,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 376,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.433589667773576,
+                "ci95_half_width": 0.043826932358995874,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 376,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.4231872013747668,
+                "ci95_half_width": 0.04277545852298782,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 1,
+              "client_concurrency": 4,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          }
+        ],
+        "calibration_only": [
+          {
+            "label": "confirm-baseline-v34-r1-p1-c4",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r2-p1-c4",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 43,
+                "effective": 43,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 43,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r3-p1-c4",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 47,
+                "effective": 47,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 47,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 47,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 47,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 47,
+                "effective": 47,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 47,
+                "effective": 47,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 47,
+                "effective": 47,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 47,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          }
+        ]
+      },
+      "p4-c16": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v86/p4-c16.json",
+        "sha256": "4d491366b3e37a5b97663cd766ccb821569dc6f50bd8528cde9a3b7ff53ec534",
+        "sources": [
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/confirm-baseline-v34-r1-p4-c16",
+            "records_sha256": "2e2b517c931225a52925b45440fed1fbf4f29165361262e1bd12386b9e873bb5",
+            "summary_sha256": "86c8d54add5bccc86b7e672c3391b251ec9e71aaa119476d0f1eb00f94484f2f",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 952,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 952,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2685386576579605,
+                "ci95_half_width": 0.08058260517364793,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 952,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.4228462192193202,
+                "ci95_half_width": 0.02686086839121598,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 952,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.43324030385373974,
+                "ci95_half_width": 0.02752114185878479,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 952,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.4228462192193202,
+                "ci95_half_width": 0.02686086839121598,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 16,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r2-p4-c16",
+            "records_sha256": "2a495e359deeefb974846afd23051a9fa9245224c098b6507b6385466d6e6e5a",
+            "summary_sha256": "2bbab77448b5c82c692f1906aac1d730611cacc041f742c98845163844284588",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 928,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 928,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2685559067133736,
+                "ci95_half_width": 0.08161907998689538,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 928,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42285196890445786,
+                "ci95_half_width": 0.027206359995631795,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 928,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.433246194873271,
+                "ci95_half_width": 0.02787512607544014,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 928,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42285196890445786,
+                "ci95_half_width": 0.027206359995631795,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 16,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r3-p4-c16",
+            "records_sha256": "51aa6e44d4145b5be6ab8952226bd0bb45bdae3bdd08b00c1a0d8d2098f47191",
+            "summary_sha256": "5f4e29ba3351f9b44ab86d9bbbf3301df5353d320593f9c26815533d9b0b8e7c",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 920,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 920,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2685618565507708,
+                "ci95_half_width": 0.08197356191541999,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 920,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.4228539521835903,
+                "ci95_half_width": 0.02732452063847333,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 920,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.43324822690386483,
+                "ci95_half_width": 0.027996191253468063,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 920,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.4228539521835903,
+                "ci95_half_width": 0.02732452063847333,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 16,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          }
+        ],
+        "calibration_only": [
+          {
+            "label": "confirm-baseline-v34-r1-p4-c16",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 119,
+                "effective": 119,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 119,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 119,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 119,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 119,
+                "effective": 119,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 119,
+                "effective": 119,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 119,
+                "effective": 119,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 119,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r2-p4-c16",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 116,
+                "effective": 116,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 116,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 116,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 116,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 116,
+                "effective": 116,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 116,
+                "effective": 116,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 116,
+                "effective": 116,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 116,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r3-p4-c16",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 115,
+                "effective": 115,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 115,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 115,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 115,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 115,
+                "effective": 115,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 115,
+                "effective": 115,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 115,
+                "effective": 115,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 115,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          }
+        ]
+      },
+      "p4-c8": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v86/p4-c8.json",
+        "sha256": "f586a037612a176429109fb93bce07a53aab7b764b048a9fb2b99013ed5b3b02",
+        "sources": [
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r1-p4-c8",
+            "records_sha256": "701f96cd3b91b7a7e45a0c5ffdefe76eaee0591dd404b1e327b3cb9e30c1549d",
+            "summary_sha256": "cd95d5902ace6f79b659b99d8ed48d778cc022ccd3b5a1f061d5c7fdadfb1fb6",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 784,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 784,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2686815996447411,
+                "ci95_half_width": 0.08880771197513189,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42289386654824707,
+                "ci95_half_width": 0.029602570658377295,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.433289122413121,
+                "ci95_half_width": 0.03033023856891847,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42289386654824707,
+                "ci95_half_width": 0.029602570658377295,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 8,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-recovery-v84-r2-p4-c8",
+            "records_sha256": "c189882cae77f133f2f6f8d223d5a8ccb5ad4846c28a96e1e7bd076ad8c419fc",
+            "summary_sha256": "7535ef8c811c814de09296de0c170ae1851d6d49594484acd8032ca94dafac4f",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 784,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 784,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2686815996447411,
+                "ci95_half_width": 0.08880771197513189,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42289386654824707,
+                "ci95_half_width": 0.029602570658377295,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.433289122413121,
+                "ci95_half_width": 0.03033023856891847,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42289386654824707,
+                "ci95_half_width": 0.029602570658377295,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 8,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r3-p4-c8",
+            "records_sha256": "e2af1150de3a3125c48e65f762c35d5973c0cf72fca67301c11c7f6eb2ef62de",
+            "summary_sha256": "f3f480157b92bde49ba7bf06ff76937c38f2f3e5ab2b25176d4012321db1573c",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "tuning"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 784,
+              "effective_rate": 0.5,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 784,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 1.15,
+                "stdev": 1.2686815996447411,
+                "ci95_half_width": 0.08880771197513189,
+                "p50": 0.6000000000000001,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42289386654824707,
+                "ci95_half_width": 0.029602570658377295,
+                "p50": 0.2,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.25,
+                "stdev": 0.433289122413121,
+                "ci95_half_width": 0.03033023856891847,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 784,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3833333333333333,
+                "stdev": 0.42289386654824707,
+                "ci95_half_width": 0.029602570658377295,
+                "p50": 0.2,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 8,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          }
+        ],
+        "calibration_only": [
+          {
+            "label": "baseline-repeat-v74-r1-p4-c8",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-recovery-v84-r2-p4-c8",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r3-p4-c8",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "iterative__dvc.1d6ea681.combine_module__bftzj1tc": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.combine_file__twvc3ts6": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "kurtmckee__feedparser.cad965a3.pr_417": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sqlfluff__sqlfluff.50a1c4b6.combine_module__p0x7ya5a": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "sunpy__sunpy.f8edfd5c.combine_module__x9mz1p2d": {
+                "submitted": 98,
+                "effective": 98,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k": {
+                "submitted": 98,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          }
+        ]
+      },
+      "validation-capacity-p4-c16": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v86/validation-capacity-p4-c16.json",
+        "sha256": "8e953d87bb88e1f8444be7d912e629c07cab94d61c5fa64937c4e8c580255abc",
+        "sources": [
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/confirm-baseline-v34-r1-validation-capacity-p4-c16",
+            "records_sha256": "1171a74aa97a3ceaa1250361826320e7ef9eabfbeaded7e1dc4897065211d5b3",
+            "summary_sha256": "b657c963cb1cdc0468a087972e88313716df15ec9e8d34bd8107c51d04ec6a9d",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 995,
+              "effective_rate": 0.3969849246231156,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 995,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9242881072026801,
+                "stdev": 1.2147404584831698,
+                "ci95_half_width": 0.07547932843489492,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 995,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3969849246231156,
+                "stdev": 0.4895188731159295,
+                "ci95_half_width": 0.030416831464668646,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 995,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3303182579564489,
+                "stdev": 0.4206441401213965,
+                "ci95_half_width": 0.026137218847623277,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 995,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.19698492462311556,
+                "stdev": 0.39792084737864714,
+                "ci95_half_width": 0.024725280302171426,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 16,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r2-validation-capacity-p4-c16",
+            "records_sha256": "af4f2636e696075ad9098f2da1ac5c34e719e56783f408f6767bf477d2ac8b09",
+            "summary_sha256": "c44c6da1f1c05caaf9839615d1d1bbc6b681ede6f88611d4b14d0e1ce3721f14",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 1285,
+              "effective_rate": 0.2988326848249027,
+              "infrastructure_error_rate": 0.12607003891050583,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 1285,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.6900129701686122,
+                "stdev": 1.1183704898726874,
+                "ci95_half_width": 0.06114911929675322,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 1285,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2988326848249027,
+                "stdev": 0.45792455491739115,
+                "ci95_half_width": 0.025037931071253336,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 1285,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2472114137483787,
+                "stdev": 0.389617612159489,
+                "ci95_half_width": 0.021303113826589677,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 1285,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.14396887159533073,
+                "stdev": 0.3511948438472716,
+                "ci95_half_width": 0.019202272947371958,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 16,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r3-validation-capacity-p4-c16",
+            "records_sha256": "b49b713f2a685df50898f14c13f7936bc437c4d5824d0c4948a15dcbf2ed0bb1",
+            "summary_sha256": "c8376f8c27c8fbffbb81eae3acaca4ea5b6ab94af7d77b5bab993622ebc31c48",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 950,
+              "effective_rate": 0.39473684210526316,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 950,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9175438596491228,
+                "stdev": 1.211546738945764,
+                "ci95_half_width": 0.07704322283318413,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 950,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.39473684210526316,
+                "stdev": 0.48905155861816446,
+                "ci95_half_width": 0.031099178427339197,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 950,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.32807017543859646,
+                "stdev": 0.41973937725509103,
+                "ci95_half_width": 0.026691561566881957,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 950,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.19473684210526315,
+                "stdev": 0.39620657006786014,
+                "ci95_half_width": 0.0251950916002393,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 16,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          }
+        ],
+        "calibration_only": [
+          {
+            "label": "confirm-baseline-v34-r1-validation-capacity-p4-c16",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": false,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 199,
+                "effective": 199,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 199,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 199,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 199,
+                "effective": 196,
+                "effective_rate": 0.9849246231155779,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 199,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r2-validation-capacity-p4-c16",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": false,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 257,
+                "effective": 199,
+                "effective_rate": 0.77431906614786,
+                "infrastructure_failures": 58
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 257,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 59
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 257,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 64
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 257,
+                "effective": 185,
+                "effective_rate": 0.7198443579766537,
+                "infrastructure_failures": 71
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 257,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 69
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r3-validation-capacity-p4-c16",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": false,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 190,
+                "effective": 190,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 190,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 190,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 190,
+                "effective": 185,
+                "effective_rate": 0.9736842105263158,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 190,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          }
+        ]
+      },
+      "validation-capacity-p4-c8": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v86/validation-capacity-p4-c8.json",
+        "sha256": "6fc3b50e696ef8a90dc25a1267f2058682b74c637e7783b1eb9d599f5b4f6b84",
+        "sources": [
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r1-validation-capacity-p4-c8",
+            "records_sha256": "755e7e9370211ebe88aad2a2378bc36e61f3cb18f211c7a6405b5594fdf65358",
+            "summary_sha256": "cd03c8206b3cd2be57907a4d01bdd2b2695eca5e24db25f969574fbdf940800c",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 825,
+              "effective_rate": 0.3987878787878788,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 825,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9296969696969697,
+                "stdev": 1.2174179651673978,
+                "ci95_half_width": 0.08307470415232084,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 825,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3987878787878788,
+                "stdev": 0.48994598954214524,
+                "ci95_half_width": 0.03343315056652146,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 825,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3321212121212121,
+                "stdev": 0.42141134980309386,
+                "ci95_half_width": 0.02875645358700489,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 825,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.1987878787878788,
+                "stdev": 0.3993301245793851,
+                "ci95_half_width": 0.027249665199396252,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 8,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-recovery-v84-r2-validation-capacity-p4-c8",
+            "records_sha256": "ad91e38cee3fe7985ba160227ec326838fcc3c2c3874f1cf048cd60d17b3e99f",
+            "summary_sha256": "ecfd7492d4850fd9b932d7d2df4fdbaac17d8c06abce0b06eb26521cfc82824c",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 830,
+              "effective_rate": 0.4,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 830,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9333333333333333,
+                "stdev": 1.2191124185776074,
+                "ci95_half_width": 0.08293937921506982,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 830,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.4,
+                "stdev": 0.4901933347447992,
+                "ci95_half_width": 0.033349123722760624,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 830,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3333333333333333,
+                "stdev": 0.4218912493085522,
+                "ci95_half_width": 0.02870235573085835,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 830,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2,
+                "stdev": 0.40024118181268886,
+                "ci95_half_width": 0.027229445496569766,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 8,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r3-validation-capacity-p4-c8",
+            "records_sha256": "1caf96f3a44b9adaa10b00d95388759bec5ac8d601a40c3860915a08e53413b6",
+            "summary_sha256": "882590230f4164d480053335ab2cbf92bb04d86664e3a1143a78d535b40f4507",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 835,
+              "effective_rate": 0.4,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 835,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9333333333333333,
+                "stdev": 1.2191080156615546,
+                "ci95_half_width": 0.08269038622085792,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 835,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.4,
+                "stdev": 0.49019156437475814,
+                "ci95_half_width": 0.033249006043454855,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 835,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3333333333333333,
+                "stdev": 0.421889725616622,
+                "ci95_half_width": 0.02861618815205565,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 835,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2,
+                "stdev": 0.40023973631160337,
+                "ci95_half_width": 0.027147699753726197,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 4,
+              "client_concurrency": 8,
+              "continuous": true,
+              "cycles": 1,
+              "minimum_duration": 180.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": false
+            }
+          }
+        ],
+        "calibration_only": [
+          {
+            "label": "baseline-repeat-v74-r1-validation-capacity-p4-c8",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": false,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 165,
+                "effective": 165,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 165,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 165,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 165,
+                "effective": 164,
+                "effective_rate": 0.9939393939393939,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 165,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-recovery-v84-r2-validation-capacity-p4-c8",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": false,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 166,
+                "effective": 166,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 166,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 166,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 166,
+                "effective": 166,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 166,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r3-validation-capacity-p4-c8",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": false,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 167,
+                "effective": 167,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 167,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 167,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 167,
+                "effective": 167,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 167,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          }
+        ]
+      },
+      "validation-p1-c4": {
+        "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-quality-references-v86/validation-p1-c4.json",
+        "sha256": "c38af217fd29ac2b183f63a1c67fb5046ed088062b01d3a410d1190153c74d69",
+        "sources": [
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/confirm-baseline-v34-r1-validation-p1-c4",
+            "records_sha256": "91c622d023e235c5b4ab35b589a70bf1ef6f97c284fa979d484a16799842ea18",
+            "summary_sha256": "8777a0bb1cb84347ca7617a909fee91a87564b3dd300b7a707fd2051557bf570",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 50,
+              "effective_rate": 0.4,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 50,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9333333333333333,
+                "stdev": 1.2307474269828653,
+                "ci95_half_width": 0.34114578180661187,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.4,
+                "stdev": 0.4948716593053935,
+                "ci95_half_width": 0.13717142559585796,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3333333333333333,
+                "stdev": 0.4259177099999599,
+                "ci95_half_width": 0.1180583659796195,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2,
+                "stdev": 0.4040610178208843,
+                "ci95_half_width": 0.112,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 1,
+              "client_concurrency": 4,
+              "continuous": false,
+              "cycles": 10,
+              "minimum_duration": 0.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": true
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r2-validation-p1-c4",
+            "records_sha256": "0d44a3eb50bb6b6efc0b0eabe2d28070ab269d48dc0827ea4ed21b1c0f0bc56a",
+            "summary_sha256": "8634f184086d20ce128e8c4778bf464ccc12125ee153558ea672f5c8f83b2221",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 50,
+              "effective_rate": 0.4,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 50,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9333333333333333,
+                "stdev": 1.2307474269828653,
+                "ci95_half_width": 0.34114578180661187,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.4,
+                "stdev": 0.4948716593053935,
+                "ci95_half_width": 0.13717142559585796,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3333333333333333,
+                "stdev": 0.4259177099999599,
+                "ci95_half_width": 0.1180583659796195,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2,
+                "stdev": 0.4040610178208843,
+                "ci95_half_width": 0.112,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 1,
+              "client_concurrency": 4,
+              "continuous": false,
+              "cycles": 10,
+              "minimum_duration": 0.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": true
+            }
+          },
+          {
+            "path": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/baseline-repeat-v74-r3-validation-p1-c4",
+            "records_sha256": "078fd7a6d87c5b5d50f6984be5af23029cf98fe86ad4468677de64011ea47e1a",
+            "summary_sha256": "5b4cd7e60446a5c563586a14d7d00e7ebaf7dd7d9fb51ba2d9b64777b9a80efa",
+            "task_definition": {
+              "max_turns": 8,
+              "max_tokens": 2048,
+              "max_context_chars": 12000,
+              "max_context_lines": 160,
+              "minimum_quality": 0.5,
+              "maximum_tool_errors": 0,
+              "require_context": true,
+              "seed": 20260904,
+              "split": "validation"
+            },
+            "all_outcome_statistics": {
+              "submitted_tasks": 50,
+              "effective_rate": 0.4,
+              "infrastructure_error_rate": 0.0,
+              "timeout_rate": 0.0,
+              "quality": {
+                "count": 50,
+                "min": 0.0,
+                "max": 3.0,
+                "mean": 0.9333333333333333,
+                "stdev": 1.2307474269828653,
+                "ci95_half_width": 0.34114578180661187,
+                "p50": 0.0,
+                "p95": 3.0
+              },
+              "file_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.4,
+                "stdev": 0.4948716593053935,
+                "ci95_half_width": 0.13717142559585796,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "class_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.3333333333333333,
+                "stdev": 0.4259177099999599,
+                "ci95_half_width": 0.1180583659796195,
+                "p50": 0.0,
+                "p95": 1.0
+              },
+              "function_f1": {
+                "count": 50,
+                "min": 0.0,
+                "max": 1.0,
+                "mean": 0.2,
+                "stdev": 0.4040610178208843,
+                "ci95_half_width": 0.112,
+                "p50": 0.0,
+                "p95": 1.0
+              }
+            },
+            "load": {
+              "mcp_clients": 1,
+              "client_concurrency": 4,
+              "continuous": false,
+              "cycles": 10,
+              "minimum_duration": 0.0,
+              "reset_prefix_before": true,
+              "reset_prefix_between_cycles": true
+            }
+          }
+        ],
+        "calibration_only": [
+          {
+            "label": "confirm-baseline-v34-r1-validation-p1-c4",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 10,
+                "effective": 10,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 10,
+                "effective": 10,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r2-validation-p1-c4",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 10,
+                "effective": 10,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 10,
+                "effective": 10,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          },
+          {
+            "label": "baseline-repeat-v74-r3-validation-p1-c4",
+            "consistent_with_own_reference": true,
+            "historical_strict_gate_passed": true,
+            "all_outcomes": {
+              "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+                "submitted": 10,
+                "effective": 10,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "pyupio__safety.7654596b.pr_508": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              },
+              "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+                "submitted": 10,
+                "effective": 10,
+                "effective_rate": 1.0,
+                "infrastructure_failures": 0
+              },
+              "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+                "submitted": 10,
+                "effective": 0,
+                "effective_rate": 0.0,
+                "infrastructure_failures": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "new_candidate_results_evaluated": 0,
+    "interpretation": "Freeze only from all three original-deployment repetitions. Every earlier strict screen result stays unchanged. Baseline self-consistency is not an independent acceptance result. Future candidates must pass both per-task extrema/effective-rate and per-task mean bounds on fresh runs, with run uncertainty reported separately."
+  },
+  "runtime_failure_case": {
+    "all_outcome_counts": {
+      "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+        "submitted": 257,
+        "effective": 199,
+        "effective_rate": 0.77431906614786,
+        "infrastructure_failures": 58
+      },
+      "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+        "submitted": 257,
+        "effective": 0,
+        "effective_rate": 0.0,
+        "infrastructure_failures": 59
+      },
+      "pyupio__safety.7654596b.pr_508": {
+        "submitted": 257,
+        "effective": 0,
+        "effective_rate": 0.0,
+        "infrastructure_failures": 64
+      },
+      "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+        "submitted": 257,
+        "effective": 185,
+        "effective_rate": 0.7198443579766537,
+        "infrastructure_failures": 71
+      },
+      "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+        "submitted": 257,
+        "effective": 0,
+        "effective_rate": 0.0,
+        "infrastructure_failures": 69
+      }
+    },
+    "conditional_task_means": {
+      "pygments__pygments.27649ebb.combine_file__z0q2ze67": {
+        "quality": {
+          "quality": 1.6666666666666665,
+          "file_f1": 1.0,
+          "class_f1": 0.6666666666666666,
+          "function_f1": 0.0
+        },
+        "tool_cost": {
+          "tool_errors": 0.0,
+          "repeated_searches": 0.0,
+          "overlap_lines": 0.0,
+          "output_chars": 8840.0,
+          "excess_output_chars": 818.0,
+          "num_tool_calls": 3.0,
+          "num_turns": 3.0,
+          "read_lines": 200.0,
+          "truncated_outputs": 1.0,
+          "tool_efficiency_cost": 0.17476000000000003
+        }
+      },
+      "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e": {
+        "quality": {
+          "quality": 0.0,
+          "file_f1": 0.0,
+          "class_f1": 0.0,
+          "function_f1": 0.0
+        },
+        "tool_cost": {
+          "tool_errors": 4.0,
+          "repeated_searches": 0.0,
+          "overlap_lines": 0.0,
+          "output_chars": 11082.0,
+          "excess_output_chars": 45.0,
+          "num_tool_calls": 6.0,
+          "num_turns": 6.0,
+          "read_lines": 200.0,
+          "truncated_outputs": 2.0,
+          "tool_efficiency_cost": 0.26172000000000006
+        }
+      },
+      "pyupio__safety.7654596b.pr_508": {
+        "quality": {
+          "quality": 0.0,
+          "file_f1": 0.0,
+          "class_f1": 0.0,
+          "function_f1": 0.0
+        },
+        "tool_cost": {
+          "tool_errors": 5.015544041450777,
+          "repeated_searches": 0.0,
+          "overlap_lines": 0.0,
+          "output_chars": 10257.0,
+          "excess_output_chars": 227.0,
+          "num_tool_calls": 7.015544041450777,
+          "num_turns": 7.015544041450777,
+          "read_lines": 200.0,
+          "truncated_outputs": 1.0,
+          "tool_efficiency_cost": 0.21726544041450777
+        }
+      },
+      "scanny__python-pptx.278b47b1.func_basic__hy2amr7w": {
+        "quality": {
+          "quality": 2.9838709677419355,
+          "file_f1": 0.9946236559139785,
+          "class_f1": 0.9946236559139785,
+          "function_f1": 0.9946236559139785
+        },
+        "tool_cost": {
+          "tool_errors": 0.03225806451612903,
+          "repeated_searches": 0.0,
+          "overlap_lines": 0.0,
+          "output_chars": 7934.0,
+          "excess_output_chars": 0.0,
+          "num_tool_calls": 3.0268817204301075,
+          "num_turns": 3.0268817204301075,
+          "read_lines": 200.0,
+          "truncated_outputs": 1.0,
+          "tool_efficiency_cost": 0.14960881720430108
+        }
+      },
+      "tobymao__sqlglot.036601ba.combine_module__2suu3l1n": {
+        "quality": {
+          "quality": 0.0,
+          "file_f1": 0.0,
+          "class_f1": 0.0,
+          "function_f1": 0.0
+        },
+        "tool_cost": {
+          "tool_errors": 0.0,
+          "repeated_searches": 0.0,
+          "overlap_lines": 0.0,
+          "output_chars": 10955.0,
+          "excess_output_chars": 124.0,
+          "num_tool_calls": 3.0,
+          "num_turns": 3.0,
+          "read_lines": 200.0,
+          "truncated_outputs": 1.0,
+          "tool_efficiency_cost": 0.18203000000000005
+        }
+      }
+    },
+    "all_outcome_quality": {
+      "quality": {
+        "count": 1285,
+        "min": 0.0,
+        "max": 3.0,
+        "mean": 0.6900129701686122,
+        "stdev": 1.1183704898726874,
+        "ci95_half_width": 0.06114911929675322,
+        "p50": 0.0,
+        "p95": 3.0
+      },
+      "file_f1": {
+        "count": 1285,
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.2988326848249027,
+        "stdev": 0.45792455491739115,
+        "ci95_half_width": 0.025037931071253336,
+        "p50": 0.0,
+        "p95": 1.0
+      },
+      "class_f1": {
+        "count": 1285,
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.2472114137483787,
+        "stdev": 0.389617612159489,
+        "ci95_half_width": 0.021303113826589677,
+        "p50": 0.0,
+        "p95": 1.0
+      },
+      "function_f1": {
+        "count": 1285,
+        "min": 0.0,
+        "max": 1.0,
+        "mean": 0.14396887159533073,
+        "stdev": 0.3511948438472716,
+        "ci95_half_width": 0.019202272947371958,
+        "p50": 0.0,
+        "p95": 1.0
+      }
+    },
+    "raw_infrastructure_error_rate": 0.12607003891050583,
+    "corrected_infrastructure_error_rate": 0.24980544747081712,
+    "runtime_error_messages": {
+      "RuntimeError: [TextContent(type='text', text=\"Error executing tool localize_code: Duplicate kind detected for <class 'openhands.sdk.tool.schema.Schema'> : <class 'abc.LocalizationFinishActionWithRisk'>, <class 'abc.LocalizationFinishActionWithRisk'>\", annotations=None, meta=None)]": 161,
+      "RuntimeError: [TextContent(type='text', text=\"Error executing tool localize_code: Class 'LocalizationFinishActionWithRisk' is not defined\\n\\nFor further information visit https://errors.pydantic.dev/2.13/u/undefined-annotation\", annotations=None, meta=None)]": 1,
+      "PydanticUndefinedAnnotation: Class 'LocalizationFinishActionWithRisk' is not defined\n\nFor further information visit https://errors.pydantic.dev/2.13/u/undefined-annotation": 159
+    },
+    "denominators": "All terminal tasks stay in effective throughput and original end-to-end F1 summaries. Conditional model/tool means exclude typed infrastructure failures only; actual model, finish and tool failures remain. Candidates must have zero infrastructure failures."
+  },
+  "original_analysis_failures": [
+    {
+      "name": "baseline-repeat-v74-r2",
+      "message": "missing or invalid quality measurement: quality",
+      "traceback": "Traceback (most recent call last):\n  File \"/root/autodl-tmp/codepin/src/performance.py\", line 177, in _quality_value\n    record[field] if field == \"quality\" else record[\"quality_metrics\"][field]\n    ~~~~~~^^^^^^^\nKeyError: 'quality'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-repeats-v74.py\", line 330, in <module>\n    measure(name, 'baseline', block, 'validation-capacity-p4-c16', 4, 16, 'validation')\n  File \"/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-repeats-v74.py\", line 301, in measure\n    inspect(label, variant, block, suffix, split)\n  File \"/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/configs/baseline-repeats-v74.py\", line 264, in inspect\n    behavior = evaluate_task_behavior(rows, references[split])\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/codepin/src/performance.py\", line 278, in evaluate_task_behavior\n    actual = summarize_task_behavior(\n             ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/codepin/src/performance.py\", line 214, in summarize_task_behavior\n    field: min(_quality_value(row, field) for row in rows)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/codepin/src/performance.py\", line 214, in <genexpr>\n    field: min(_quality_value(row, field) for row in rows)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/autodl-tmp/codepin/src/performance.py\", line 180, in _quality_value\n    raise ValueError(f\"missing or invalid quality measurement: {field}\") from exc\nValueError: missing or invalid quality measurement: quality\n"
+    }
+  ],
+  "report_limits": {
+    "steady_start_seconds": 60,
+    "groups": [
+      {
+        "name": "baseline-p1-c4",
+        "runs": [
+          "confirm-baseline-v34-r1-p1-c4",
+          "baseline-repeat-v74-r2-p1-c4",
+          "baseline-repeat-v74-r3-p1-c4"
+        ],
+        "role": "Original-deployment baseline; these outcomes define the reference, not candidate qualification.",
+        "historical_small_reference_all_passed": true,
+        "historical_screen_results": [
+          {
+            "label": "confirm-baseline-v34-r1-p1-c4",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r2-p1-c4",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r3-p1-c4",
+            "accepted": true,
+            "regressions": []
+          }
+        ],
+        "load": 4,
+        "series": "baseline-tuning"
+      },
+      {
+        "name": "baseline-p4-c16",
+        "runs": [
+          "confirm-baseline-v34-r1-p4-c16",
+          "baseline-repeat-v74-r2-p4-c16",
+          "baseline-repeat-v74-r3-p4-c16"
+        ],
+        "role": "Original-deployment baseline; these outcomes define the reference, not candidate qualification.",
+        "historical_small_reference_all_passed": true,
+        "historical_screen_results": [
+          {
+            "label": "confirm-baseline-v34-r1-p4-c16",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r2-p4-c16",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r3-p4-c16",
+            "accepted": true,
+            "regressions": []
+          }
+        ],
+        "load": 16,
+        "series": "baseline-tuning"
+      },
+      {
+        "name": "baseline-p4-c8",
+        "runs": [
+          "baseline-repeat-v74-r1-p4-c8",
+          "baseline-recovery-v84-r2-p4-c8",
+          "baseline-repeat-v74-r3-p4-c8"
+        ],
+        "role": "Original-deployment baseline; these outcomes define the reference, not candidate qualification.",
+        "historical_small_reference_all_passed": true,
+        "historical_screen_results": [
+          {
+            "label": "baseline-repeat-v74-r1-p4-c8",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-recovery-v84-r2-p4-c8",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r3-p4-c8",
+            "accepted": true,
+            "regressions": []
+          }
+        ],
+        "load": 8,
+        "series": "baseline-tuning"
+      },
+      {
+        "name": "baseline-validation-capacity-p4-c16",
+        "runs": [
+          "confirm-baseline-v34-r1-validation-capacity-p4-c16",
+          "baseline-repeat-v74-r2-validation-capacity-p4-c16",
+          "baseline-repeat-v74-r3-validation-capacity-p4-c16"
+        ],
+        "role": "Original-deployment baseline; these outcomes define the reference, not candidate qualification.",
+        "historical_small_reference_all_passed": false,
+        "historical_screen_results": [
+          {
+            "label": "confirm-baseline-v34-r1-validation-capacity-p4-c16",
+            "accepted": false,
+            "regressions": [
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_errors",
+                "expected_maximum": 5.0,
+                "actual": 6.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_tool_calls",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_turns",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.21710999999999997,
+                "actual": 0.22710999999999998
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "effective_rate",
+                "expected_minimum": 1.0,
+                "actual": 0.9849246231155779
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "quality",
+                "expected_minimum": 3.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "file_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "class_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "function_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "tool_errors",
+                "expected_maximum": 0.0,
+                "actual": 6.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "num_tool_calls",
+                "expected_maximum": 3.0,
+                "actual": 8.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "num_turns",
+                "expected_maximum": 3.0,
+                "actual": 8.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.14934,
+                "actual": 0.19934000000000002
+              }
+            ]
+          },
+          {
+            "label": "baseline-repeat-v74-r2-validation-capacity-p4-c16",
+            "accepted": false,
+            "regressions": [
+              {
+                "field": "unavailable_measurements",
+                "message": "missing or invalid quality measurement: quality"
+              }
+            ]
+          },
+          {
+            "label": "baseline-repeat-v74-r3-validation-capacity-p4-c16",
+            "accepted": false,
+            "regressions": [
+              {
+                "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+                "field": "tool_errors",
+                "expected_maximum": 4.0,
+                "actual": 6.0
+              },
+              {
+                "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+                "field": "num_tool_calls",
+                "expected_maximum": 6.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+                "field": "num_turns",
+                "expected_maximum": 6.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pylint-dev__astroid.b114f6b5.combine_module__fi3p9s7e",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.26172000000000006,
+                "actual": 0.28172
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_errors",
+                "expected_maximum": 5.0,
+                "actual": 6.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_tool_calls",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_turns",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.21710999999999997,
+                "actual": 0.22710999999999998
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "effective_rate",
+                "expected_minimum": 1.0,
+                "actual": 0.9736842105263158
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "quality",
+                "expected_minimum": 3.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "file_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "class_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "function_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "tool_errors",
+                "expected_maximum": 0.0,
+                "actual": 6.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "num_tool_calls",
+                "expected_maximum": 3.0,
+                "actual": 8.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "num_turns",
+                "expected_maximum": 3.0,
+                "actual": 8.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.14934,
+                "actual": 0.19934000000000002
+              }
+            ]
+          }
+        ],
+        "load": 16,
+        "series": "baseline-validation"
+      },
+      {
+        "name": "baseline-validation-capacity-p4-c8",
+        "runs": [
+          "baseline-repeat-v74-r1-validation-capacity-p4-c8",
+          "baseline-recovery-v84-r2-validation-capacity-p4-c8",
+          "baseline-repeat-v74-r3-validation-capacity-p4-c8"
+        ],
+        "role": "Original-deployment baseline; these outcomes define the reference, not candidate qualification.",
+        "historical_small_reference_all_passed": false,
+        "historical_screen_results": [
+          {
+            "label": "baseline-repeat-v74-r1-validation-capacity-p4-c8",
+            "accepted": false,
+            "regressions": [
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_errors",
+                "expected_maximum": 5.0,
+                "actual": 6.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_tool_calls",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_turns",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.21710999999999997,
+                "actual": 0.22710999999999998
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "effective_rate",
+                "expected_minimum": 1.0,
+                "actual": 0.9939393939393939
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "quality",
+                "expected_minimum": 3.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "file_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "class_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "function_f1",
+                "expected_minimum": 1.0,
+                "actual": 0.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "tool_errors",
+                "expected_maximum": 0.0,
+                "actual": 6.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "num_tool_calls",
+                "expected_maximum": 3.0,
+                "actual": 8.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "num_turns",
+                "expected_maximum": 3.0,
+                "actual": 8.0
+              },
+              {
+                "task": "scanny__python-pptx.278b47b1.func_basic__hy2amr7w",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.14934,
+                "actual": 0.19934000000000002
+              }
+            ]
+          },
+          {
+            "label": "baseline-recovery-v84-r2-validation-capacity-p4-c8",
+            "accepted": false,
+            "regressions": [
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_errors",
+                "expected_maximum": 5.0,
+                "actual": 6.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_tool_calls",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_turns",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.21710999999999997,
+                "actual": 0.22710999999999998
+              }
+            ]
+          },
+          {
+            "label": "baseline-repeat-v74-r3-validation-capacity-p4-c8",
+            "accepted": false,
+            "regressions": [
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_errors",
+                "expected_maximum": 5.0,
+                "actual": 6.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_tool_calls",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "num_turns",
+                "expected_maximum": 7.0,
+                "actual": 8.0
+              },
+              {
+                "task": "pyupio__safety.7654596b.pr_508",
+                "field": "tool_efficiency_cost",
+                "expected_maximum": 0.21710999999999997,
+                "actual": 0.22710999999999998
+              }
+            ]
+          }
+        ],
+        "load": 8,
+        "series": "baseline-validation"
+      },
+      {
+        "name": "baseline-validation-p1-c4",
+        "runs": [
+          "confirm-baseline-v34-r1-validation-p1-c4",
+          "baseline-repeat-v74-r2-validation-p1-c4",
+          "baseline-repeat-v74-r3-validation-p1-c4"
+        ],
+        "role": "Original-deployment baseline; these outcomes define the reference, not candidate qualification.",
+        "historical_small_reference_all_passed": true,
+        "historical_screen_results": [
+          {
+            "label": "confirm-baseline-v34-r1-validation-p1-c4",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r2-validation-p1-c4",
+            "accepted": true,
+            "regressions": []
+          },
+          {
+            "label": "baseline-repeat-v74-r3-validation-p1-c4",
+            "accepted": true,
+            "regressions": []
+          }
+        ]
+      }
+    ],
+    "comparisons": [],
+    "stage_groups": [],
+    "stage_measurement_limit": "Unmodified original deployment does not export the later digest/context stage fields. No zeros or synthetic stage chart are substituted; baseline timeline evidence is in the real Nsight traces.",
+    "load_throughput_metric": "steady_effective_tasks_per_minute",
+    "load_latency_metric": "steady_latency_seconds.p95",
+    "load_axis_label": "Concurrent real localization tasks",
+    "interpretation": "Three independent engine measurements per condition. All complete poor-quality and infrastructure-failed cases retained. Missing r2 conditions are later supplements, not replacements; no adjacent wall-time pairing is claimed. Raw QoS values keep every failure; typed runtime classification is corrected in derived statistics."
+  },
+  "reproduction": {
+    "raw_collection": [
+      "configs/baseline-repeats-v74.py",
+      "configs/baseline-recovery-v84.py"
+    ],
+    "successful_report_queue": "configs/queue-baseline-evidence-v93.sh",
+    "report": "configs/complete-baseline-report-v92.py",
+    "quality_freeze": "configs/freeze-baseline-references-v86.py",
+    "raw_report": "results/baseline-report-v92/report.json",
+    "local_document_builder": "configs/build-stage6-evidence-v94.py",
+    "note": "Historical scripts use frozen absolute run paths and exclusive output creation. Reproduce into a fresh run directory; preserve original artifacts. Source statistics and all raw records are included in the verified material bundle."
+  }
+}

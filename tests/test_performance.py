@@ -21,6 +21,12 @@ def test_server_runtime_failures_are_distinct_from_model_finish_failures():
     assert has_runtime_exception({"errors": ["Exception: server failed"]})
     assert has_runtime_exception({"exception_type": "TimeoutError"})
     assert has_runtime_exception(
+        {"errors": ["PydanticUndefinedAnnotation: missing tool schema"]}
+    )
+    assert not has_runtime_exception(
+        {"errors": ["source mentions PydanticUndefinedAnnotation"]}
+    )
+    assert has_runtime_exception(
         {"errors": ["repository_or_deployment_changed_during_run"]}
     )
     assert not has_runtime_exception(

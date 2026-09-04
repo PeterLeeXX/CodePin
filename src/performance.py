@@ -119,6 +119,7 @@ def has_runtime_exception(record: dict) -> bool:
     """Include typed server-side failures as well as client transport exceptions."""
     return bool(record.get("exception_type")) or any(
         error == "repository_or_deployment_changed_during_run"
+        or error.startswith("PydanticUndefinedAnnotation:")
         or re.match(r"^[\w.]*(?:Error|Exception|ExceptionGroup):", error)
         for error in record.get("errors", [])
     )
