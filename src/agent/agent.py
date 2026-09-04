@@ -11,6 +11,8 @@ from openhands.sdk.logger import get_logger
 from openhands.sdk.mcp import create_mcp_tools
 from openhands.sdk.tool import ToolDefinition, resolve_tool
 
+from src.tools import initialize_tool_schemas
+
 if TYPE_CHECKING:
     from openhands.sdk.conversation import ConversationState
 
@@ -50,3 +52,9 @@ class CustomAgent(Agent):
 
         logger.info("Loaded CodePin tools: %s", names)
         self._tools = {tool.name: tool for tool in tools}
+
+
+# Rebuild after this last SDK subclass is defined, while imports are serialized.
+# Lazy rebuilding during a concurrent ConversationState constructor is unsafe.
+initialize_tool_schemas()
+CustomAgent.model_json_schema()

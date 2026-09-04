@@ -106,3 +106,24 @@ def test_cache_requires_deployment_identity(tmp_path):
     with pytest.raises(ValueError, match="deployment"):
         ServiceConfig(tmp_path)
     assert ServiceConfig(tmp_path, cache_size=0)
+
+
+def test_digest_includes_empty_and_ignored_paths_without_following_links(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    empty = tree_digest(repo)
+    (repo / ".git").mkdir()
+    assert tree_digest(repo) != empty
+    (repo / ".git" / "ignored").write_text("one")
+    original = tree_digest(repo)
+    (repo / ".git" / "ignored").write_text("two")
+    assert tree_digest(repo) != original
+    external = tmp_path / "external"
+    external.write_text("outside")
+    (repo / "link").symlink_to(external)
+    original = tree_digest(repo)
+    external.write_text("changed outside")
+    assert tree_digest(repo) == original
+    (repo / "link").unlink()
+    (repo / "link").symlink_to(repo / ".git" / "ignored")
+    assert tree_digest(repo) != original

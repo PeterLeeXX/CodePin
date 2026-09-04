@@ -59,19 +59,26 @@ def tree_digest(root: Path) -> str:
     External links are never followed. Internal link targets are hashed in-tree.
     """
     digest = hashlib.sha256()
-    for parent, dirs, files in os.walk(root):
-        dirs.sort()
-        for name in sorted(dirs + files):
-            path = Path(parent) / name
-            digest.update(path.relative_to(root).as_posix().encode() + b"\0")
-            if path.is_symlink():
-                digest.update(b"link\0" + os.readlink(path).encode() + b"\0")
-            elif path.is_file():
+    pending = [(str(root), "")]
+    while pending:
+        parent, prefix = pending.pop()
+        with os.scandir(parent) as iterator:
+            entries = sorted(iterator, key=lambda entry: entry.name)
+        directories = []
+        for entry in entries:
+            relative = prefix + entry.name
+            digest.update(relative.encode() + b"\0")
+            if entry.is_symlink():
+                digest.update(b"link\0" + os.readlink(entry.path).encode() + b"\0")
+            elif entry.is_file(follow_symlinks=False):
                 digest.update(b"file\0")
-                with path.open("rb") as handle:
+                with open(entry.path, "rb") as handle:
                     for chunk in iter(lambda: handle.read(1024 * 1024), b""):
                         digest.update(chunk)
                 digest.update(b"\0")
+            elif entry.is_dir(follow_symlinks=False):
+                directories.append((entry.path, relative + "/"))
+        pending.extend(reversed(directories))
     return digest.hexdigest()
 
 
