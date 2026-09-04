@@ -1,0 +1,408 @@
+{
+  "protocol": {
+    "started_at": "2026-09-04T15:05:25.149301+00:00",
+    "source_receipt": {
+      "archive_sha256": "7b3922ce399767bfd8b689144773460ef9a94d4cbb8281d991f0ee30676c3f2a",
+      "bytes": 162216,
+      "files": 47,
+      "manifest_sha256": "10e68a297157ed9f106191c5662f27ce1b7fcfff7dc23a0ea5cb9ef47c0c8956",
+      "candidate_branch": "codex/stable-serving-main",
+      "main_base": "b2cc195",
+      "source_mapping": {
+        "base": "b2cc195",
+        "functional_source": "9e56b610e9e366a22744751dc5ff70052e826c8d",
+        "runtime_fix_source": "97ada3bae907b381ab88d20f1b0506c836ad48fb",
+        "selected_fixes": [
+          "full-content scandir digest with unchanged byte identity",
+          "native SDK schema initialization before concurrent conversations"
+        ],
+        "excluded": [
+          "performance harness",
+          "NVTX/trace hooks",
+          "experimental native server settings",
+          "performance-only dependencies",
+          "V86/V102 comparison policies"
+        ],
+        "extracted_source_sha256": {
+          "src/tools/__init__.py": "55f30306de6ac0428b32f86dfbcd6039f277aa6cd8be8bc13732e84a66813094",
+          "src/agent/agent.py": "323b60ad0ec098bd3300a8e6aefe80655a9a88e3ac5b8de800fd79dcecec15ba",
+          "src/service.py": "2be2e7571978854da5793743aad1b0fd5aefb62bde7dfba5986f7aa5157c1e62",
+          "tests/tools/test_atomic_toolset.py": "fd6163fe91746aadf51acd233efb60732d317a99c1a71b578d4f3c526c13eec8",
+          "tests/test_service.py": "47f6fa4ff2b6a0068553675b8cb14d8c4581cf0fa8bf3e7786ad2c28bc453153"
+        }
+      }
+    },
+    "fixtures_from_original_git": {
+      "data/sample/README.md": "300aa89933aefb1071117dbe930c357f97c25f2d7ff0d742bb2b4701d3bf7177",
+      "data/sample/validation.parquet": "e760f58ab69bd8ecf59c2b5010729f98b8e2b25b635a170ac969f58f359a217e"
+    },
+    "previous_attempt": "v108: 54 passed, one failure because the isolated source archive omitted the existing sample parquet; no source or test changed for this retry",
+    "candidate_directory": "/root/autodl-tmp/codepin-stable-main-v108",
+    "installed_dependencies": {
+      "skyrl": "0.3.0",
+      "transformers": "5.8.0",
+      "openhands-sdk": "1.7.1",
+      "openhands-tools": "1.7.1",
+      "openhands-workspace": "1.7.1",
+      "vllm": "0.23.0+cu129",
+      "pydantic": "2.13.5",
+      "rich": "15.0.0",
+      "pyarrow": "25.0.1",
+      "unidiff": "1.0.0",
+      "mcp": "1.29.1"
+    },
+    "environment": "Reuse the existing pinned Python 3.12 environment read-only; candidate code is isolated by working directory and PYTHONPATH. No dependency edits, shims or monkey patches.",
+    "engine": {
+      "pid": 37480,
+      "created_at": 1788533560.45,
+      "command": [
+        "/root/autodl-tmp/codepin/.venv/bin/python",
+        "-m",
+        "vllm.entrypoints.openai.api_server",
+        "--model",
+        "/root/autodl-tmp/models/codepin-native-v2",
+        "--served-model-name",
+        "codepin",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--language-model-only",
+        "--dtype",
+        "bfloat16",
+        "--tensor-parallel-size",
+        "1",
+        "--gpu-memory-utilization",
+        "0.70",
+        "--max-model-len",
+        "16384",
+        "--max-num-batched-tokens",
+        "8192",
+        "--max-num-seqs",
+        "64",
+        "--enable-chunked-prefill",
+        "--enable-auto-tool-choice",
+        "--tool-call-parser",
+        "qwen3_coder",
+        "--structured-outputs-config",
+        "{\"backend\":\"xgrammar\",\"disable_any_whitespace\":true}",
+        "--enable-prefix-caching",
+        "--mamba-cache-mode",
+        "align",
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 256, 512, 1024]}"
+      ],
+      "deployment_sha256": "f09d2881fc9ffcf56c01419dc99a2128f1d350cac72d98ac1a7189c6ccce4acb"
+    },
+    "scope": "Full real functional acceptance on the unchanged native S64/FI/G1024 engine, not a timed performance run. The generic serving launcher is byte-identical to the original S8 launcher already exercised by 18 baseline groups.",
+    "test_expectation": {
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "tasks_sha256": "481fcd4430be431c4a6f24f175ef7e15df587a690cdae42e684d2ed255703850",
+    "benchmark_before_maintenance_sha256": "f43778ecf4c552c22bba2a9b54aa11836e613456e08d4cea63fea7b7190a3d46",
+    "judge_limit": "Same small SFT model checks integration only; not an independent quality judge."
+  },
+  "accepted": true,
+  "test_totals": {
+    "tests": 55,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "skyrl_readback": {
+    "sft_rows": 1,
+    "batch_type": "TrainingInputBatch",
+    "supervised_tokens": [
+      170
+    ],
+    "rl_rows": 3
+  },
+  "skyrl_rollout": {
+    "valid_stop": [
+      "stop"
+    ],
+    "valid_reward": [
+      2.986668
+    ],
+    "valid_loss_tokens": 170,
+    "invalid_stop": [
+      "length"
+    ],
+    "invalid_reward": [
+      0.0
+    ],
+    "invalid_loss_tokens": 0
+  },
+  "evaluation": {
+    "tasks": 3,
+    "evaluated": 3,
+    "valid": 1,
+    "missing_ids": [],
+    "means": {
+      "class_f1": 0.3333333333333333,
+      "completion_tokens": 353.3333333333333,
+      "entity_reward": 0.3333333333333333,
+      "excess_output_chars": 0.0,
+      "file_f1": 0.3333333333333333,
+      "file_reward": 0.3333333333333333,
+      "function_f1": 0.3333333333333333,
+      "module_reward": 0.3333333333333333,
+      "multilevel_localization_f1_reward": 1.0,
+      "num_tool_calls": 5.666666666666667,
+      "num_turns": 5.666666666666667,
+      "output_chars": 7241.0,
+      "overlap_lines": 0.0,
+      "overlap_ratio": 0.0,
+      "read_calls": 1.0,
+      "read_lines": 169.66666666666666,
+      "repeated_searches": 0.0,
+      "search_calls": 1.0,
+      "tool_efficiency_cost": 0.15241,
+      "tool_efficiency_penalty": 0.004444,
+      "tool_errors": 3.3333333333333335,
+      "total_reward": 0.995556,
+      "trajectory_valid": 0.3333333333333333,
+      "truncated_outputs": 0.6666666666666666,
+      "wall_clock_duration": 1.6044203523003187
+    },
+    "by_difficulty": {
+      "easy": {
+        "count": 3,
+        "mean_quality": 1.0
+      }
+    },
+    "rows": [
+      {
+        "instance_id": "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k",
+        "valid": false,
+        "errors": [
+          "agent_error",
+          "missing_or_multiple_finish",
+          "tool_error"
+        ],
+        "difficulty": "easy",
+        "total_reward": 0.0,
+        "multilevel_localization_f1_reward": 0.0,
+        "file_reward": 0.0,
+        "module_reward": 0.0,
+        "entity_reward": 0.0,
+        "file_f1": 0.0,
+        "class_f1": 0.0,
+        "function_f1": 0.0,
+        "tool_efficiency_penalty": 0.0,
+        "trajectory_valid": 0.0,
+        "num_tool_calls": 8.0,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "output_chars": 8398.0,
+        "excess_output_chars": 0.0,
+        "truncated_outputs": 1.0,
+        "tool_errors": 6.0,
+        "completion_tokens": 576.0,
+        "num_turns": 8.0,
+        "overlap_ratio": 0.0,
+        "tool_efficiency_cost": 0.20398,
+        "wall_clock_duration": 2.6860901939217,
+        "judge": {
+          "relevance": 0.0,
+          "sufficiency": 1.0,
+          "explanation": "I'll start by exploring the repository structure to understand the codebase and locate the relevant files for the `get_user` and `get_users` methods. Let me first check the models.py file since that's likely where the User class is defined. Let me also check the user.py file since that's where the `"
+        }
+      },
+      {
+        "instance_id": "python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71",
+        "valid": true,
+        "errors": [],
+        "difficulty": "easy",
+        "total_reward": 2.986668,
+        "multilevel_localization_f1_reward": 3.0,
+        "file_reward": 1.0,
+        "module_reward": 1.0,
+        "entity_reward": 1.0,
+        "file_f1": 1.0,
+        "class_f1": 1.0,
+        "function_f1": 1.0,
+        "tool_efficiency_penalty": 0.013332,
+        "trajectory_valid": 1.0,
+        "num_tool_calls": 3.0,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 109.0,
+        "overlap_lines": 0.0,
+        "output_chars": 4666.0,
+        "excess_output_chars": 0.0,
+        "truncated_outputs": 0.0,
+        "tool_errors": 0.0,
+        "completion_tokens": 170.0,
+        "num_turns": 3.0,
+        "overlap_ratio": 0.0,
+        "tool_efficiency_cost": 0.06666,
+        "wall_clock_duration": 0.7198379780165851,
+        "judge": {
+          "relevance": 1.0,
+          "sufficiency": 1.0,
+          "explanation": "I'll start by searching for the `NamespacePrefixedTag` class and its `local_part` property in the repository. Let me first locate the relevant file.I'll start by searching for the `NamespacePrefixedTag` class in the repository to understand its structure and locate the `local_part` tag."
+        }
+      },
+      {
+        "instance_id": "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi",
+        "valid": false,
+        "errors": [
+          "missing_or_multiple_finish",
+          "tool_error"
+        ],
+        "difficulty": "easy",
+        "total_reward": 0.0,
+        "multilevel_localization_f1_reward": 0.0,
+        "file_reward": 0.0,
+        "module_reward": 0.0,
+        "entity_reward": 0.0,
+        "file_f1": 0.0,
+        "class_f1": 0.0,
+        "function_f1": 0.0,
+        "tool_efficiency_penalty": 0.0,
+        "trajectory_valid": 0.0,
+        "num_tool_calls": 6.0,
+        "search_calls": 1.0,
+        "read_calls": 1.0,
+        "repeated_searches": 0.0,
+        "read_lines": 200.0,
+        "overlap_lines": 0.0,
+        "output_chars": 8659.0,
+        "excess_output_chars": 0.0,
+        "truncated_outputs": 1.0,
+        "tool_errors": 4.0,
+        "completion_tokens": 314.0,
+        "num_turns": 6.0,
+        "overlap_ratio": 0.0,
+        "tool_efficiency_cost": 0.18658999999999998,
+        "wall_clock_duration": 1.4073328849626705,
+        "judge": {
+          "relevance": 1.0,
+          "sufficiency": 1.0,
+          "explanation": "Invoke glomit"
+        }
+      }
+    ],
+    "judge": {
+      "evaluated": 3,
+      "failed": 0,
+      "mean_relevance": 0.6666666666666666
+    },
+    "cleaning": {
+      "input": 3,
+      "kept": 3,
+      "rejected": [],
+      "difficulty": {
+        "easy": 3
+      }
+    },
+    "export": {
+      "cleaning": {
+        "input": 3,
+        "kept": 3,
+        "rejected": [],
+        "difficulty": {
+          "easy": 3
+        }
+      },
+      "sft_kept": 1,
+      "rejected": [
+        {
+          "instance_id": "tweepy__tweepy.91a41c6e.lm_rewrite__7pty2z8k",
+          "reasons": [
+            "agent_error",
+            "missing_or_multiple_finish",
+            "tool_error"
+          ]
+        },
+        {
+          "instance_id": "mahmoud__glom.fb3c4e76.func_pm_op_change__5350ikmi",
+          "reasons": [
+            "missing_or_multiple_finish",
+            "tool_error"
+          ]
+        }
+      ],
+      "splits": {
+        "sft/train": 1,
+        "rl/train": 3,
+        "sft/validation": 0,
+        "rl/validation": 0
+      }
+    }
+  },
+  "completed_at": "2026-09-04T15:06:31.567867+00:00",
+  "source_manifest": {
+    "pyproject.toml": "4f3b99f43f0c9ce0fb906eeac4b19b83d9aed211f2876dcf26c7b8e9ababef4e",
+    "scripts/acceptance.py": "91e376f08152c541331e7a6a199a95982f585789e427743e1e02bbf9fcf4fc71",
+    "scripts/preflight_qwen3_5.py": "586fd5e8cd98a5d8ebb0fa3335829bc94aa968aa9518926eb6bfd27e13c91c66",
+    "scripts/prepare_serving_model.py": "1e38a0e38ffd4e020df451cc7a61067f9ebf7e766df756e17aefdf2017994107",
+    "scripts/run_acceptance.sh": "245a9a8c8592731dcf093b8ec7a2b81206775e13972d4bf77321f1ffc65cd73a",
+    "scripts/run_dapo_qwen3_5_0_8b.sh": "679b5553c7aff589e9f0b53c798218c2cf4cbaf788bec5fcd6f2b9db237f934c",
+    "scripts/run_rl_qwen3_5_0_8b.sh": "eb550d30714bd8183617d8cbbe5385fbe65f89029f66f7da75fb0e1fc1e16df9",
+    "scripts/run_sft_qwen3_5_0_8b.sh": "c4447e9d53b2b705b781551ae6db86addbdf8a95900346f1f722d90c8af178a9",
+    "scripts/serve_vllm.sh": "5d80f92ba127b43f3a695878c474f816c2f0c5ec90c4b6bd131baddab0ecd178",
+    "src/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/agent/agent.py": "323b60ad0ec098bd3300a8e6aefe80655a9a88e3ac5b8de800fd79dcecec15ba",
+    "src/build_swe_smith_code_search.py": "c2a2796dca8837caa8956acf12254e9aa638e1457ce55dcec6eb223713005407",
+    "src/context.py": "2e7046b3001f9849e1f3ce36acf8f4b6ad72c34d400dfd7758180adcfa3df9b8",
+    "src/data_pipeline.py": "27a11edd5af8d94732ea3c8d69bb432dc7fd5625bbf1502d13ea9b2f4a075a6c",
+    "src/evaluate.py": "ed96861d72961ed02f06be9daddd8ff83dee2b38d1368ae1c06d9f77c563fb00",
+    "src/generator/code_search_generator.py": "dd3a4af8d46b5eea5376662b16efcd36580cb9d9b45eaa29e173fe829671b6af",
+    "src/mcp_server.py": "7f6fe50a684dce29f9d8e08b6e9fc53084f88b22331e8cef95687b649e006e5c",
+    "src/prompts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/prompts/templates/system_prompt_atomic_search.j2": "0ebc312d89cd70c07b86ca062ed425458bb0582fe37a1b260aa4c8711b35647d",
+    "src/rewards/__init__.py": "eaf68012fbbab3ca945c91e9f964933d99c9a3a4f904df1958e55c4ea358399c",
+    "src/rewards/file_localization/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/rewards/file_localization/file_localization.py": "3aff370c96ce2d400363de347c070dffa952dffd77bf16a7968088048e5c218b",
+    "src/rollout.py": "7bedc8966238fb1fe7fa8eed7a9c46e4689d1c91976f0bcd42db4db1f12554e2",
+    "src/service.py": "2be2e7571978854da5793743aad1b0fd5aefb62bde7dfba5986f7aa5157c1e62",
+    "src/sft.py": "169fce1b0f7e58d2c31460de57c8d5c917e8cc835028ce7b93d44f71181aa770",
+    "src/tools/__init__.py": "55f30306de6ac0428b32f86dfbcd6039f277aa6cd8be8bc13732e84a66813094",
+    "src/tools/glob.py": "1130c47a944aec05ed93e517f41b7525c856b1c7170e176b695ef2b1292fbe87",
+    "src/tools/grep.py": "7a41984bc47993d84b4401fce80e9cd589db9bf8a7075d9e26c87cafe6ab8b0a",
+    "src/tools/localization_finish.py": "c10b329361f84735ee45588bb2eedf2121f95edb261ca9501bc7138c9e0db803",
+    "src/tools/read_file.py": "01287a00b4d26451d3db4ec28eb23ee436d1bbce6269fea2a3619a409c52e0e1",
+    "src/train.py": "5dc6c6774182031b25db5edb1ead74f68034646c590f436b036c57f77f63e8e6",
+    "src/trajectory.py": "0cb7753a1fc920df1e44442a167e843c2ed705d4c8793f63873a031d1f793342",
+    "src/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/utils/instance.py": "6b66abcc8433fbb64526546d5bede43d50c933396d0fa3252b2af6350682fbcb",
+    "src/utils/trajectory_tokens.py": "412cd85b905a236fd540d7a846d42e59ce8f17ceb635e3999402efbc1a0c26ca",
+    "tests/integration/test_mcp_live.py": "bf2089651ead67a545c9645b0e91759262519f77a431a60673646603d2354b14",
+    "tests/test_build_swe_smith_code_search.py": "8725c37984dd3da2d729bfc3f030e1b78c18a19da0560743bb03826eaf9ef78a",
+    "tests/test_pipeline.py": "01082e524c403679d6a132128cbc24b1c9b5be06fb9e5b42dfac0f612d175235",
+    "tests/test_reward.py": "52530fb3ee7a1261e2b704c2f423b592fde924e66abd6c72796e8e5befec36cc",
+    "tests/test_service.py": "47f6fa4ff2b6a0068553675b8cb14d8c4581cf0fa8bf3e7786ad2c28bc453153",
+    "tests/test_trajectory_tokens.py": "ede6ab5fea56c099fd12b51fbde639d8af4a9406c270a6bb3e32263703454aa5",
+    "tests/tools/test_atomic_toolset.py": "fd6163fe91746aadf51acd233efb60732d317a99c1a71b578d4f3c526c13eec8",
+    "tests/tools/test_glob.py": "6212aea92714f09bb870f732ac95056ddca26db63f9b1cba1ca3d07eb87dfacf",
+    "tests/tools/test_grep.py": "634815974ee28e926d52fed11955d2718244fe32a2cf0020aba5c07be14b9dc4",
+    "tests/tools/test_localization_finish.py": "4f3e41d9c2c021a3e9e25949fac0830d7145da909871503c677ae4b4887d7fe4",
+    "tests/tools/test_read_file.py": "4646bdfcf931a2ef040540a8c7c8abdf8da892dab55260eb9cb4a712fe66047b",
+    "uv.lock": "842d49c6fc125387612e8d8af619a6193b55686edfa0a95c927bca8a036225ef"
+  },
+  "material_retrieval": {
+    "archive": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/stable-main-material-v111.tar.gz",
+    "bytes": 379439,
+    "sha256": "6e32bad0111ceb79f612410032aa3d11c2029065e9160b784cb916796c885aed",
+    "entries": 47,
+    "manifest_sha256": "ecc695e01a14fd5d7fb0487c9128e597d668a33fda3a4d2457dfa8debf05bc71",
+    "verified_at": "2026-09-04T15:09:09.904268+00:00",
+    "local_archive": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\stable-main-material-v111.tar.gz",
+    "local_directory": "E:\\Desktop\\CodePin\\tmp\\verification\\20260904-vllm-performance\\stable-main-material-v111",
+    "verified_entries": 47,
+    "regular_bytes": 1649386,
+    "failures": []
+  },
+  "test_report_sha256": "3e52724ef14eb608e2c5e526431ddbcb10c762f82ba87ea8b8a468d852e57206"
+}

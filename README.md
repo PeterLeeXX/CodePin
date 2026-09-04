@@ -23,6 +23,10 @@ shared trajectory validation and cost metrics. See
 [serving, data processing and real-model acceptance](docs/SERVING_AND_EVALUATION.md).
 The [2026-09-03 acceptance report](docs/ACCEPTANCE_20260903.md) records the tested
 checkpoint, environment, passing checks, and evaluation limits.
+The [mainline extraction record](docs/MAINLINE_EXTRACTION_20260904.md) documents
+the selected fixes and their real-model regression tests. The
+[vLLM tuning report](docs/VLLM_TUNING_REPORT_20260904.md) compares measured
+approaches, including unsuccessful experiments and pending acceptance.
 
 The agent does not edit code, execute shell commands in target repositories, or
 generate patches. The fixed read-only action space keeps trajectories bounded,
