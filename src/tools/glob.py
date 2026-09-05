@@ -17,6 +17,8 @@ from openhands.sdk.tool import (
 )
 from pydantic import Field
 
+from src.profiling import nvtx_range
+
 if TYPE_CHECKING:
     from openhands.sdk.conversation import LocalConversation
     from openhands.sdk.conversation.state import ConversationState
@@ -98,6 +100,7 @@ class GlobExecutor(ToolExecutor[GlobAction, GlobObservation]):
     def __init__(self, workspace_root: str):
         self.workspace_root = Path(workspace_root).resolve()
 
+    @nvtx_range("codepin.tool.glob")
     def __call__(
         self,
         action: GlobAction,

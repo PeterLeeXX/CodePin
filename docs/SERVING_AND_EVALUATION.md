@@ -90,8 +90,9 @@ HTTP 模式增加 `--transport streamable-http --port 8001`，地址为
 ```
 
 `repository` 必须位于服务配置的目录内；工具解析真实路径并拒绝越界符号链接。
-返回 `status`、`locations`、`context`、`metrics`、`errors`、`snapshot` 和
-`cache_hit`。`locations` 包含 `file`、`class_name`、`function_name`；符号会通过
+返回 `status`、`locations`、`context`、`metrics`、`errors`、`snapshot`、
+`execution_id` 和 `cache_hit`。`execution_id` 可关联一次真实 Conversation；
+缓存命中保留原执行 ID。`locations` 包含 `file`、`class_name`、`function_name`；符号会通过
 现有 Python AST 分析器校验，找不到定义时不会提交成功结果。
 `context` 中每段带实际行号，所有段的 `text` 总字符数和行数遵守请求预算，
 重复行不会重复返回。预算不包含 JSON 元数据；截断通过 `truncated` 表示。
@@ -227,3 +228,7 @@ SFT 读回沿用现有训练入口的默认 tokenizer 参数；固定 SkyRL 版�
 参数直接传入该接口。
 还会通过原生 `RemoteInferenceClient` 和 Ray 执行正常与过短生成预算的 SkyRL
 rollout，检查正常监督、异常零奖励和零 Loss Mask；不会创建训练器或更新模型权重。
+
+需要采集性能时间线时设置 `CODEPIN_PERF_NVTX=1`；未设置时埋点为零依赖 no-op。
+设置 `CODEPIN_PERF_TRACE_DIR=/path/to/traces` 可按 `execution_id` 导出真实轨迹。
+显式开启 NVTX 但系统缺少 `libnvToolsExt` 时服务会直接报错，不静默降级。

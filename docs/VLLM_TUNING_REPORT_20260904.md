@@ -288,7 +288,7 @@ NSYS_NVTX_PROFILER_REGISTER_ONLY=0 "$NSYS" profile \
   --steady-window 10 25 --cuda-details
 ```
 
-工具位于调优分支，未随最小生产功能进入 main。服务端记录脚本显式开启 `VLLM_NVTX_SCOPES_FOR_PROFILING=1`，无采集配对保留相同 NVTX/轨迹导出开关。实际分析使用 nsys stats、SQLite 的 CUDA/NVTX/OSRT 区间查询和导出图；GUI 可离线打开保留的 `.nsys-rep`，先定位 `codepin.benchmark`，再关联 task/service/step 与原始 response ID。本报告不声称已经在 GUI 中完成了未实际操作的步骤。
+离线分析与压测工具仍位于调优分支；最小运行时埋点和按 execution ID 导出轨迹的能力已进入 main。服务端记录脚本显式开启 `VLLM_NVTX_SCOPES_FOR_PROFILING=1`，无采集配对保留相同 NVTX/轨迹导出开关。实际分析使用 nsys stats、SQLite 的 CUDA/NVTX/OSRT 区间查询和导出图；GUI 可离线打开保留的 `.nsys-rep`，先定位 `codepin.benchmark`，再关联 task/service/step 与原始 response ID。本报告不声称已经在 GUI 中完成了未实际操作的步骤。
 
 ## 10. 当前瓶颈如何迁移，以及下一步条件
 

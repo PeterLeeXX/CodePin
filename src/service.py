@@ -16,6 +16,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field
 
 from src.context import bounded_context
+from src.profiling import issue_trace_id, measure_stage, nvtx_range
 from src.rollout import run_localization
 
 
@@ -141,6 +142,7 @@ class LocalizationService:
     async def localize(
         self, request: LocalizationRequest, *, purpose: str = "serving"
     ) -> dict:
+        service_started = time.monotonic()
         if purpose not in {"serving", "rollout"}:
             raise ValueError("purpose must be serving or rollout")
         if purpose == "rollout" and self.config.cache_size:
@@ -148,11 +150,24 @@ class LocalizationService:
         root = self.repository(request.repository)
         if not request.issue.strip():
             raise ValueError("issue cannot be blank")
-        await asyncio.wait_for(self.slots.acquire(), timeout=60)
+        queue_started = time.monotonic()
+        try:
+            await asyncio.wait_for(self.slots.acquire(), timeout=60)
+        except TimeoutError as exc:
+            # MCP transports exception messages, not their Python type.
+            raise TimeoutError("service queue timeout after 60 seconds") from exc
+        queue_seconds = time.monotonic() - queue_started
         try:
             task = asyncio.create_task(asyncio.to_thread(self._localize, request, root))
             try:
-                return await asyncio.shield(task)
+                issue_id = issue_trace_id(request.issue)
+                with nvtx_range(f"codepin.service|{root.name}|{issue_id}"):
+                    result = await asyncio.shield(task)
+                result["metrics"]["service_queue_seconds"] = queue_seconds
+                result["metrics"]["service_total_seconds"] = (
+                    time.monotonic() - service_started
+                )
+                return result
             except asyncio.CancelledError:
                 # The SDK runs synchronously; keep its slot until it exits.
                 await task
@@ -161,28 +176,45 @@ class LocalizationService:
             self.slots.release()
 
     def _localize(self, request: LocalizationRequest, root: Path) -> dict:
-        snapshot = tree_digest(root)
-        key = self.cache_key(request, snapshot)
+        stages = {}
+        with measure_stage(stages, "repository_digest_before_seconds"):
+            snapshot = tree_digest(root)
+        with measure_stage(stages, "cache_key_before_seconds"):
+            key = self.cache_key(request, snapshot)
         if self.config.cache_size and (cached := self.cache.get(key)):
             cached["cache_hit"] = True
+            # Trajectory metrics describe the cached answer; execution timings
+            # must describe this request, not the earlier inference.
+            cached["metrics"] = {
+                name: value
+                for name, value in cached["metrics"].items()
+                if not name.endswith("_seconds") and name != "wall_clock_duration"
+            }
+            cached["metrics"].update(stages)
             return cached
-        result = run_localization(
-            {"problem_statement": request.issue},
-            root,
-            model=self.config.model,
-            base_url=self.config.base_url,
-            max_turns=self.config.max_turns,
-            max_tokens=self.config.max_tokens,
-        )
-        context = []
-        if result["status"] == "ok":
-            context = bounded_context(
+        with measure_stage(stages, "rollout_seconds"):
+            result = run_localization(
+                {"problem_statement": request.issue},
                 root,
-                result["structured_locations"],
-                request.max_context_chars,
-                request.max_context_lines,
+                model=self.config.model,
+                base_url=self.config.base_url,
+                max_turns=self.config.max_turns,
+                max_tokens=self.config.max_tokens,
             )
-        if snapshot != tree_digest(root) or key != self.cache_key(request, snapshot):
+        context = []
+        with measure_stage(stages, "bounded_context_seconds"):
+            if result["status"] == "ok":
+                context = bounded_context(
+                    root,
+                    result["structured_locations"],
+                    request.max_context_chars,
+                    request.max_context_lines,
+                )
+        with measure_stage(stages, "repository_digest_after_seconds"):
+            current_snapshot = tree_digest(root)
+        with measure_stage(stages, "cache_key_after_seconds"):
+            current_key = self.cache_key(request, snapshot)
+        if snapshot != current_snapshot or key != current_key:
             result["errors"].append("repository_or_deployment_changed_during_run")
             result["status"] = "error"
             result["structured_locations"] = None
@@ -195,7 +227,9 @@ class LocalizationService:
             "errors": result["errors"],
             "snapshot": snapshot,
             "cache_hit": False,
+            "execution_id": result.get("execution_id"),
         }
+        response["metrics"].update(stages)
         self.cache.put(key, response)
         return response
 

@@ -5,6 +5,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from uuid import UUID
 
 import httpx
 from mcp import ClientSession, StdioServerParameters
@@ -36,6 +37,7 @@ def test_native_batch_and_mcp_delegation(tmp_path):
     async def exercise():
         parameters = StdioServerParameters(
             command=sys.executable,
+            env=dict(os.environ),
             args=[
                 "-m",
                 "src.mcp_server",
@@ -74,12 +76,24 @@ def test_native_batch_and_mcp_delegation(tmp_path):
                 ), result
                 assert sum(len(c["text"]) for c in result["context"]) <= 500
                 assert result["metrics"]["completion_tokens"] > 0
+                assert str(UUID(result["execution_id"])) == result["execution_id"]
                 repeat = await client.call_tool("localize_code", {"request": request})
                 assert repeat.structuredContent["cache_hit"]
+                assert (
+                    repeat.structuredContent["execution_id"] == result["execution_id"]
+                )
+                cached_metrics = repeat.structuredContent["metrics"]
+                assert cached_metrics["service_total_seconds"] >= 0
+                assert "rollout_seconds" not in cached_metrics
+                assert "wall_clock_duration" not in cached_metrics
+                assert "repository_digest_after_seconds" not in cached_metrics
                 (repo / "new_file.py").write_text("VALUE = 1\n")
                 changed = await client.call_tool("localize_code", {"request": request})
                 assert not changed.structuredContent["cache_hit"]
                 assert changed.structuredContent["snapshot"] != result["snapshot"]
+                assert (
+                    changed.structuredContent["execution_id"] != result["execution_id"]
+                )
                 batch = await client.call_tool(
                     "localize_batch",
                     {

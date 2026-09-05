@@ -127,3 +127,34 @@ def test_digest_includes_empty_and_ignored_paths_without_following_links(tmp_pat
     (repo / "link").unlink()
     (repo / "link").symlink_to(repo / ".git" / "ignored")
     assert tree_digest(repo) != original
+
+
+def test_uncached_service_reports_stage_timings(tmp_path, monkeypatch):
+    (tmp_path / "app.py").write_text("def target():\n    return 1\n")
+
+    def localize(*_args, **_kwargs):
+        return {
+            "status": "ok",
+            "structured_locations": [{"file": "app.py", "function_name": "target"}],
+            "metrics": {},
+            "errors": [],
+        }
+
+    monkeypatch.setattr("src.service.run_localization", localize)
+    service = LocalizationService(ServiceConfig(tmp_path, cache_size=0))
+    result = asyncio.run(
+        service.localize(LocalizationRequest(repository=".", issue="find target"))
+    )
+
+    assert result["status"] == "ok"
+    for key in (
+        "service_queue_seconds",
+        "service_total_seconds",
+        "repository_digest_before_seconds",
+        "cache_key_before_seconds",
+        "rollout_seconds",
+        "bounded_context_seconds",
+        "repository_digest_after_seconds",
+        "cache_key_after_seconds",
+    ):
+        assert result["metrics"][key] >= 0
