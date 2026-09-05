@@ -1,0 +1,946 @@
+{
+  "profiles": {
+    "default": {
+      "status": "qualified_default_pending_final_acceptance",
+      "seqs": 64,
+      "batch_tokens": 8192,
+      "api_count": 1,
+      "prefix_cache": true,
+      "clients": 4,
+      "concurrency": 16,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASH_ATTN\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 256, 512, 1024]}"
+      ],
+      "server_environment": {
+        "CUDA_HOME": "/root/autodl-tmp/codepin-cuda12.9-v20",
+        "FLASHINFER_WORKSPACE_BASE": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/flashinfer-cuda129-jit-v20",
+        "MAX_JOBS": "4",
+        "VLLM_BATCH_INVARIANT": "0",
+        "VLLM_USE_V2_MODEL_RUNNER": "0",
+        "LITELLM_LOCAL_MODEL_COST_MAP": "True"
+      },
+      "reason": "S64/B8192/APC-align/G1024 with the native FLASH_ATTN backend passed V86 on three fresh engines at C4/C16/C64 and on cold and warm validation. C16 is the default operating load because it improves same-load effective throughput and P95 without the tail-latency cost of capacity mode.",
+      "comparison_policy": "V86",
+      "qualification_groups": {
+        "tuning_c4": {
+          "n": 3,
+          "labels": [
+            "fresh-fa-control-v95-r1-p1-c4",
+            "fresh-fa-control-v95-r2-p1-c4",
+            "fresh-fa-control-v95-r3-p1-c4"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              83.0,
+              84.5,
+              86.0
+            ],
+            "mean": 84.5,
+            "stdev": 1.5,
+            "ci95_half_width": 3.726206567765629
+          },
+          "latency_seconds.p95": {
+            "values": [
+              2.4855298844457137,
+              2.4630732749588784,
+              2.449719794234261
+            ],
+            "mean": 2.466107651212951,
+            "stdev": 0.018096856624191783,
+            "ci95_half_width": 0.04495508400598423
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        },
+        "tuning_c16": {
+          "n": 3,
+          "labels": [
+            "fa-validation-v118-r1-p4-c16",
+            "fa-validation-v118-r2-p4-c16",
+            "fa-validation-v118-r3-p4-c16"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              227.5,
+              228.0,
+              234.0
+            ],
+            "mean": 229.83333333333334,
+            "stdev": 3.6170890690351176,
+            "ci95_half_width": 8.985347363487946
+          },
+          "latency_seconds.p95": {
+            "values": [
+              4.0687144095019905,
+              4.06864714184776,
+              4.001088700199034
+            ],
+            "mean": 4.046150083849595,
+            "stdev": 0.039024317465031835,
+            "ci95_half_width": 0.09694177869384839
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        },
+        "tuning_c64": {
+          "n": 3,
+          "labels": [
+            "fresh-fa-control-v95-r1-p32-c64",
+            "fresh-fa-control-v95-r2-p32-c64",
+            "fresh-fa-control-v95-r3-p32-c64"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              452.5,
+              473.5,
+              477.5
+            ],
+            "mean": 467.8333333333333,
+            "stdev": 13.428824718989125,
+            "ci95_half_width": 33.35904991018047
+          },
+          "latency_seconds.p95": {
+            "values": [
+              8.719129322480875,
+              8.300909013685304,
+              8.220866325241513
+            ],
+            "mean": 8.413634887135897,
+            "stdev": 0.267575868705284,
+            "ci95_half_width": 0.6646953062301486
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        },
+        "validation_cold_c4": {
+          "n": 3,
+          "labels": [
+            "fa-validation-v118-r1-validation-p1-c4",
+            "fa-validation-v118-r2-validation-p1-c4",
+            "fa-validation-v118-r3-validation-p1-c4"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              53.429475387957694,
+              55.23987605165319,
+              55.73731688904413
+            ],
+            "mean": 54.80222277621834,
+            "stdev": 1.2145733368794016,
+            "ci95_half_width": 3.0171674299420284
+          },
+          "latency_seconds.p95": {
+            "values": [
+              2.392078249511542,
+              2.3431385529285764,
+              2.252838946168777
+            ],
+            "mean": 2.329351916202965,
+            "stdev": 0.07063603480517304,
+            "ci95_half_width": 0.17546963787463823
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        },
+        "validation_c16": {
+          "n": 3,
+          "labels": [
+            "fa-validation-v118-r1-validation-capacity-p4-c16",
+            "fa-validation-v118-r2-validation-capacity-p4-c16",
+            "fa-validation-v118-r3-validation-capacity-p4-c16"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              188.5,
+              191.0,
+              195.0
+            ],
+            "mean": 191.5,
+            "stdev": 3.278719262151,
+            "ci95_half_width": 8.144790165657824
+          },
+          "latency_seconds.p95": {
+            "values": [
+              3.5030028876848514,
+              3.467719234060496,
+              3.4397101545939224
+            ],
+            "mean": 3.47014409211309,
+            "stdev": 0.031715965505740414,
+            "ci95_half_width": 0.07878682598034538
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        },
+        "validation_c64": {
+          "n": 3,
+          "labels": [
+            "fa-validation-v118-r1-validation-capacity-p32-c64",
+            "fa-validation-v118-r2-validation-capacity-p32-c64",
+            "fa-validation-v118-r3-validation-capacity-p32-c64"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              421.0,
+              414.5,
+              414.5
+            ],
+            "mean": 416.6666666666667,
+            "stdev": 3.7527767497325675,
+            "ci95_half_width": 9.322414248141097
+          },
+          "latency_seconds.p95": {
+            "values": [
+              6.695465134707046,
+              6.865733986196574,
+              6.851222465978935
+            ],
+            "mean": 6.804140528960851,
+            "stdev": 0.09439492593313382,
+            "ci95_half_width": 0.23448999531719558
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        }
+      }
+    },
+    "throughput": {
+      "status": "qualified_throughput_pending_final_acceptance",
+      "seqs": 256,
+      "batch_tokens": 8192,
+      "api_count": 1,
+      "prefix_cache": true,
+      "clients": 32,
+      "concurrency": 256,
+      "server_extra": [
+        "--attention-config",
+        "{\"backend\": \"FLASHINFER\"}",
+        "--compilation-config",
+        "{\"cudagraph_capture_sizes\": [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512, 1024]}"
+      ],
+      "server_environment": {
+        "CUDA_HOME": "/root/autodl-tmp/codepin-cuda12.9-v20",
+        "FLASHINFER_WORKSPACE_BASE": "/root/autodl-tmp/codepin/runs/20260904-vllm-agent-performance/results/flashinfer-cuda129-jit-v20",
+        "MAX_JOBS": "4",
+        "VLLM_BATCH_INVARIANT": "0",
+        "VLLM_USE_V2_MODEL_RUNNER": "0",
+        "LITELLM_LOCAL_MODEL_COST_MAP": "True"
+      },
+      "reason": "S256 is the throughput profile. S512 added less than 3% mean tuning throughput while nearly doubling P95 and reducing validation throughput; S128 left substantial throughput unused.",
+      "comparison_policy": "V86",
+      "qualification_groups": {
+        "tuning": {
+          "n": 3,
+          "labels": [
+            "capacity-neighborhood-v98-s256-p32-c256",
+            "capacity-repeat-v123-s256-r2-p32-c256",
+            "capacity-repeat-v123-s256-r3-p32-c256"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              855.0,
+              858.5,
+              848.0
+            ],
+            "mean": 853.8333333333334,
+            "stdev": 5.346338310781813,
+            "ci95_half_width": 13.281040618088127
+          },
+          "latency_seconds.p95": {
+            "values": [
+              17.046608693688178,
+              16.729703817953123,
+              16.785624566022307
+            ],
+            "mean": 16.85397902588787,
+            "stdev": 0.1691491182471765,
+            "ci95_half_width": 0.4201897035629294
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        },
+        "validation": {
+          "n": 3,
+          "labels": [
+            "capacity-neighborhood-v98-s256-validation-p32-c256",
+            "capacity-repeat-v123-s256-r2-validation-p32-c256",
+            "capacity-repeat-v123-s256-r3-validation-p32-c256"
+          ],
+          "effective_tasks_per_minute": {
+            "values": [
+              654.0,
+              667.0,
+              666.0
+            ],
+            "mean": 662.3333333333334,
+            "stdev": 7.234178138070235,
+            "ci95_half_width": 17.970694726975893
+          },
+          "latency_seconds.p95": {
+            "values": [
+              15.631569894857238,
+              15.515971590194386,
+              15.517919930594505
+            ],
+            "mean": 15.555153805215376,
+            "stdev": 0.06618544458333289,
+            "ci95_half_width": 0.16441375886460208
+          },
+          "all_V86_passed": true,
+          "zero_infrastructure_errors": true,
+          "zero_timeouts": true,
+          "requests_equal_turns": true
+        }
+      }
+    }
+  },
+  "selection_rule": "Default: strict V86 pass on three fresh engines at all declared loads, then use C16 for a bounded latency/throughput balance. Throughput: select the lowest capacity within 3% of the highest repeated tuning throughput when it has materially lower P95 and does not regress validation.",
+  "capacity": {
+    "128": {
+      "tuning": {
+        "n": 3,
+        "effective_tasks_per_minute": {
+          "values": [
+            617.0,
+            687.5,
+            679.0
+          ],
+          "mean": 661.1666666666666,
+          "stdev": 38.484845502266644
+        },
+        "latency_seconds.p95": {
+          "values": [
+            12.722122335014864,
+            11.171167727350257,
+            11.482625189318787
+          ],
+          "mean": 11.791971750561302,
+          "stdev": 0.8204489746312359
+        }
+      },
+      "validation": {
+        "n": 3,
+        "effective_tasks_per_minute": {
+          "values": [
+            594.5,
+            604.5,
+            604.5
+          ],
+          "mean": 601.1666666666666,
+          "stdev": 5.773502691896257
+        },
+        "latency_seconds.p95": {
+          "values": [
+            9.175531299988506,
+            9.160982658038847,
+            9.050884553336072
+          ],
+          "mean": 9.129132837121142,
+          "stdev": 0.0681543188809518
+        }
+      }
+    },
+    "256": {
+      "tuning": {
+        "n": 3,
+        "labels": [
+          "capacity-neighborhood-v98-s256-p32-c256",
+          "capacity-repeat-v123-s256-r2-p32-c256",
+          "capacity-repeat-v123-s256-r3-p32-c256"
+        ],
+        "effective_tasks_per_minute": {
+          "values": [
+            855.0,
+            858.5,
+            848.0
+          ],
+          "mean": 853.8333333333334,
+          "stdev": 5.346338310781813,
+          "ci95_half_width": 13.281040618088127
+        },
+        "latency_seconds.p95": {
+          "values": [
+            17.046608693688178,
+            16.729703817953123,
+            16.785624566022307
+          ],
+          "mean": 16.85397902588787,
+          "stdev": 0.1691491182471765,
+          "ci95_half_width": 0.4201897035629294
+        },
+        "all_V86_passed": true,
+        "zero_infrastructure_errors": true,
+        "zero_timeouts": true,
+        "requests_equal_turns": true
+      },
+      "validation": {
+        "n": 3,
+        "labels": [
+          "capacity-neighborhood-v98-s256-validation-p32-c256",
+          "capacity-repeat-v123-s256-r2-validation-p32-c256",
+          "capacity-repeat-v123-s256-r3-validation-p32-c256"
+        ],
+        "effective_tasks_per_minute": {
+          "values": [
+            654.0,
+            667.0,
+            666.0
+          ],
+          "mean": 662.3333333333334,
+          "stdev": 7.234178138070235,
+          "ci95_half_width": 17.970694726975893
+        },
+        "latency_seconds.p95": {
+          "values": [
+            15.631569894857238,
+            15.515971590194386,
+            15.517919930594505
+          ],
+          "mean": 15.555153805215376,
+          "stdev": 0.06618544458333289,
+          "ci95_half_width": 0.16441375886460208
+        },
+        "all_V86_passed": true,
+        "zero_infrastructure_errors": true,
+        "zero_timeouts": true,
+        "requests_equal_turns": true
+      }
+    },
+    "512": {
+      "tuning": {
+        "n": 3,
+        "effective_tasks_per_minute": {
+          "values": [
+            865.0,
+            865.0,
+            864.5
+          ],
+          "mean": 864.8333333333334,
+          "stdev": 0.28867513459481287
+        },
+        "latency_seconds.p95": {
+          "values": [
+            31.532449181354604,
+            31.493805480661102,
+            31.530509522929783
+          ],
+          "mean": 31.51892139498183,
+          "stdev": 0.02177263036074985
+        }
+      },
+      "validation": {
+        "n": 3,
+        "effective_tasks_per_minute": {
+          "values": [
+            639.5,
+            635.5,
+            650.5
+          ],
+          "mean": 641.8333333333334,
+          "stdev": 7.767453465154029
+        },
+        "latency_seconds.p95": {
+          "values": [
+            30.855779158812943,
+            31.15999163145898,
+            30.619804339681284
+          ],
+          "mean": 30.878525043317737,
+          "stdev": 0.27081102081702496
+        }
+      }
+    }
+  },
+  "arrival_boundary": {
+    "stable_fraction": 1.0,
+    "stable_offered_tasks_per_second": 28.491666666666664,
+    "stable_effective_tasks_per_minute": {
+      "count": 3,
+      "min": 848.0,
+      "max": 853.0,
+      "mean": 850.3333333333334,
+      "stdev": 2.516611478423583,
+      "ci95_half_width": 6.251609872040704,
+      "p50": 850.0,
+      "p95": 852.7
+    },
+    "plateau_point_fraction": 1.1,
+    "plateau_point_effective_tasks_per_minute": {
+      "count": 3,
+      "min": 878.0,
+      "max": 886.0,
+      "mean": 882.5,
+      "stdev": 4.092676385936225,
+      "ci95_half_width": 10.166772390871333,
+      "p50": 883.5,
+      "p95": 885.75
+    },
+    "plateau_reproduced": true,
+    "repeat_counts": {
+      "1.0": 3,
+      "1.1": 3,
+      "1.25": 3
+    },
+    "repeat_complete": true,
+    "stable_reproduced": true,
+    "saturation_confirmed": true,
+    "pressure_response_observed": true,
+    "scope": "Reproducible arrival plateau for the frozen tuning workload; combine with closed-loop neighboring loads and native trace attribution. This flag alone is not final acceptance.",
+    "criterion": "The first three offered-rate levels above the repeated plateau point add no more than 3% effective throughput over its three-repeat mean. The zero-rejection operating rate is independently reported; rejection, queue and tail metrics remain explicit in every row.",
+    "stable_repeats": [
+      {
+        "label": "arrival-s256-v133-f1-r1",
+        "effective_tasks_per_minute": 853.0,
+        "p95_seconds": 12.501504444004967,
+        "admission_rejection_rate": 0.0
+      },
+      {
+        "label": "arrival-s256-v133-f1-r2",
+        "effective_tasks_per_minute": 850.0,
+        "p95_seconds": 13.85492267482914,
+        "admission_rejection_rate": 0.0
+      },
+      {
+        "label": "arrival-s256-v133-f1-r3",
+        "effective_tasks_per_minute": 848.0,
+        "p95_seconds": 12.90004388812231,
+        "admission_rejection_rate": 0.0
+      }
+    ],
+    "plateau_point_repeats": [
+      {
+        "label": "arrival-s256-v133-f1p1-r1",
+        "effective_tasks_per_minute": 878.0,
+        "p95_seconds": 16.00614983693231,
+        "admission_rejection_rate": 0.059135977337110485
+      },
+      {
+        "label": "arrival-s256-v133-f1p1-r2",
+        "effective_tasks_per_minute": 883.5,
+        "p95_seconds": 15.847011084086262,
+        "admission_rejection_rate": 0.046211048158640224
+      },
+      {
+        "label": "arrival-s256-v133-f1p1-r3",
+        "effective_tasks_per_minute": 886.0,
+        "p95_seconds": 15.871725948993117,
+        "admission_rejection_rate": 0.04337818696883853
+      }
+    ],
+    "three_higher_adjacent_levels": [
+      {
+        "label": "arrival-s256-v133-f1p25-r1",
+        "fraction": 1.25,
+        "effective_tasks_per_minute": 868.5,
+        "p95_seconds": 15.923223256319762,
+        "admission_rejection_rate": 0.16832917705735662
+      },
+      {
+        "label": "arrival-s256-v133-f1p5-r1",
+        "fraction": 1.5,
+        "effective_tasks_per_minute": 881.0,
+        "p95_seconds": 15.96141297459253,
+        "admission_rejection_rate": 0.30067567567567566
+      },
+      {
+        "label": "arrival-s256-v133-f1p75-r1",
+        "fraction": 1.75,
+        "effective_tasks_per_minute": 874.0,
+        "p95_seconds": 15.922590871527788,
+        "admission_rejection_rate": 0.4055258467023173
+      }
+    ]
+  },
+  "arrival": [
+    {
+      "label": "arrival-s256-v133-f0p5-r1",
+      "effective_tasks_per_minute": 427.5,
+      "terminal_tasks_per_minute": 856.0,
+      "p50_seconds": 3.051471349550411,
+      "p95_seconds": 7.53810937423841,
+      "gpu_utilization_percent": 57.44444444444444,
+      "cpu_quota_utilization_percent": 23.40534338800612,
+      "waiting_requests": 0.0,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 0.5,
+      "repeat": 1,
+      "offered_tasks_per_second": 14.245833333333332,
+      "admission_rejection_rate": 0.0,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f0p75-r1",
+      "effective_tasks_per_minute": 640.5,
+      "terminal_tasks_per_minute": 1281.0,
+      "p50_seconds": 4.691222481953446,
+      "p95_seconds": 10.773857824341393,
+      "gpu_utilization_percent": 69.4017094017094,
+      "cpu_quota_utilization_percent": 33.93182697729976,
+      "waiting_requests": 0.0,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 0.75,
+      "repeat": 1,
+      "offered_tasks_per_second": 21.36875,
+      "admission_rejection_rate": 0.0,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f0p9-r1",
+      "effective_tasks_per_minute": 771.5,
+      "terminal_tasks_per_minute": 1544.0,
+      "p50_seconds": 5.805535370018333,
+      "p95_seconds": 11.973663815669715,
+      "gpu_utilization_percent": 78.94871794871794,
+      "cpu_quota_utilization_percent": 40.7272217905413,
+      "waiting_requests": 0.06837606837606838,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 0.9,
+      "repeat": 1,
+      "offered_tasks_per_second": 25.6425,
+      "admission_rejection_rate": 0.0,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1-r1",
+      "effective_tasks_per_minute": 853.0,
+      "terminal_tasks_per_minute": 1702.0,
+      "p50_seconds": 5.287664026021957,
+      "p95_seconds": 12.501504444004967,
+      "gpu_utilization_percent": 87.86086956521739,
+      "cpu_quota_utilization_percent": 44.844540399735344,
+      "waiting_requests": 0.3826086956521739,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.0,
+      "repeat": 1,
+      "offered_tasks_per_second": 28.491666666666664,
+      "admission_rejection_rate": 0.0,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p1-r1",
+      "effective_tasks_per_minute": 878.0,
+      "terminal_tasks_per_minute": 1884.0,
+      "p50_seconds": 5.917686483007856,
+      "p95_seconds": 16.00614983693231,
+      "gpu_utilization_percent": 91.0,
+      "cpu_quota_utilization_percent": 45.52782485765829,
+      "waiting_requests": 0.6724137931034483,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.1,
+      "repeat": 1,
+      "offered_tasks_per_second": 31.340833333333332,
+      "admission_rejection_rate": 0.059135977337110485,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p25-r1",
+      "effective_tasks_per_minute": 868.5,
+      "terminal_tasks_per_minute": 2136.0,
+      "p50_seconds": 5.665681244048756,
+      "p95_seconds": 15.923223256319762,
+      "gpu_utilization_percent": 90.79310344827586,
+      "cpu_quota_utilization_percent": 45.86856882520935,
+      "waiting_requests": 1.5603448275862069,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.25,
+      "repeat": 1,
+      "offered_tasks_per_second": 35.61458333333333,
+      "admission_rejection_rate": 0.16832917705735662,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p5-r1",
+      "effective_tasks_per_minute": 881.0,
+      "terminal_tasks_per_minute": 2568.0,
+      "p50_seconds": 5.338154229975771,
+      "p95_seconds": 15.96141297459253,
+      "gpu_utilization_percent": 90.20175438596492,
+      "cpu_quota_utilization_percent": 46.24730606187852,
+      "waiting_requests": 0.41228070175438597,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.5,
+      "repeat": 1,
+      "offered_tasks_per_second": 42.7375,
+      "admission_rejection_rate": 0.30067567567567566,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p75-r1",
+      "effective_tasks_per_minute": 874.0,
+      "terminal_tasks_per_minute": 2991.5,
+      "p50_seconds": 5.073982676956803,
+      "p95_seconds": 15.922590871527788,
+      "gpu_utilization_percent": 93.01739130434783,
+      "cpu_quota_utilization_percent": 46.771773539400584,
+      "waiting_requests": 0.45217391304347826,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.75,
+      "repeat": 1,
+      "offered_tasks_per_second": 49.86041666666666,
+      "admission_rejection_rate": 0.4055258467023173,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f2-r1",
+      "effective_tasks_per_minute": 872.0,
+      "terminal_tasks_per_minute": 3424.0,
+      "p50_seconds": 4.459122201020364,
+      "p95_seconds": 15.861255316692404,
+      "gpu_utilization_percent": 89.75,
+      "cpu_quota_utilization_percent": 46.48613644701535,
+      "waiting_requests": 0.29310344827586204,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 2.0,
+      "repeat": 1,
+      "offered_tasks_per_second": 56.98333333333333,
+      "admission_rejection_rate": 0.47856586126266565,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1-r2",
+      "effective_tasks_per_minute": 850.0,
+      "terminal_tasks_per_minute": 1703.0,
+      "p50_seconds": 6.323955586063676,
+      "p95_seconds": 13.85492267482914,
+      "gpu_utilization_percent": 87.05982905982906,
+      "cpu_quota_utilization_percent": 42.479123832088916,
+      "waiting_requests": 0.4017094017094017,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.0,
+      "repeat": 2,
+      "offered_tasks_per_second": 28.491666666666664,
+      "admission_rejection_rate": 0.0,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p1-r2",
+      "effective_tasks_per_minute": 883.5,
+      "terminal_tasks_per_minute": 1876.5,
+      "p50_seconds": 5.885972927091643,
+      "p95_seconds": 15.847011084086262,
+      "gpu_utilization_percent": 92.11206896551724,
+      "cpu_quota_utilization_percent": 44.30825129604027,
+      "waiting_requests": 0.7413793103448276,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.1,
+      "repeat": 2,
+      "offered_tasks_per_second": 31.340833333333332,
+      "admission_rejection_rate": 0.046211048158640224,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p25-r2",
+      "effective_tasks_per_minute": 890.0,
+      "terminal_tasks_per_minute": 2137.5,
+      "p50_seconds": 5.620045312971342,
+      "p95_seconds": 15.89977945962455,
+      "gpu_utilization_percent": 90.01739130434783,
+      "cpu_quota_utilization_percent": 44.23346187830043,
+      "waiting_requests": 0.6608695652173913,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.25,
+      "repeat": 2,
+      "offered_tasks_per_second": 35.61458333333333,
+      "admission_rejection_rate": 0.15508104738154613,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p25-r3",
+      "effective_tasks_per_minute": 885.5,
+      "terminal_tasks_per_minute": 2137.0,
+      "p50_seconds": 5.6540860190289095,
+      "p95_seconds": 16.124506210390244,
+      "gpu_utilization_percent": 90.17391304347827,
+      "cpu_quota_utilization_percent": 45.322825366187345,
+      "waiting_requests": 0.4434782608695652,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.25,
+      "repeat": 3,
+      "offered_tasks_per_second": 35.61458333333333,
+      "admission_rejection_rate": 0.16770573566084787,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1p1-r3",
+      "effective_tasks_per_minute": 886.0,
+      "terminal_tasks_per_minute": 1884.0,
+      "p50_seconds": 5.863212825031951,
+      "p95_seconds": 15.871725948993117,
+      "gpu_utilization_percent": 89.72173913043478,
+      "cpu_quota_utilization_percent": 45.1553657688807,
+      "waiting_requests": 0.7130434782608696,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.1,
+      "repeat": 3,
+      "offered_tasks_per_second": 31.340833333333332,
+      "admission_rejection_rate": 0.04337818696883853,
+      "admitted_model_regression_count": 0
+    },
+    {
+      "label": "arrival-s256-v133-f1-r3",
+      "effective_tasks_per_minute": 848.0,
+      "terminal_tasks_per_minute": 1690.5,
+      "p50_seconds": 6.4462916270131245,
+      "p95_seconds": 12.90004388812231,
+      "gpu_utilization_percent": 86.64655172413794,
+      "cpu_quota_utilization_percent": 42.50801603239286,
+      "waiting_requests": 0.1724137931034483,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": null,
+      "fraction": 1.0,
+      "repeat": 3,
+      "offered_tasks_per_second": 28.491666666666664,
+      "admission_rejection_rate": 0.0,
+      "admitted_model_regression_count": 0
+    }
+  ],
+  "closed_loop_pressure": [
+    {
+      "label": "pressure-neighbors-v134-tuning-c320",
+      "effective_tasks_per_minute": 749.0,
+      "terminal_tasks_per_minute": 1494.5,
+      "p50_seconds": 9.238877963041887,
+      "p95_seconds": 26.371564770396798,
+      "gpu_utilization_percent": 70.16379310344827,
+      "cpu_quota_utilization_percent": 38.963748213376945,
+      "waiting_requests": 35.008620689655174,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": true,
+      "split": "tuning",
+      "concurrency": 320,
+      "clients": 32
+    },
+    {
+      "label": "pressure-neighbors-v134-validation-c320",
+      "effective_tasks_per_minute": 651.0,
+      "terminal_tasks_per_minute": 1638.5,
+      "p50_seconds": 8.181315104011446,
+      "p95_seconds": 19.64110904678237,
+      "gpu_utilization_percent": 89.4608695652174,
+      "cpu_quota_utilization_percent": 47.894547252010234,
+      "waiting_requests": 1.017391304347826,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": true,
+      "split": "validation",
+      "concurrency": 320,
+      "clients": 32
+    },
+    {
+      "label": "pressure-neighbors-v134-tuning-c384",
+      "effective_tasks_per_minute": 725.5,
+      "terminal_tasks_per_minute": 1449.5,
+      "p50_seconds": 11.013752134982497,
+      "p95_seconds": 30.978035008639562,
+      "gpu_utilization_percent": 64.43589743589743,
+      "cpu_quota_utilization_percent": 36.63069512363435,
+      "waiting_requests": 108.86324786324786,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": true,
+      "split": "tuning",
+      "concurrency": 384,
+      "clients": 32
+    },
+    {
+      "label": "pressure-neighbors-v134-validation-c384",
+      "effective_tasks_per_minute": 656.0,
+      "terminal_tasks_per_minute": 1650.5,
+      "p50_seconds": 9.665409830049612,
+      "p95_seconds": 23.082769155036658,
+      "gpu_utilization_percent": 90.6,
+      "cpu_quota_utilization_percent": 47.30097599952001,
+      "waiting_requests": 0.6956521739130435,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": true,
+      "split": "validation",
+      "concurrency": 384,
+      "clients": 32
+    },
+    {
+      "label": "pressure-neighbors-v134-tuning-c512",
+      "effective_tasks_per_minute": 734.0,
+      "terminal_tasks_per_minute": 1477.5,
+      "p50_seconds": 14.502776296518277,
+      "p95_seconds": 39.42063433470321,
+      "gpu_utilization_percent": 64.27350427350427,
+      "cpu_quota_utilization_percent": 37.6586891644954,
+      "waiting_requests": 234.84615384615384,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": true,
+      "split": "tuning",
+      "concurrency": 512,
+      "clients": 32
+    },
+    {
+      "label": "pressure-neighbors-v134-validation-c512",
+      "effective_tasks_per_minute": 651.5,
+      "terminal_tasks_per_minute": 1642.5,
+      "p50_seconds": 12.832497596973553,
+      "p95_seconds": 30.384389581228604,
+      "gpu_utilization_percent": 91.52631578947368,
+      "cpu_quota_utilization_percent": 47.143783362199414,
+      "waiting_requests": 1.1403508771929824,
+      "timeout_rate": 0.0,
+      "infrastructure_failures": 0,
+      "accepted": true,
+      "split": "validation",
+      "concurrency": 512,
+      "clients": 32
+    }
+  ],
+  "interpretation": {
+    "default": "S64/FA2 at P4/C16 for the best measured same-load latency/throughput balance.",
+    "throughput": "S256/FI at P32/C256 is the highest zero-rejection operating point; higher admitted arrival rates plateau with rejection, and higher closed-loop concurrency reduces throughput while increasing P95.",
+    "scope": "This is a workload-specific saturation boundary, not a hardware theoretical limit or global optimum."
+  }
+}

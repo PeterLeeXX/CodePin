@@ -1,6 +1,14 @@
 # CodePin 性能验收进展（2026-09-05）
 
-本记录承接 [完整阶段调优报告](https://github.com/PeterLeeXX/CodePin/blob/b73eb0299a9b54a02964c440647a4391e4d8f5fb/docs/VLLM_TUNING_REPORT_20260904.md)，保留所有旧结果和质量失败。此处是新增证据，**最终性能配置、稳定容量和本机 Codex MCP 使用验收尚未完成**。
+本记录承接 [完整阶段调优报告](https://github.com/PeterLeeXX/CodePin/blob/b73eb0299a9b54a02964c440647a4391e4d8f5fb/docs/VLLM_TUNING_REPORT_20260904.md)，保留所有旧结果和质量失败。下方阶段记录按发生时的状态保留；最终结论以最前面的“收口状态”为准。
+
+## 收口状态
+
+短稳态三次对照、容量扫描、原配置完整功能回归以及本机 Codex 的真实 MCP 调用已经完成。默认 S64/FA2 在 C16 的有效吞吐为 229.83 tasks/min，P95 为 4.046 秒，相对原部署分别改善 49.08% 和 25.09%；吞吐配置 S256/FI 的零拒绝边界约为 850.33 effective tasks/min。
+
+15 分钟默认配置运行的调参/验证吞吐为 223.87/189.53 effective tasks/min，P95 为 4.074/3.483 秒，质量、错误率、超时和 GPU 显存趋势均通过，但匿名内存分别增长 5.61/4.53 GiB，未通过长期稳定性门槛。共享解析线程池的候选修复未显著改善，已撤销。因此这里不声明长期常驻生产验收通过。
+
+本机 Codex 已实际调用注册的 `codepin.localize_code`。远程模型对真实 `python-docx` 任务返回 `src/docx/oxml/ns.py`、`NamespacePrefixedTag.local_part` 和 50–55 行有界上下文，`status=ok`、`cache_hit=false`、工具错误/重复搜索/重叠读取均为 0。证据见 [codex-mcp-acceptance.json](assets/performance/20260905-codex-mcp-acceptance.json)，完整结论见 [最终调优报告](VLLM_TUNING_REPORT_20260905.md)。
 
 ## 三次独立引擎对照已经收齐
 
@@ -109,9 +117,9 @@ V98 的 137 个归档条目与 V99 的 322 个条目已逐件拉回校验，零�
 | 最终 Nsight / 缓存 / 功能回归 | V99 原 S8 全部 82 项和真实数据闭环通过；仍需最终配置的 Nsight、原生缓存事件、真实 token 前缀和功能回归 |
 | 本机 Codex 真实 MCP 调用 | 用户新增验收：真实服务注册到本机 Codex，由 Codex 通过注册工具完成一次实际代码定位，并保留调用和结构化结果证据 |
 
-新增 Codex 集成安排在性能验收之后、云主机关机之前。配置文件存在、工具枚举成功或独立 MCP 测试通过，都不能单独替代 Codex 实际发起的工具调用。
+该表和本段记录的是当时待办。其后已完成 Codex 实际发起的 MCP 工具调用，并核对事件流、结构化返回、远程轨迹和真实源文件；长稳态因 MCP 匿名内存增长未通过，其余额外远程验收按最小链路收口。
 
-用户进一步明确：链路跑通后关闭云主机。执行顺序为完成远程验收、实际 Codex MCP 调用、材料拉回与校验、阶段提交，然后关机；关机后远程模型和 MCP 不再提供服务。接入步骤已补入 [服务说明](SERVING_AND_EVALUATION.md#注册到本机-codex)，实际注册和调用仍待执行。
+用户进一步明确：链路跑通后关闭云主机。接入步骤已补入 [服务说明](SERVING_AND_EVALUATION.md#注册到本机-codex)，实际注册、调用、远程轨迹核对和材料拉回均已完成；阶段提交完成后关闭主机，远程模型和 MCP 随之停止服务。
 
 ## 原始材料与复现
 
@@ -119,4 +127,4 @@ V98 的 137 个归档条目与 V99 的 322 个条目已逐件拉回校验，零�
 
 可审查摘要见 [stage8-evidence.json](assets/performance/20260905-stage8-evidence.json)。完整重分析位于本地材料的 `complete-comparison-analysis-v119/evidence.json`，由本地 `python -m tmp.analyze-complete-comparison-v119` 实际执行；它逐组核验原始摘要、原生请求数、参考文件和新旧判定，不发起模型请求。图中误差棒为 SD，与表中的 95% CI 分开标注。
 
-本次推送只更新调优分支的进展材料。已推送 main 的 `b73eb02` 及云端 V95 固定源码不因这一阶段报告改变；未切换最终部署配置、未启动训练、未关机。
+本次收口不切换模型或推理框架，不启动训练。云端代码仍是 V95 固定源码；短时默认/吞吐配置、长期稳定性限制和真实 Codex MCP 调用分别记录，不相互替代。

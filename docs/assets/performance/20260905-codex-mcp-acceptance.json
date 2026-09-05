@@ -1,0 +1,74 @@
+{
+  "status": "passed",
+  "executed_at": "2026-09-05T01:35:40Z",
+  "chain": [
+    "local Codex CLI",
+    "registered codepin stdio MCP over SSH",
+    "remote CodePin MCP server",
+    "remote vLLM OpenAI-compatible API",
+    "CodePin-SFT-Qwen3.5-0.8B",
+    "real repository tools",
+    "structured localization result with bounded context"
+  ],
+  "codex": {
+    "exit_code": 0,
+    "event_type": "mcp_tool_call",
+    "server": "codepin",
+    "tool": "localize_code",
+    "events_sha256": "6897df5668166e56040e68127f361e7ced2fd81b0dfe88299dcba2c44e61e8a1",
+    "final_message_sha256": "2d24c96a411749dbdf8bc51a65a544f446204ce8f520fe86e60aa404a2413920"
+  },
+  "request": {
+    "repository": "swesmith_python-openxml__python-docx.0cf6d71f_python-openxml__python-docx.0cf6d71f.func_basic__jrsrvb71",
+    "issue": "NamespacePrefixedTag.local_part returns reversed string",
+    "max_context_chars": 12000,
+    "max_context_lines": 160
+  },
+  "result": {
+    "status": "ok",
+    "locations": [
+      {
+        "file": "src/docx/oxml/ns.py",
+        "class_name": "NamespacePrefixedTag",
+        "function_name": "local_part"
+      }
+    ],
+    "context": {
+      "symbol_start": 50,
+      "symbol_end": 55,
+      "line_numbers": [50, 51, 52, 53, 54, 55],
+      "truncated": false
+    },
+    "cache_hit": false,
+    "execution_id": "8baec1d6-6b63-4c9d-a468-99da6e6479cc",
+    "num_tool_calls": 3,
+    "search_calls": 1,
+    "read_calls": 1,
+    "repeated_searches": 0,
+    "overlap_lines": 0,
+    "tool_errors": 0,
+    "tool_efficiency_cost": 0.06666,
+    "service_total_seconds": 1.0741908439667895
+  },
+  "source_verification": {
+    "file_sha256": "c9c72d53080b8fdbc446bf817b7e00a1ea338cb83d4149d5b2332a0004b03e6c",
+    "line_55": "return self._local_part[::-1]",
+    "repository_contains_expected_mutation": true
+  },
+  "remote_trajectory": {
+    "sha256": "a8b98bcf344b6d1648fe6992643e86c56964be7ba432153cc279b12ceebee30c",
+    "status": "ok",
+    "errors": 0
+  },
+  "deployment": {
+    "deployment_id": "f90867ba544f48fdb2b31ebd2cc81cf7",
+    "manifest_sha256": "9bbbf4d2a02b9dda0f00e753ea446cbcd9c274746129a2799496a3c5e47dc77a",
+    "deployment_file_sha256": "28d331cfd74e0963bbeb4f345be1d2d2a54cf9e1f91259b32b253820a6a51cd3",
+    "result_cache_size": 0
+  },
+  "retrieved_archive": {
+    "name": "codepin-final-minimal-v166.tar.gz",
+    "sha256": "6da6dd395465f265f441d2cff9a1d16affcbd3c5ceddd1bff072c837fe678c77"
+  },
+  "claim_boundary": "This proves one real registered Codex-to-CodePin MCP localization call. It does not prove long-duration MCP process memory stability or a localization-quality improvement."
+}

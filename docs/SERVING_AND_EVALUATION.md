@@ -110,6 +110,13 @@ codex mcp get codepin
 `codex exec --json` 保存调用事件；桌面当前会话是否已加载新工具需另行检查。
 远程 vLLM 或云主机关闭后，这条链路停止服务；本机注册配置不会让模型继续运行。
 
+2026-09-05 的实际验收使用本机 `codex exec --json` 调用了注册的
+`codepin.localize_code`，经 SSH stdio、远程 MCP、vLLM 和真实仓库工具返回
+`src/docx/oxml/ns.py` 中 `NamespacePrefixedTag.local_part` 的 50–55 行上下文。
+调用 `status=ok`、`cache_hit=false`，工具错误、重复搜索和重叠读取均为 0。
+可审查摘要见 [codex-mcp-acceptance.json](assets/performance/20260905-codex-mcp-acceptance.json)。
+该主机关闭后再次使用工具前需要启动兼容的远程部署，或更新本机 MCP 注册指向新主机。
+
 `localize_code` 参数：
 
 ```json
